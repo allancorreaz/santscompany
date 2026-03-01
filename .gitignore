@@ -1,0 +1,25 @@
+# Arquivos com suas credenciais (NUNCA fazer commit)
+credentials-local.php
+config.php
+
+# PHPMailer
+vendor/
+composer.lock
+
+# Logs e temporários
+*.log
+*.json
+*.bak
+
+# Sistema
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
+
+# Testes
+teste-email.html
+
+# Documentação sensível  
+README-EMAIL.md
