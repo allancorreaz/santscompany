@@ -1,4 +1,8 @@
-# Proteger arquivos de configuração
+# ==================================================
+# PROTEÇÃO DIGITAL SANTS COMPANY - NIVEL MILITAR
+# ==================================================
+
+# Proteger arquivos de configuração CRÍTICOS
 <Files "config.php">
     Require all denied
 </Files>
@@ -7,6 +11,43 @@
     Require all denied
 </Files>
 
-<FilesMatch "\.(log|bak|json)$">
+<Files "setup-security.php">
+    Order Allow,Deny
+    Allow from 127.0.0.1
+    Allow from ::1
+    # Bloquear acesso externo - apenas localhost
+</Files>
+
+# Proteger outros arquivos sensíveis
+<FilesMatch "\.(log|bak|json|lock)$">
     Require all denied
 </FilesMatch>
+
+# Proteger pasta vendor do Composer
+<Directory "vendor">
+    Require all denied
+</Directory>
+
+# Bloquear acesso aos arquivos do Git
+<FilesMatch "^\.git">
+    Require all denied
+</FilesMatch>
+
+# Headers de segurança adicionais
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://js.hcaptcha.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://hcaptcha.com;"
+</IfModule>
+
+# Bloqueio de tentativas de força bruta
+<IfModule mod_evasive24.c>
+    DOSHashTableSize    3097
+    DOSPageCount        2
+    DOSPageInterval     1
+    DOSSiteCount        50
+    DOSSiteInterval     1
+    DOSBlockingPeriod   86400
+</IfModule>

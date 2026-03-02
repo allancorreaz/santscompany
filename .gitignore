@@ -1,25 +1,38 @@
-# Arquivos com suas credenciais (NUNCA fazer commit)
+# ===============================================
+# ARQUIVOS SENSÍVEIS - NUNCA FAZER COMMIT!
+# ===============================================
+
+# Credenciais (CRIPTOGRAFADAS OU NÃO)
 credentials-local.php
 config.php
+setup-security.php
 
-# PHPMailer
+# PHPMailer e dependências
 vendor/
 composer.lock
 
-# Logs e temporários
+# Logs e arquivos temporários
 *.log
 *.json
 *.bak
+*.tmp
 
-# Sistema
+# Arquivos do sistema
 .DS_Store
 Thumbs.db
 .vscode/
 *.swp
 *.swo
 
-# Testes
+# Arquivos de teste
 teste-email.html
+test-*.php
 
 # Documentação sensível  
 README-EMAIL.md
+*-PRIVADO.md
+
+# Backup e arquivos de segurança
+backup/
+*.backup
+*.encrypted

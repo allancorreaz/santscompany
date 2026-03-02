@@ -44,10 +44,10 @@ function revealOnScroll() {
 
   reveals.forEach((el, index) => {
     const elementTop = el.getBoundingClientRect().top;
-    if (elementTop < windowHeight - 100) {
+    if (elementTop < windowHeight - 50) {
       setTimeout(() => {
         el.classList.add("active");
-      }, index * 50); // Reduzido de 100ms para 50ms para animações mais rápidas
+      }, index * 20); // Reduzido para 20ms para animações muito mais rápidas
     }
   });
 }
