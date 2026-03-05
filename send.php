@@ -29,7 +29,7 @@ try {
     }
     
     // Validar captcha no servidor hCaptcha
-    $secretKey = '0x0000000000000000000000000000000000000000'; // Chave demo - funciona em localhost
+    $secretKey = defined('HCAPTCHA_SECRET') ? HCAPTCHA_SECRET : '';
     $verifyURL = 'https://hcaptcha.com/siteverify';
     $response = file_get_contents($verifyURL . '?secret=' . $secretKey . '&response=' . $captcha);
     $responseData = json_decode($response);
