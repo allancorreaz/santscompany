@@ -35,19 +35,17 @@ window.addEventListener("scroll", () => {
 });
 
 // =========================
-// REVEAL AO SCROLL COM DELAY
+// REVEAL AO SCROLL - INSTANTÂNEO
 // =========================
 const reveals = document.querySelectorAll(".reveal");
 
 function revealOnScroll() {
   const windowHeight = window.innerHeight;
 
-  reveals.forEach((el, index) => {
+  reveals.forEach((el) => {
     const elementTop = el.getBoundingClientRect().top;
-    if (elementTop < windowHeight - 100) {
-      setTimeout(() => {
-        el.classList.add("active");
-      }, index * 50); // Reduzido de 100ms para 50ms para animações mais rápidas
+    if (elementTop < windowHeight - 50) {
+      el.classList.add("active");
     }
   });
 }
