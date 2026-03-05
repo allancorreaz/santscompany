@@ -21,16 +21,16 @@ try {
     // Carregar configurações
     require_once 'config.php';
     
-    // Verificar hCaptcha
-    $captcha = $_POST['h-captcha-response'] ?? '';
+    // Verificar reCAPTCHA
+    $captcha = $_POST['g-recaptcha-response'] ?? '';
     if (empty($captcha)) {
         echo json_encode(['success' => false, 'message' => 'Complete a verificação anti-robô']);
         exit;
     }
     
-    // Validar captcha no servidor hCaptcha
-    $secretKey = defined('HCAPTCHA_SECRET') ? HCAPTCHA_SECRET : '';
-    $verifyURL = 'https://hcaptcha.com/siteverify';
+    // Validar captcha no servidor Google reCAPTCHA
+    $secretKey = defined('RECAPTCHA_SECRET') ? RECAPTCHA_SECRET : '';
+    $verifyURL = 'https://www.google.com/recaptcha/api/siteverify';
     $response = file_get_contents($verifyURL . '?secret=' . $secretKey . '&response=' . $captcha);
     $responseData = json_decode($response);
     

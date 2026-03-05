@@ -131,7 +131,7 @@ window.addEventListener("scroll", animateCounters);
 animateCounters();
 
 // =========================
-// FORMULÁRIO DE CONTATO COM HCAPTCHA - ANTI-SPAM
+// FORMULÁRIO DE CONTATO COM RECAPTCHA - ANTI-SPAM
 // =========================
 document.querySelector("#contactForm")?.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -140,8 +140,8 @@ document.querySelector("#contactForm")?.addEventListener("submit", async (e) => 
   const btn = form.querySelector("button[type=submit]");
   const originalText = btn.innerHTML;
   
-  // Verificar hCaptcha ANTES de enviar
-  const captchaResponse = hcaptcha.getResponse();
+  // Verificar reCAPTCHA ANTES de enviar
+  const captchaResponse = grecaptcha.getResponse();
   if (!captchaResponse) {
     btn.innerHTML = '<i class="fas fa-robot"></i> Complete a verificação anti-robô!';
     btn.style.backgroundColor = '#f59e0b';
@@ -160,7 +160,7 @@ document.querySelector("#contactForm")?.addEventListener("submit", async (e) => 
   try {
     // Preparar dados incluindo captcha
     const formData = new FormData(form);
-    formData.append('h-captcha-response', captchaResponse);
+    formData.append('g-recaptcha-response', captchaResponse);
     
     // Enviar
     const response = await fetch('send.php', {
@@ -175,7 +175,7 @@ document.querySelector("#contactForm")?.addEventListener("submit", async (e) => 
       btn.innerHTML = '<i class="fas fa-check"></i> Enviado! Responderemos em breve.';
       btn.style.backgroundColor = '#22c55e';
       form.reset();
-      hcaptcha.reset(); // Reset captcha
+      grecaptcha.reset(); // Reset captcha
       
       setTimeout(() => {
         btn.innerHTML = originalText;
