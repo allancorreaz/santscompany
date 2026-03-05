@@ -1,6 +1,5 @@
 # Arquivos com suas credenciais (NUNCA fazer commit)
 credentials-local.php
-config.php
 
 # PHPMailer
 vendor/
@@ -8,7 +7,7 @@ composer.lock
 
 # Logs e temporários
 *.log
-*.json
+deploy.log
 *.bak
 
 # Sistema
