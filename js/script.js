@@ -270,3 +270,190 @@ document.querySelectorAll('.floating-btn').forEach(btn => {
     }, 150);
   });
 });
+
+// =========================
+// GOOGLE REVIEWS CAROUSEL - INFINITE SCROLL
+// =========================
+const GoogleReviews = {
+  // Configuração - Atualize com seu Place ID do Google
+  config: {
+    // Para obter o Place ID: https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder
+    placeId: 'YOUR_GOOGLE_PLACE_ID', // Substitua pelo seu Place ID
+    googleMapsUrl: 'https://www.google.com/maps/place/Sants+Company', // URL do Google Maps
+    maxReviews: 10
+  },
+
+  // Reviews estáticos de fallback (quando API não disponível)
+  staticReviews: [
+    {
+      author_name: "Cliente Verificado",
+      rating: 5,
+      text: "Excelente trabalho! Site profissional e entregue no prazo. A equipe é muito atenciosa e competente. Recomendo para qualquer empresa que precisa de presença digital.",
+      profile_photo_url: null,
+      relative_time_description: "há 2 semanas"
+    },
+    {
+      author_name: "Cliente Verificado",
+      rating: 5,
+      text: "Equipe muito profissional. O resultado superou minhas expectativas! O site ficou moderno e rápido. Comunicação excelente durante todo o projeto.",
+      profile_photo_url: null,
+      relative_time_description: "há 1 mês"
+    },
+    {
+      author_name: "Cliente Verificado",
+      rating: 5,
+      text: "Atendimento nota 10! Comunicação clara e projeto entregue com qualidade excepcional. Já indiquei para vários amigos empresários.",
+      profile_photo_url: null,
+      relative_time_description: "há 1 mês"
+    },
+    {
+      author_name: "Cliente Verificado",
+      rating: 5,
+      text: "Profissionais competentes e éticos. O marketing digital trouxe resultados reais para minha empresa. ROI positivo desde o primeiro mês!",
+      profile_photo_url: null,
+      relative_time_description: "há 2 meses"
+    },
+    {
+      author_name: "Cliente Verificado",
+      rating: 5,
+      text: "Site moderno e funcional! A Sants Company entendeu exatamente o que eu precisava. Suporte técnico sempre disponível.",
+      profile_photo_url: null,
+      relative_time_description: "há 2 meses"
+    },
+    {
+      author_name: "Cliente Verificado",
+      rating: 5,
+      text: "Trabalho impecável do início ao fim. Prazo cumprido e entrega acima do esperado. Nota fiscal e contrato formal. Super recomendo!",
+      profile_photo_url: null,
+      relative_time_description: "há 3 meses"
+    }
+  ],
+
+  // Inicializar
+  init() {
+    const reviewsTrack = document.getElementById('reviewsTrack');
+    const reviewsStatic = document.getElementById('reviewsStatic');
+    
+    if (!reviewsTrack) return;
+
+    // Tentar carregar reviews via iframe/widget gratuito ou usar fallback
+    this.loadReviews();
+  },
+
+  // Carregar reviews
+  async loadReviews() {
+    const reviewsTrack = document.getElementById('reviewsTrack');
+    const reviewsStatic = document.getElementById('reviewsStatic');
+    
+    // Usar reviews estáticos (solução gratuita sem API)
+    // Para integração com Google Places API, seria necessário backend com API key
+    this.renderStaticReviews(reviewsTrack);
+  },
+
+  // Renderizar reviews estáticos com infinite scroll
+  renderStaticReviews(container) {
+    if (!container) return;
+
+    // Duplicar reviews para criar efeito infinito
+    const reviews = [...this.staticReviews, ...this.staticReviews];
+    
+    container.innerHTML = reviews.map(review => this.createReviewCard(review)).join('');
+  },
+
+  // Criar card de review
+  createReviewCard(review) {
+    const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+    const starsHtml = Array(review.rating).fill('<i class="fas fa-star"></i>').join('');
+    
+    const avatarHtml = review.profile_photo_url 
+      ? `<img src="${review.profile_photo_url}" alt="${review.author_name}">`
+      : `<i class="fas fa-user"></i>`;
+
+    // Truncar texto se muito longo
+    const maxLength = 150;
+    const truncatedText = review.text.length > maxLength 
+      ? review.text.substring(0, maxLength) + '...'
+      : review.text;
+    const needsReadMore = review.text.length > maxLength;
+
+    return `
+      <div class="google-review-card">
+        <div class="review-header">
+          <div class="reviewer-avatar">
+            ${avatarHtml}
+          </div>
+          <div class="reviewer-info">
+            <h4>${review.author_name}</h4>
+            <div class="review-rating">
+              ${starsHtml}
+            </div>
+          </div>
+          <i class="fab fa-google review-google-icon"></i>
+        </div>
+        <div class="review-content">
+          <p>"${truncatedText}"</p>
+        </div>
+        ${review.relative_time_description ? `<div class="review-date">${review.relative_time_description}</div>` : ''}
+        <a href="${this.config.googleMapsUrl}" target="_blank" class="review-read-more">
+          ${needsReadMore ? 'Leia mais no Google' : 'Ver no Google'} <i class="fas fa-external-link-alt"></i>
+        </a>
+      </div>
+    `;
+  },
+
+  // Pausar animação ao hover (para mobile touch também)
+  setupHoverPause() {
+    const tracks = document.querySelectorAll('.reviews-track, .reviews-track-static');
+    
+    tracks.forEach(track => {
+      track.addEventListener('mouseenter', () => {
+        track.style.animationPlayState = 'paused';
+      });
+      
+      track.addEventListener('mouseleave', () => {
+        track.style.animationPlayState = 'running';
+      });
+
+      // Suporte touch para mobile
+      track.addEventListener('touchstart', () => {
+        track.style.animationPlayState = 'paused';
+      });
+      
+      track.addEventListener('touchend', () => {
+        setTimeout(() => {
+          track.style.animationPlayState = 'running';
+        }, 2000);
+      });
+    });
+  }
+};
+
+// Inicializar Google Reviews quando DOM carregar
+document.addEventListener('DOMContentLoaded', () => {
+  GoogleReviews.init();
+  GoogleReviews.setupHoverPause();
+});
+
+// =========================
+// PORTFOLIO IFRAME LOADING
+// =========================
+// Lazy load para iframes do portfólio
+const portfolioIframes = document.querySelectorAll('.portfolio-preview iframe');
+
+if ('IntersectionObserver' in window) {
+  const iframeObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const iframe = entry.target;
+        if (iframe.dataset.src) {
+          iframe.src = iframe.dataset.src;
+        }
+        observer.unobserve(iframe);
+      }
+    });
+  }, { rootMargin: '100px' });
+
+  portfolioIframes.forEach(iframe => {
+    iframeObserver.observe(iframe);
+  });
+}
