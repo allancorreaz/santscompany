@@ -1,4 +1,4 @@
-  /* Reset e Base */
+/* Reset e Base */
 * {
   margin: 0;
   padding: 0;
@@ -36,6 +36,15 @@ body {
   --radius: 16px;
   --radius-lg: 24px;
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* logo header */
+.header-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-right: auto;
 }
 
 /* Loader Premium */
@@ -94,7 +103,8 @@ body {
 /* Header */
 .header {
   background: rgba(15, 23, 42, 0.95);
-  padding: 12px 0;
+  padding: 28px 0;
+  min-height: 90px;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -118,31 +128,57 @@ body {
 }
 
 /* Nome da Empresa no Header */
+/* Controle visual do texto Sants Company e Marketing & Dev no header:
+   - Para alinhar Sants Company em uma única linha e Marketing & Dev embaixo, use flex-direction: column;
+   - Para garantir que Sants Company não quebre, use white-space: nowrap.
+   - Para ajustar espaçamento, edite gap e margin.
+*/
 .company-name {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+}
+.company-main {
+  white-space: nowrap;
 }
 
 .company-main {
   font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--accent);
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.02em;
   text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .company-subtitle {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--accent);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-top: -2px;
   opacity: 0.9;
+}
+@media (max-width: 900px) {
+  .header {
+    padding: 18px 0;
+    min-height: 70px;
+  }
+  .company-main {
+    font-size: 1.3rem;
+  }
+  .company-subtitle {
+    font-size: 0.8rem;
+    margin-top: 0px;
+  }
+  .company-name {
+    min-width: 120px;
+  }
 }
 
 .header-brand:hover .company-main {
@@ -167,6 +203,13 @@ body {
   flex-direction: row;
   gap: 10px;
   margin-right: 30px;
+}
+.header-tag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .header-tag {
@@ -220,7 +263,12 @@ body {
   border-radius: 7px;
   font-size: 1.05rem;
   letter-spacing: 0.01em;
+  white-space: nowrap;
 }
+/* Controle visual do header:
+  - Altura: .header { padding: 28px 0; min-height: 90px; }
+  - Largura: .container { width: 90%; max-width: 1200px; }
+  Edite esses valores para ajustar visualmente. */
 
 .nav-link::after {
   content: '';
@@ -1752,6 +1800,7 @@ body {
 /* Contact Section */
 .section-contact {
   background: #f8f9fc;
+  margin-top: 0px !important;
 }
 
 #contact .container {
@@ -3628,3 +3677,6 @@ footer::after {
 .review-card-full .review-google-icon {
   color: #4285f4;
 }
+/* Diminui a distância para a seção anterior */
+  padding: 40px 0 30px 0;
+  margin-top: 32px;
