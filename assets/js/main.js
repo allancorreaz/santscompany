@@ -1,3 +1,144 @@
+// Carrossel infinito e autoplay suave para o portfolio
+function initPortfolioCarousel() {
+  document.querySelectorAll(".portfolio-grid").forEach((carousel) => {
+    if (carousel.dataset.carouselBound === "true") return;
+    carousel.dataset.carouselBound = "true";
+
+    const originalItems = Array.from(carousel.children);
+    if (!originalItems.length) return;
+
+    carousel.classList.add("portfolio-carousel");
+
+    let autoplayPaused = false;
+    let animationFrameId = 0;
+    let lastTimestamp = 0;
+    let originalTrackWidth = 0;
+    let resumeTimeoutId = 0;
+    let resizeTimeoutId = 0;
+
+    function getItemWidth() {
+      const viewportWidth = window.innerWidth;
+
+      if (viewportWidth < 500) return "85vw";
+      if (viewportWidth < 900) return "60vw";
+      return "400px";
+    }
+
+    function applyItemWidths() {
+      const width = getItemWidth();
+
+      Array.from(carousel.children).forEach((item) => {
+        item.style.flex = `0 0 ${width}`;
+        item.style.minWidth = width;
+        item.style.maxWidth = width;
+        item.style.scrollSnapAlign = "center";
+      });
+    }
+
+    function clearClones() {
+      carousel.querySelectorAll("[data-clone='true']").forEach((clone) => clone.remove());
+    }
+
+    function measureOriginalTrackWidth() {
+      const firstItem = originalItems[0];
+      const lastItem = originalItems[originalItems.length - 1];
+      if (!firstItem || !lastItem) return 0;
+
+      const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
+      return (lastItem.offsetLeft + lastItem.offsetWidth) - firstItem.offsetLeft + gap;
+    }
+
+    function buildLoopTrack() {
+      clearClones();
+      applyItemWidths();
+
+      originalTrackWidth = measureOriginalTrackWidth();
+      if (!originalTrackWidth) return;
+
+      const extraSets = Math.max(1, Math.ceil(carousel.clientWidth / originalTrackWidth));
+
+      for (let copyIndex = 0; copyIndex < extraSets; copyIndex += 1) {
+        originalItems.forEach((item) => {
+          const clone = item.cloneNode(true);
+          clone.dataset.clone = "true";
+          carousel.appendChild(clone);
+        });
+      }
+
+      applyItemWidths();
+      originalTrackWidth = measureOriginalTrackWidth();
+      carousel.scrollLeft = carousel.scrollLeft % originalTrackWidth;
+    }
+
+    function getScrollSpeed() {
+      return window.innerWidth <= 768 ? 18 : 24;
+    }
+
+    function pauseAutoplay() {
+      autoplayPaused = true;
+      window.clearTimeout(resumeTimeoutId);
+    }
+
+    function resumeAutoplay(delay = 0) {
+      window.clearTimeout(resumeTimeoutId);
+      resumeTimeoutId = window.setTimeout(() => {
+        autoplayPaused = false;
+      }, delay);
+    }
+
+    function animate(timestamp) {
+      if (!lastTimestamp) {
+        lastTimestamp = timestamp;
+      }
+
+      const delta = Math.min(timestamp - lastTimestamp, 48);
+      lastTimestamp = timestamp;
+
+      if (!autoplayPaused && !document.hidden && originalTrackWidth > 0) {
+        carousel.scrollLeft += (getScrollSpeed() * delta) / 1000;
+
+        if (carousel.scrollLeft >= originalTrackWidth) {
+          carousel.scrollLeft -= originalTrackWidth;
+        }
+      }
+
+      animationFrameId = window.requestAnimationFrame(animate);
+    }
+
+    function handleResize() {
+      window.clearTimeout(resizeTimeoutId);
+      resizeTimeoutId = window.setTimeout(() => {
+        buildLoopTrack();
+        lastTimestamp = 0;
+      }, 120);
+    }
+
+    buildLoopTrack();
+
+    carousel.addEventListener("mouseenter", pauseAutoplay);
+    carousel.addEventListener("mouseleave", () => resumeAutoplay());
+    carousel.addEventListener("touchstart", pauseAutoplay, { passive: true });
+    carousel.addEventListener("touchend", () => resumeAutoplay(1800), { passive: true });
+    carousel.addEventListener("pointerdown", pauseAutoplay);
+    carousel.addEventListener("pointerup", () => resumeAutoplay(1800));
+    carousel.addEventListener("wheel", () => {
+      pauseAutoplay();
+      resumeAutoplay(1800);
+    }, { passive: true });
+    carousel.addEventListener("focusin", pauseAutoplay);
+    carousel.addEventListener("focusout", () => resumeAutoplay(1200));
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        lastTimestamp = 0;
+      }
+    });
+
+    animationFrameId = window.requestAnimationFrame(animate);
+    carousel.dataset.carouselFrame = String(animationFrameId);
+  });
+}
+
 function initHero() {
   document.querySelector(".hero .container")?.classList.add("hero-visible");
 }
@@ -7,15 +148,23 @@ function initMenu() {
   const nav = document.querySelector(".nav");
   if (!menuToggle || !nav || menuToggle.dataset.bound === "true") return;
 
+  if (!nav.id) {
+    nav.id = "siteNav";
+  }
+
   menuToggle.dataset.bound = "true";
   menuToggle.addEventListener("click", () => {
-    nav.classList.toggle("active");
+    const isActive = nav.classList.toggle("active");
+    menuToggle.setAttribute("aria-expanded", String(isActive));
   });
 
   document.querySelectorAll(".nav-link, .nav-cta").forEach((link) => {
     if (link.dataset.bound === "true") return;
     link.dataset.bound = "true";
-    link.addEventListener("click", () => nav.classList.remove("active"));
+    link.addEventListener("click", () => {
+      nav.classList.remove("active");
+      menuToggle.setAttribute("aria-expanded", "false");
+    });
   });
 }
 
@@ -277,6 +426,7 @@ function initSite() {
   initCounters();
   initContactForms();
   initFloatingButtons();
+  initPortfolioCarousel();
 }
 
 document.addEventListener("DOMContentLoaded", initSite);

@@ -1,20 +1,6 @@
 <header class="header">
   <div class="container nav-container">
     <a href="{{BASE_PATH}}index.html" class="header-brand" aria-label="Página inicial">
-      <span class="brand-logo-wrap">
-        <!-- Melhor formato para a logo:
-             - SVG com viewBox recortado no conteúdo real
-             - ou PNG transparente horizontal em 1200x500 px -->
-        <img
-          src="{{BASE_PATH}}assets/images/branding/logo.svg"
-          alt="Logo da Sants Company"
-          class="brand-logo header-logo-img"
-          width="104"
-          height="42"
-          loading="eager"
-          decoding="async"
-        >
-      </span>
       <div class="company-name">
         <span class="company-main">Sants Company</span>
         <span class="company-subtitle">Marketing & Dev</span>
@@ -28,7 +14,7 @@
       </div>
     </div>
 
-    <nav class="nav" aria-label="Navegação principal">
+    <nav class="nav" id="siteNav" aria-label="Navegação principal">
       <a href="{{BASE_PATH}}index.html" class="nav-link" data-nav="home">Home</a>
       <a href="{{BASE_PATH}}pages/sobre.html" class="nav-link" data-nav="sobre">Sobre Nós</a>
       <a href="{{BASE_PATH}}pages/servicos.html" class="nav-link" data-nav="servicos">Serviços</a>
@@ -39,7 +25,7 @@
       </a>
     </nav>
 
-    <button class="menu-mobile" id="menuToggle" aria-label="Abrir menu">
+    <button class="menu-mobile" id="menuToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="siteNav">
       <span class="hamburger-line"></span>
       <span class="hamburger-line"></span>
       <span class="hamburger-line"></span>
