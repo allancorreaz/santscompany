@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog | Sants Company</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -14,8 +17,11 @@
   <main>
     <section class="blog-section">
       <div class="container">
-        <h1 class="blog-title">Blog da Sants Company</h1>
-        <p class="blog-intro">Conteúdos sobre presença digital, desenvolvimento web, marketing e estruturação de canais para pequenas e médias empresas.</p>
+        <div class="blog-page-intro">
+          <p class="section-eyebrow">Conteúdo</p>
+          <h1 class="blog-title">Blog da Sants Company</h1>
+          <p class="blog-intro">Um espaço para publicar conteúdos institucionais, técnicos e comerciais sobre sites, desenvolvimento, SEO, tráfego pago, orgânico e estrutura digital pensada para atrair clientes.</p>
+        </div>
         <div id="blogList" class="blog-list"></div>
       </div>
     </section>
@@ -24,44 +30,7 @@
   <div class="global-footer"></div>
 
   <script src="../assets/js/components.js"></script>
-  <script src="../js/script.js"></script>
-  <script>
-    fetch("posts.json")
-      .then((response) => response.json())
-      .then((posts) => {
-        const blogList = document.getElementById("blogList");
-        if (!blogList || !posts.length) return;
-
-        const [featuredPost, ...secondaryPosts] = posts;
-
-        blogList.innerHTML = `
-          <a href="./post.html?id=${featuredPost.id}" class="blog-featured-card">
-            <img src="${featuredPost.banner}" alt="${featuredPost.title}" class="blog-featured-img" loading="lazy">
-            <div class="blog-featured-content">
-              <div class="blog-meta">${featuredPost.date} • ${featuredPost.category} • ${featuredPost.readingTime}</div>
-              <h2>${featuredPost.title}</h2>
-              <p>${featuredPost.summary}</p>
-              <span class="blog-card-readmore">Ler post completo</span>
-            </div>
-          </a>
-          <div class="blog-cards">
-            ${secondaryPosts.map((post) => `
-              <a href="./post.html?id=${post.id}" class="blog-card">
-                <img src="${post.banner}" alt="${post.title}" class="blog-card-img" loading="lazy">
-                <div class="blog-card-content">
-                  <div class="blog-card-meta">${post.date} • ${post.category}</div>
-                  <div class="blog-card-title">${post.title}</div>
-                  <div class="blog-card-excerpt">${post.summary}</div>
-                  <span class="blog-card-readmore">Ler mais</span>
-                </div>
-              </a>
-            `).join("")}
-          </div>
-        `;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  </script>
+  <script src="../assets/js/main.js"></script>
+  <script src="../assets/js/blog-list.js"></script>
 </body>
 </html>

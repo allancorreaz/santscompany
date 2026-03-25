@@ -1,83 +1,52 @@
-# 🚀 Sants Company - Landing Page
+# Sants Company
 
-Landing page profissional da Sants Company com formulário de contato integrado via Zoho Mail.
+Site institucional com blog, formulários de contato em PHP e componentes globais.
 
-## 📁 Estrutura do Projeto
+## Estrutura
 
-```
-├── index.html          # Página principal
-├── config.php          # Configurações gerais
-├── credentials-local.php  # Credenciais SMTP (criptografado)
-├── send.php            # Backend do formulário
-├── setup-security.php  # Configurador de senha (APAGAR após uso)
-├── .htaccess           # Segurança Apache
-├── composer.json       # Dependências PHP
-├── css/
-│   └── style.css       # Estilos
-├── js/
-│   └── script.js       # JavaScript
-├── img/
-│   └── logo.png        # Logo e imagens
-└── vendor/             # Dependências (gerado pelo composer)
-```
-
-## ⚙️ Tecnologias
-
-- **Frontend:** HTML5, CSS3, JavaScript
-- **Backend:** PHP 7.4+
-- **Email:** PHPMailer + Zoho SMTP
-- **Segurança:** hCaptcha + Criptografia AES-256
-
-## 🔧 Configuração Inicial
-
-### 1. Instalar Dependências PHP
-```bash
-composer install
+```text
+.
+|-- index.html
+|-- pages/
+|-- blog/
+|-- components/
+|-- assets/
+|   |-- css/
+|   |-- js/
+|   `-- images/
+|-- data/
+|   `-- blog/
+|-- server/
+|   |-- contact.php
+|   |-- mail-config.php
+|   |-- credentials-local.example.php
+|   |-- deploy-config.example.php
+|   `-- tools/
+|-- scripts/
+|   `-- setup-security.php
+|-- composer.json
+|-- .htaccess
+|-- send.php
+|-- config.php
+`-- deploy.php
 ```
 
-### 2. Configurar Senha do Email
-Execute o configurador:
-```bash
-php setup-security.php
-```
-Ou acesse `https://seudominio.com/setup-security.php` no navegador.
+## Segurança
 
-### 3. Configurar hCaptcha (Produção)
-1. Crie conta em [hcaptcha.com](https://www.hcaptcha.com)
-2. Adicione seu domínio
-3. Substitua as chaves:
-   - **Site Key** em `index.html` (linha do data-sitekey)
-   - **Secret Key** em `send.php` (variável $secretKey)
+- Não suba `server/credentials-local.php`.
+- Não suba `server/deploy-config.local.php`.
+- O segredo do webhook de deploy não fica mais hardcoded no repositório.
+- O `deploy.php` da raiz é apenas um wrapper para o handler real em `server/tools/`.
+- O `setup-security.php` da raiz responde com `403`; o configurador real fica em `scripts/setup-security.php`.
 
-## 📧 Configuração SMTP (Zoho)
+## Configuração local
 
-As credenciais estão configuradas para:
-- **Email:** contato@santscompany.com
-- **Servidor:** smtp.zoho.com
-- **Porta:** 587 (TLS)
+1. Copie:
+   - `server/credentials-local.example.php` para `server/credentials-local.php`
+   - `server/deploy-config.example.php` para `server/deploy-config.local.php`
+2. Preencha os valores reais apenas nos arquivos locais.
+3. Instale dependências com `composer install` se quiser usar PHPMailer.
 
-## 🛡️ Segurança
+## Observação importante
 
-- Senha SMTP criptografada com AES-256-CBC
-- Arquivos sensíveis bloqueados via .htaccess
-- Verificação anti-robô com hCaptcha
-- Validação de dados no frontend e backend
-
-## 🌐 Deploy (Hostinger)
-
-1. Acesse hPanel da Hostinger
-2. Vá em **Gerenciador de Arquivos** ou use FTP
-3. Envie todos os arquivos para `public_html/`
-4. Configure a senha via `setup-security.php`
-5. Instale dependências via Terminal SSH: `composer install`
-6. **DELETE** o arquivo `setup-security.php` após configurar
-
-## 📞 Contato
-
-- **Email:** contato@santscompany.com
-- **WhatsApp:** +55 21 97907-5762
-- **Site:** https://www.santscompany.com
-
----
-
-© 2026 Sants Company - Todos os direitos reservados.
+O `site key` do reCAPTCHA aparece no frontend por natureza e isso é esperado. O que precisa permanecer privado é o `RECAPTCHA_SECRET`, que agora deve ficar somente em `server/credentials-local.php`.

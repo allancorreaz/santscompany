@@ -1,5 +1,8 @@
 # Arquivos com suas credenciais (NUNCA fazer commit)
 credentials-local.php
+*.local.php
+server/credentials-local.php
+server/deploy-config.local.php
 
 # PHPMailer
 vendor/
@@ -22,3 +25,11 @@ teste-email.html
 
 # Documentação sensível  
 README-EMAIL.md
+
+# Segurança extra: configs e credenciais
+server/mail-config.php
+public/credentials/
+public/config/
+.env
+.env.local
+

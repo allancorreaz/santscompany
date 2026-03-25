@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serviços | Sants Company</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit" async defer></script>
+</head>
+<body data-page="servicos">
+  <div class="global-header"></div>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="section-eyebrow reveal">Serviços</p>
+        <h1 class="section-title reveal">Estruturamos presença digital com foco em clareza, confiança e geração de oportunidade.</h1>
+        <p class="section-subtitle reveal">Da criação do site à leitura da mensagem comercial, o objetivo é construir uma presença mais profissional e mais preparada para crescer.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container service-detail-grid">
+        <article class="service-detail-card reveal" id="criacao-sites">
+          <i class="fas fa-code icon-card"></i>
+          <h3>Criação de Sites</h3>
+          <p>Páginas institucionais, landing pages e estruturas prontas para evoluir sem refazer tudo depois.</p>
+          <ul>
+            <li>Arquitetura de páginas</li>
+            <li>Design responsivo</li>
+            <li>Estrutura pronta para expansão</li>
+          </ul>
+        </article>
+
+        <article class="service-detail-card reveal" id="trafego-pago">
+          <i class="fas fa-bullhorn icon-card"></i>
+          <h3>Tráfego Pago</h3>
+          <p>Campanhas com objetivo claro, leitura de dados e foco em custo por oportunidade mais saudável.</p>
+          <ul>
+            <li>Planejamento por oferta</li>
+            <li>Configuração de campanhas</li>
+            <li>Otimização contínua</li>
+          </ul>
+        </article>
+
+        <article class="service-detail-card reveal" id="conteudo-estrategico">
+          <i class="fas fa-search icon-card"></i>
+          <h3>Conteúdo Estratégico</h3>
+          <p>Conteúdos que ajudam a educar o cliente, reforçar autoridade e preparar a conversão.</p>
+          <ul>
+            <li>Pautas e calendário</li>
+            <li>Conteúdo para blog e redes</li>
+            <li>Integração com SEO</li>
+          </ul>
+        </article>
+
+        <article class="service-detail-card reveal" id="marketing-digital">
+          <i class="fas fa-chart-line icon-card"></i>
+          <h3>Marketing Digital</h3>
+          <p>Definição de prioridades, mensagem e canais para a presença digital funcionar como uma operação mais coerente.</p>
+          <ul>
+            <li>Diagnóstico do posicionamento</li>
+            <li>Planejamento por etapa</li>
+            <li>Foco em conversão</li>
+          </ul>
+        </article>
+
+        <article class="service-detail-card reveal" id="design-profissional">
+          <i class="fas fa-palette icon-card"></i>
+          <h3>Design Profissional</h3>
+          <p>Interfaces, layouts e materiais que aumentam percepção de valor e deixam a comunicação mais sólida.</p>
+          <ul>
+            <li>Refino visual</li>
+            <li>Layouts de páginas</li>
+            <li>Peças de apoio comercial</li>
+          </ul>
+        </article>
+
+        <article class="service-detail-card reveal" id="desenvolvimento-web">
+          <i class="fas fa-cogs icon-card"></i>
+          <h3>Desenvolvimento Web</h3>
+          <p>Implementações sob medida, ajustes estruturais e melhorias técnicas para o projeto evoluir bem.</p>
+          <ul>
+            <li>Páginas customizadas</li>
+            <li>Integrações e ajustes</li>
+            <li>Melhorias de performance</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container contact-page-grid">
+        <aside class="content-card reveal">
+          <h3>Quer receber uma proposta?</h3>
+          <p>Você pode nos enviar o cenário atual, o objetivo do projeto e quais serviços fazem mais sentido para o momento da empresa.</p>
+          <div class="contact-list">
+            <div class="contact-item"><i class="fas fa-phone"></i><a href="tel:+5521979075762">+55 21 97907-5762</a></div>
+            <div class="contact-item"><i class="fas fa-envelope"></i><a href="mailto:contato@santscompany.com">contato@santscompany.com</a></div>
+            <div class="contact-item"><i class="fab fa-whatsapp"></i><a href="https://wa.me/5521979075762" target="_blank" rel="noopener">Falar no WhatsApp</a></div>
+          </div>
+        </aside>
+
+        <div class="content-card reveal">
+          <form class="contact-form" method="POST" action="../server/contact.php">
+            <input type="text" name="name" placeholder="Seu nome" required>
+            <input type="email" name="email" placeholder="Seu e-mail" required>
+            <input type="tel" name="phone" placeholder="Telefone / WhatsApp">
+            <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <textarea name="message" placeholder="Quais serviços você precisa neste momento?" required></textarea>
+            <div class="g-recaptcha" data-sitekey="6LeFFIEsAAAAAEGyy35ZhMEXIGj-OQAlhm_EYoCd" data-theme="light"></div>
+            <button type="submit" class="btn-primary btn-submit">
+              <i class="fas fa-paper-plane"></i> Solicitar contato
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="global-footer"></div>
+
+  <script src="../assets/js/components.js"></script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sants Company | Marketing e Desenvolvimento Web</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- reCAPTCHA v2 - Proteção anti-robô Google -->
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit" async defer></script>
 </head>
 <body data-page="home">
 
-  <div class="loader">Carregando...</div>
   <div class="global-header"></div>
 
   <section class="hero">
@@ -249,8 +250,8 @@
 
         <!-- Projeto 2 - Ocean Pools FL -->
         <div class="portfolio-item reveal">
-          <div class="portfolio-preview">
-            <iframe src="https://www.oceanpoolsfl.com" loading="lazy" title="Ocean Pools FL Preview"></iframe>
+          <div class="portfolio-preview portfolio-preview-image">
+            <img src="https://image.thum.io/get/width/600/crop/800/https://www.oceanpoolsfl.com" alt="Ocean Pools FL Preview" loading="lazy" decoding="async">
             <div class="portfolio-overlay">
               <a href="https://www.oceanpoolsfl.com" target="_blank" class="portfolio-link">
                 <i class="fas fa-external-link-alt"></i> Visitar Site
@@ -271,8 +272,8 @@
 
         <!-- Projeto 3 - Florida Pool Plastering -->
         <div class="portfolio-item reveal">
-          <div class="portfolio-preview">
-            <iframe src="https://www.floridapoolplastering.com" loading="lazy" title="Florida Pool Plastering Preview"></iframe>
+          <div class="portfolio-preview portfolio-preview-image">
+            <img src="https://image.thum.io/get/width/600/crop/800/https://www.floridapoolplastering.com" alt="Florida Pool Plastering Preview" loading="lazy" decoding="async">
             <div class="portfolio-overlay">
               <a href="https://www.floridapoolplastering.com" target="_blank" class="portfolio-link">
                 <i class="fas fa-external-link-alt"></i> Visitar Site
@@ -293,8 +294,8 @@
 
         <!-- Projeto 4 - Florida Pool Plastering Builder -->
         <div class="portfolio-item reveal">
-          <div class="portfolio-preview">
-            <iframe src="https://www.floridapoolplastering.com/builder" loading="lazy" title="Florida Pool Plastering Builder Preview"></iframe>
+          <div class="portfolio-preview portfolio-preview-image">
+            <img src="https://image.thum.io/get/width/600/crop/800/https://www.floridapoolplastering.com/builder" alt="Florida Pool Plastering Builder Preview" loading="lazy" decoding="async">
             <div class="portfolio-overlay">
               <a href="https://www.floridapoolplastering.com/builder" target="_blank" class="portfolio-link">
                 <i class="fas fa-external-link-alt"></i> Visitar Site
@@ -315,8 +316,8 @@
 
         <!-- Projeto 5 - Casa Sol Project -->
         <div class="portfolio-item reveal">
-          <div class="portfolio-preview">
-            <iframe src="https://www.casasolproject.com" loading="lazy" title="Casa Sol Project Preview"></iframe>
+          <div class="portfolio-preview portfolio-preview-image">
+            <img src="https://image.thum.io/get/width/600/crop/800/https://www.casasolproject.com" alt="Casa Sol Project Preview" loading="lazy" decoding="async">
             <div class="portfolio-overlay">
               <a href="https://www.casasolproject.com" target="_blank" class="portfolio-link">
                 <i class="fas fa-external-link-alt"></i> Visitar Site
@@ -366,71 +367,6 @@
       </div>
     </div>
   </section>
-
-  <section id="about" class="section">
-    <div class="container">
-      <p class="section-eyebrow reveal">Quem somos</p>
-      <h2 class="section-title reveal">Sobre a Sants Company</h2>
-      <p class="section-subtitle reveal">Especialistas em transformar ideias em resultados digitais</p>
-
-      <div class="about-content">
-        <div class="about-text reveal">
-          <p>
-            A <strong>Sants Company</strong> é uma agência digital especializada em criar soluções que realmente 
-            <strong>geram resultados</strong>. Combinamos desenvolvimento web de alta qualidade com estratégias de 
-            marketing comprovadas para impulsionar negócios de todos os tamanhos.
-          </p>
-          <p>
-            Nossa missão é simples: <strong>transformar sua presença digital em uma máquina de vendas</strong>. 
-            Trabalhamos com transparência total, contratos formais e foco absoluto na satisfação do cliente.
-          </p>
-          <div class="about-highlights">
-            <div class="highlight-item">
-              <i class="fas fa-rocket"></i>
-              <span><strong>Resultados em 30 dias:</strong> ROI positivo desde o primeiro mês</span>
-            </div>
-            <div class="highlight-item">
-              <i class="fas fa-shield-alt"></i>
-              <span><strong>Garantia total:</strong> Nota fiscal e contratos transparentes</span>
-            </div>
-            <div class="highlight-item">
-              <i class="fas fa-users"></i>
-              <span><strong>Equipe dedicada:</strong> Acompanhamento personalizado do início ao fim</span>
-            </div>
-            <div class="highlight-item">
-              <i class="fas fa-chart-line"></i>
-              <span><strong>Tecnologia de ponta:</strong> Sites modernos e campanhas otimizadas</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="about-stats reveal">
-          <div class="stat-item">
-            <div class="stat-icon">
-              <i class="fas fa-percentage"></i>
-            </div>
-            <h3>98%</h3>
-            <p>Taxa de Satisfação</p>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">
-              <i class="fas fa-star"></i>
-            </div>
-            <h3>5.0</h3>
-            <p>Avaliação Média</p>
-          </div>
-          <div class="stat-item">
-            <div class="stat-icon">
-              <i class="fas fa-trophy"></i>
-            </div>
-            <h3>6+</h3>
-            <p>Projetos de Sucesso</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Seção de Depoimentos Originais - TEMPORARIAMENTE OCULTA -->
   <!-- 
   <section class="section testimonials">
@@ -628,15 +564,14 @@
       <p class="section-subtitle reveal">Respondemos em até 24h em dias úteis</p>
 
       <div class="contact-wrapper">
-        <form class="contact-form reveal" id="contactForm" method="POST">
+        <form class="contact-form reveal" id="contactForm" method="POST" action="./server/contact.php">
           <input type="text" name="name" placeholder="Seu nome" required>
           <input type="email" name="email" placeholder="Seu e-mail" required>
           <input type="tel" name="phone" placeholder="Telefone / WhatsApp">
+          <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
           <textarea name="message" placeholder="Conte sobre seu projeto ou objetivo..." required></textarea>
-          
-          <!-- reCAPTCHA v2 - Verificação anti-robô Google -->
           <div class="g-recaptcha" data-sitekey="6LeFFIEsAAAAAEGyy35ZhMEXIGj-OQAlhm_EYoCd" data-theme="light"></div>
-          
+
           <button type="submit" class="btn-primary btn-submit" id="submitBtn">
             <i class="fas fa-paper-plane"></i> Enviar mensagem
           </button>
@@ -678,20 +613,11 @@
 
   <div class="global-footer"></div>
 
-  <!-- Botões Flutuantes Mobile -->
-  <div class="floating-buttons">
-    <a href="https://wa.me/5521979075762" target="_blank" class="floating-btn floating-whatsapp" title="WhatsApp">
-      <i class="fab fa-whatsapp"></i>
-    </a>
-    <a href="mailto:contato@santscompany.com" class="floating-btn floating-email" title="Email">
-      <i class="fas fa-envelope"></i>
-    </a>
-  </div>
-
   <script src="assets/js/components.js"></script>
-  <script src="js/script.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
+
 
 
 
