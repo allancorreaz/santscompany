@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -10,47 +10,10 @@
   <!-- reCAPTCHA v2 - Proteção anti-robô Google -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-<body>
+<body data-page="home">
 
   <div class="loader">Carregando...</div>
-  <header class="header">
-    <div class="container nav-container">
-      <a href="#" class="header-brand">
-        <!-- Controle visual: Para ajustar altura/largura do header, edite .header e .container no style.css -->
-        <!-- Controle visual: Para ajustar altura/largura do header, edite .header e .container no style.css -->
-        <!-- Sants Company em uma linha, Marketing & Dev embaixo -->
-        <!-- Sants Company em uma única linha, Marketing & Dev embaixo. Para ajustar visualmente, edite .company-name no CSS -->
-        <div class="company-name">
-          <span class="company-main">Sants Company</span>
-          <span class="company-subtitle">Marketing & Dev</span>
-        </div>
-      </a>
-
-      <div class="header-left">
-        <div class="header-info">
-          <!-- Para manter os textos em linha, não use <br> aqui -->
-          <span class="header-tag"><i class="fas fa-briefcase"></i> +6 Projetos</span>
-          <span class="header-tag"><i class="fas fa-star"></i> 98% Satisfação</span>
-        </div>
-      </div>
-
-      <nav class="nav">
-        <a href="#services" class="nav-link">Serviços</a>
-        <a href="#portfolio" class="nav-link">Portfólio</a>
-        <a href="#about" class="nav-link">Sobre Nós</a>
-        <a href="#contact" class="nav-link">Contato</a>
-        <a href="https://wa.me/5521979075762" target="_blank" class="nav-cta">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-      </nav>
-
-      <button class="menu-mobile" id="menuToggle">
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-        <span class="hamburger-line"></span>
-      </button>
-    </div>
-  </header>
+  <div class="global-header"></div>
 
   <section class="hero">
     <div class="container">
@@ -713,69 +676,7 @@
     </div>
   </section>
 
-  <footer>
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <div class="footer-company-name">
-              <span class="footer-company-main">Sants Company</span>
-              <span class="footer-company-subtitle">Marketing & Dev</span>
-          </div>
-          <p>Transformando ideias em resultados digitais com criatividade e tecnologia de ponta.</p>
-          <div class="footer-badges">
-            <span class="footer-badge">⭐ 98% Satisfação</span>
-            <span class="footer-badge">🚀 +6 Projetos</span>
-          </div>
-        </div>
-        <div class="footer-links">
-          <h4>Serviços</h4>
-          <a href="#services">Criação de Sites</a>
-          <a href="#services">Tráfego Pago</a>
-          <a href="#services">Conteúdo Estratégico</a>
-          <a href="#services">Marketing Digital</a>
-          <a href="#services">Desenvolvimento Web</a>
-        </div>
-        <div class="footer-links">
-          <h4>Empresa</h4>
-          <a href="#about">Sobre Nós</a>
-          <a href="#contact">Contato</a>
-          <a href="mailto:contato@santscompany.com">Email</a>
-          <a href="https://wa.me/5521979075762" target="_blank">WhatsApp</a>
-        </div>
-        <div class="footer-social">
-          <h4>Redes Sociais</h4>
-          <div class="footer-social-links">
-            <a href="https://instagram.com/santsccompany" target="_blank" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-              <a href="https://wa.me/5521979075762" target="_blank" class="social-link" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-            <a href="mailto:contato@santscompany.com" class="social-link" aria-label="Email"><i class="fas fa-envelope"></i></a>
-            <!-- FACEBOOK: Remova os comentários e adicione o link quando necessário -->
-            <!-- <a href="SEU_LINK_FACEBOOK_AQUI" target="_blank" class="social-link" aria-label="Facebook"><i class="fab fa-facebook"></i></a> -->
-            <!-- TIKTOK: Remova os comentários e adicione o link quando necessário -->
-            <!-- <a href="SEU_LINK_TIKTOK_AQUI" target="_blank" class="social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a> -->
-          </div>
-        </div>
-        <div class="footer-contact">
-          <h4>Contato</h4>
-          <div class="contact-item"><i class="fas fa-envelope"></i> <a href="mailto:contato@santscompany.com">contato@santscompany.com</a></div>
-          <div class="contact-item"><i class="fab fa-whatsapp"></i> <a href="https://wa.me/5521979075762" target="_blank">+55 21 97907-5762</a></div>
-          <div class="contact-item"><i class="fas fa-map-marker-alt"></i> Rio de Janeiro, RJ</div>
-          <div class="contact-item"><i class="fas fa-clock"></i> Atendimento: Seg-Sex 9h-18h</div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div class="footer-bottom-content">
-          <div class="footer-legal">
-            <a href="#">Política de Privacidade</a>
-            <a href="#">Termos de Uso</a>
-            <a href="#">Cookies</a>
-          </div>
-          <div class="footer-copyright">
-            &copy; 2026 Sants Company - Todos os direitos reservados.
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <div class="global-footer"></div>
 
   <!-- Botões Flutuantes Mobile -->
   <div class="floating-buttons">
@@ -787,6 +688,10 @@
     </a>
   </div>
 
+  <script src="assets/js/components.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
+
+
+

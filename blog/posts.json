@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "title": "Como estruturar um site institucional que realmente gera contato",
+    "banner": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "25/03/2026",
+    "category": "Sites Institucionais",
+    "readingTime": "4 min",
+    "summary": "O site institucional precisa apresentar a empresa com clareza, reforçar confiança e encurtar o caminho até o contato.",
+    "content": "<h2>Comece pela estrutura</h2><p>Antes de pensar em animações ou efeitos, um site institucional precisa responder perguntas básicas: quem é a empresa, o que ela oferece, para quem ela trabalha e qual é o próximo passo esperado do visitante.</p><h2>Páginas que resolvem o essencial</h2><ul><li>Home com posicionamento claro</li><li>Sobre nós com contexto e credibilidade</li><li>Serviços com escopo e benefício</li><li>Contato com CTA direto</li><li>Blog para fortalecer presença orgânica</li></ul><h2>O que faz diferença</h2><p>Clareza no texto, navegação simples, velocidade e consistência visual costumam gerar mais resultado do que complexidade desnecessária. A estrutura certa facilita manutenção e expansão.</p>",
+    "sources": [
+      "https://web.dev/learn/design/",
+      "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Blog corporativo: quando vale a pena criar e como começar sem exagero",
+    "banner": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "24/03/2026",
+    "category": "Conteúdo",
+    "readingTime": "5 min",
+    "summary": "Um blog funciona melhor quando nasce com uma estrutura simples, temas bem definidos e rotina possível de manter.",
+    "content": "<h2>Nem todo blog precisa nascer grande</h2><p>Para a maioria das empresas, começar com poucos artigos bem pensados é melhor do que publicar dezenas de textos genéricos. O objetivo inicial é organizar temas, responder dúvidas reais e criar consistência.</p><h2>Três frentes para começar</h2><ul><li>Perguntas frequentes de clientes</li><li>Temas ligados aos serviços principais</li><li>Conteúdos que ajudem o visitante a tomar decisão</li></ul><h2>Pense em escala desde a base</h2><p>Mesmo com poucos posts, vale estruturar o blog com dados organizados, layout padronizado e páginas prontas para crescer sem retrabalho depois.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
+      "https://moz.com/learn/seo/what-is-seo"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "O que revisar antes de subir uma nova versão do site",
+    "banner": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "23/03/2026",
+    "category": "Processo",
+    "readingTime": "3 min",
+    "summary": "Fechar navegação, consistência visual e assets compartilhados antes do deploy evita retrabalho e revisões confusas.",
+    "content": "<h2>Revise a base antes do detalhe</h2><p>Quando a estrutura compartilhada ainda está mudando, cada nova página aumenta o custo da revisão. Por isso, vale primeiro fechar componentes globais, links e estilos reaproveitados.</p><h2>Checklist mínimo</h2><ul><li>Header e footer funcionando em todas as páginas</li><li>Links internos e externos revisados</li><li>Textos sem problema de codificação</li><li>Assets existentes e carregando corretamente</li><li>Conteúdo mínimo publicado com consistência</li></ul><h2>O ganho real</h2><p>Esse cuidado deixa a branch mais coesa, facilita revisão e abre espaço para evoluir o conteúdo em etapas menores depois.</p>",
+    "sources": [
+      "https://web.dev/articles/navigation",
+      "https://css-tricks.com/"
+    ]
+  }
+]

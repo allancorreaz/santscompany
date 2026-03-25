@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post | Sants Company</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page="blog">
+  <div class="global-header"></div>
+
+  <main>
+    <section class="blog-section">
+      <div class="container blog-post-layout">
+        <a href="./index.html" class="blog-card-readmore">← Voltar para o Blog</a>
+        <div id="postContent"></div>
+        <section class="related-posts">
+          <div class="related-title">Leia também</div>
+          <div class="related-list" id="relatedPosts"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="global-footer"></div>
+
+  <script src="../assets/js/components.js"></script>
+  <script src="../js/script.js"></script>
+  <script>
+    function getPostId() {
+      const url = new URL(window.location.href);
+      return url.searchParams.get("id") || "1";
+    }
+
+    fetch("posts.json")
+      .then((response) => response.json())
+      .then((posts) => {
+        const postId = getPostId();
+        const post = posts.find((item) => String(item.id) === postId);
+        const postContent = document.getElementById("postContent");
+        const relatedPosts = document.getElementById("relatedPosts");
+
+        if (!post || !postContent || !relatedPosts) {
+          if (postContent) {
+            postContent.innerHTML = '<div class="content-card"><p>Post não encontrado.</p></div>';
+          }
+          return;
+        }
+
+        postContent.innerHTML = `
+          <article class="blog-post-card">
+            <img src="${post.banner}" class="blog-hero" alt="${post.title}">
+            <div class="blog-post-content">
+              <div class="blog-post-meta">${post.date} • ${post.category} • ${post.readingTime}</div>
+              <h1 class="blog-post-title">${post.title}</h1>
+              <div class="blog-post-body">${post.content}</div>
+              ${post.sources?.length ? `
+                <div class="source-list">
+                  <strong>Fontes recomendadas</strong>
+                  <ul>
+                    ${post.sources.map((source) => `<li><a href="${source}" target="_blank" rel="noopener">${source}</a></li>`).join("")}
+                  </ul>
+                </div>
+              ` : ""}
+            </div>
+          </article>
+        `;
+
+        relatedPosts.innerHTML = posts
+          .filter((item) => String(item.id) !== postId)
+          .slice(0, 3)
+          .map((item) => `
+            <a href="./post.html?id=${item.id}" class="blog-card">
+              <img src="${item.banner}" alt="${item.title}" class="blog-card-img" loading="lazy">
+              <div class="blog-card-content">
+                <div class="blog-card-meta">${item.date} • ${item.category}</div>
+                <div class="blog-card-title">${item.title}</div>
+                <div class="blog-card-excerpt">${item.summary}</div>
+                <span class="blog-card-readmore">Ler mais</span>
+              </div>
+            </a>
+          `).join("");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  </script>
+</body>
+</html>
