@@ -1,9 +1,9 @@
 (function injectGlobalComponents() {
-  const rootPaths = ["/blog/"];
+  const nestedPaths = ["/blog/", "/pages/"];
 
   function getBasePath() {
     const pathname = window.location.pathname.replace(/\\/g, "/");
-    return rootPaths.some((segment) => pathname.includes(segment)) ? "../" : "./";
+    return nestedPaths.some((segment) => pathname.includes(segment)) ? "../" : "./";
   }
 
   function resolveTemplate(html, basePath) {

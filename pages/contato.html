@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fale Conosco | Sants Company</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit" async defer></script>
 </head>
 <body data-page="contato">
   <div class="global-header"></div>
@@ -17,29 +20,30 @@
       <div class="container">
         <p class="section-eyebrow reveal">Contato</p>
         <h1 class="section-title reveal">Vamos entender seu cenário e desenhar o próximo passo digital da sua empresa.</h1>
-        <p class="section-subtitle reveal">Você pode falar com a gente por formulário, e-mail ou WhatsApp. O retorno acontece em até 24h úteis.</p>
+        <p class="section-subtitle reveal">Escolha o canal que fizer mais sentido para você. Se preferir, nos envie uma mensagem rápida pelo formulário e seguimos a conversa por e-mail ou WhatsApp.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container contact-page-grid">
-        <aside class="content-card reveal">
+        <aside class="content-card contact-aside-card reveal">
           <h3>Canais de atendimento</h3>
-          <p>Se preferir, podemos começar por uma conversa rápida no WhatsApp e alinhar o que faz mais sentido para o seu momento.</p>
-          <div class="contact-list">
+          <p>Estamos disponíveis para conversar sobre sites, marketing, conteúdo e evolução da estrutura digital da sua empresa.</p>
+          <div class="contact-list contact-list-strong">
+            <div class="contact-item"><i class="fas fa-phone"></i><a href="tel:+5521979075762">+55 21 97907-5762</a></div>
             <div class="contact-item"><i class="fas fa-envelope"></i><a href="mailto:contato@santscompany.com">contato@santscompany.com</a></div>
-            <div class="contact-item"><i class="fab fa-whatsapp"></i><a href="https://wa.me/5521979075762" target="_blank" rel="noopener">+55 21 97907-5762</a></div>
-            <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>Rio de Janeiro, RJ</span></div>
+            <div class="contact-item"><i class="fab fa-whatsapp"></i><a href="https://wa.me/5521979075762" target="_blank" rel="noopener">Falar agora no WhatsApp</a></div>
             <div class="contact-item"><i class="fas fa-clock"></i><span>Segunda a sexta, das 9h às 18h</span></div>
           </div>
         </aside>
 
         <div class="content-card reveal">
-          <form class="contact-form" id="contactForm" method="POST">
+          <form class="contact-form" id="contactForm" method="POST" action="../server/contact.php">
             <input type="text" name="name" placeholder="Seu nome" required>
             <input type="email" name="email" placeholder="Seu e-mail" required>
             <input type="tel" name="phone" placeholder="Telefone / WhatsApp">
-            <textarea name="message" placeholder="Conte sobre seu projeto ou objetivo..." required></textarea>
+            <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <textarea name="message" placeholder="Conte sobre seu projeto, objetivo ou necessidade atual..." required></textarea>
             <div class="g-recaptcha" data-sitekey="6LeFFIEsAAAAAEGyy35ZhMEXIGj-OQAlhm_EYoCd" data-theme="light"></div>
             <button type="submit" class="btn-primary btn-submit">
               <i class="fas fa-paper-plane"></i> Enviar mensagem
@@ -52,7 +56,7 @@
 
   <div class="global-footer"></div>
 
-  <script src="assets/js/components.js"></script>
-  <script src="js/script.js"></script>
+  <script src="../assets/js/components.js"></script>
+  <script src="../assets/js/main.js"></script>
 </body>
 </html>
