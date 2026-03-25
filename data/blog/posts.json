@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "title": "Como estruturar um site institucional que realmente gera contato",
+    "banner": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "25/03/2026",
+    "category": "Sites Institucionais",
+    "readingTime": "4 min",
+    "summary": "O site institucional precisa apresentar a empresa com clareza, reforçar confiança e encurtar o caminho até o contato.",
+    "content": "<h2>Comece pela estrutura</h2><p>Antes de pensar em animações ou efeitos, um site institucional precisa responder perguntas básicas: quem é a empresa, o que ela oferece, para quem ela trabalha e qual é o próximo passo esperado do visitante.</p><h2>Páginas que resolvem o essencial</h2><ul><li>Home com posicionamento claro</li><li>Sobre nós com contexto e credibilidade</li><li>Serviços com escopo e benefício</li><li>Contato com CTA direto</li><li>Blog para fortalecer presença orgânica</li></ul><blockquote>Quanto mais clara for a estrutura, menor a fricção para o visitante confiar e entrar em contato.</blockquote><h2>O que faz diferença</h2><p>Clareza no texto, navegação simples, velocidade e consistência visual costumam gerar mais resultado do que complexidade desnecessária. A estrutura certa facilita manutenção e expansão.</p>",
+    "sources": [
+      "https://web.dev/learn/design/",
+      "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Blog corporativo: quando vale a pena criar e como começar sem exagero",
+    "banner": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "24/03/2026",
+    "category": "Conteúdo",
+    "readingTime": "5 min",
+    "summary": "Um blog funciona melhor quando nasce com uma estrutura simples, temas bem definidos e rotina possível de manter.",
+    "content": "<h2>Nem todo blog precisa nascer grande</h2><p>Para a maioria das empresas, começar com poucos artigos bem pensados é melhor do que publicar dezenas de textos genéricos. O objetivo inicial é organizar temas, responder dúvidas reais e criar consistência.</p><h2>Três frentes para começar</h2><ul><li>Perguntas frequentes de clientes</li><li>Temas ligados aos serviços principais</li><li>Conteúdos que ajudem o visitante a tomar decisão</li></ul><h2>Pense em escala desde a base</h2><p>Mesmo com poucos posts, vale estruturar o blog com dados organizados, layout padronizado e páginas prontas para crescer sem retrabalho depois.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
+      "https://moz.com/learn/seo/what-is-seo"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "O que revisar antes de subir uma nova versão do site",
+    "banner": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "23/03/2026",
+    "category": "Processo",
+    "readingTime": "3 min",
+    "summary": "Fechar navegação, consistência visual e assets compartilhados antes do deploy evita retrabalho e revisões confusas.",
+    "content": "<h2>Revise a base antes do detalhe</h2><p>Quando a estrutura compartilhada ainda está mudando, cada nova página aumenta o custo da revisão. Por isso, vale primeiro fechar componentes globais, links e estilos reaproveitados.</p><h2>Checklist mínimo</h2><ul><li>Header e footer funcionando em todas as páginas</li><li>Links internos e externos revisados</li><li>Textos sem problema de codificação</li><li>Assets existentes e carregando corretamente</li><li>Conteúdo mínimo publicado com consistência</li></ul><h2>O ganho real</h2><p>Esse cuidado deixa a branch mais coesa, facilita revisão e abre espaço para evoluir o conteúdo em etapas menores depois.</p>",
+    "sources": [
+      "https://web.dev/articles/navigation",
+      "https://css-tricks.com/"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Três sinais de que sua empresa já precisa sair da landing page única",
+    "banner": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "22/03/2026",
+    "category": "Estratégia",
+    "readingTime": "4 min",
+    "summary": "Quando a operação cresce, uma página única começa a limitar clareza, SEO e percepção de valor da marca.",
+    "content": "<h2>Quando a página única deixa de ajudar</h2><p>Landing pages são úteis para ofertas específicas, mas nem sempre sustentam bem uma empresa que já possui vários serviços, casos e públicos. Em algum momento, o visitante precisa de mais contexto para confiar.</p><h2>Três sinais comuns</h2><ul><li>O menu fica apertado ou inexistente</li><li>O visitante não entende claramente cada serviço</li><li>Fica difícil publicar conteúdo e crescer no orgânico</li></ul><h2>O próximo passo</h2><p>Nessa fase, o mais estratégico costuma ser criar uma estrutura institucional enxuta, com home, serviços, sobre, blog e contato organizados em páginas próprias.</p>",
+    "sources": [
+      "https://web.dev/learn/html/",
+      "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Como melhorar a leitura de uma página de contato",
+    "banner": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "21/03/2026",
+    "category": "UX",
+    "readingTime": "3 min",
+    "summary": "Contato bom não é só formulário: é clareza visual, contraste forte e canais rápidos acessíveis no primeiro olhar.",
+    "content": "<h2>O problema mais comum</h2><p>Muitas páginas de contato escondem a informação principal em caixas sem contraste suficiente ou dependem de um único formulário. Isso aumenta fricção e reduz a sensação de confiança.</p><h2>O que ajuda mais</h2><ul><li>Destacar telefone, e-mail e WhatsApp com contraste forte</li><li>Usar títulos claros e objetivos</li><li>Reduzir distrações visuais no bloco de atendimento</li></ul><h2>Resultado esperado</h2><p>Quando os canais ficam visíveis e a interface responde bem no mobile, a página de contato deixa de ser só um encerramento e vira uma parte ativa da conversão.</p>",
+    "sources": [
+      "https://www.nngroup.com/articles/contact-us-page/",
+      "https://web.dev/learn/accessibility/"
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Por que componentes globais economizam tempo em cada nova página",
+    "banner": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "20/03/2026",
+    "category": "Desenvolvimento",
+    "readingTime": "4 min",
+    "summary": "Header, footer e padrões compartilhados reduzem retrabalho e deixam a evolução do site mais previsível.",
+    "content": "<h2>Repetir estrutura custa caro</h2><p>Quando cada página tem seu próprio header, footer e blocos de contato, pequenas mudanças viram retrabalho. Isso aumenta chance de inconsistência e deixa a revisão mais difícil.</p><h2>O ganho do componente global</h2><ul><li>Atualização centralizada</li><li>Navegação consistente</li><li>Menos chance de link quebrado</li><li>Base pronta para expansão</li></ul><h2>Na prática</h2><p>Uma boa base global permite criar páginas novas mais rápido e com menos ruído, porque o sistema visual e estrutural já está definido desde o começo.</p>",
+    "sources": [
+      "https://developer.mozilla.org/en-US/docs/Web/Web_Components",
+      "https://css-tricks.com/"
+    ]
+  },
+  {
+    "id": 7,
+    "title": "SEO para empresas locais: o que realmente ajuda a aparecer no Google",
+    "banner": "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "19/03/2026",
+    "category": "SEO",
+    "readingTime": "5 min",
+    "summary": "SEO local não depende só de palavras-chave: estrutura do site, clareza da página e intenção de busca contam muito.",
+    "content": "<h2>O erro mais comum</h2><p>Muitas empresas tentam crescer no Google pensando apenas em palavras-chave, mas esquecem que o site precisa responder melhor à intenção de busca do cliente.</p><h2>O que ajuda de verdade</h2><ul><li>Páginas específicas por serviço</li><li>Títulos claros e consistentes</li><li>Blog com conteúdos úteis e direcionados</li><li>Contato e localização bem apresentados</li></ul><blockquote>SEO orgânico funciona melhor quando a estrutura do site já está alinhada com a forma como o cliente procura solução.</blockquote><h2>Como isso atrai clientes</h2><p>Quando o conteúdo corresponde à dúvida real do visitante, o site passa a ganhar relevância e confiança ao mesmo tempo.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/fundamentals/seo-starter-guide",
+      "https://moz.com/learn/seo/what-is-seo"
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Tráfego pago para negócios locais: onde muita gente erra logo no começo",
+    "banner": "https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "18/03/2026",
+    "category": "Tráfego Pago",
+    "readingTime": "5 min",
+    "summary": "Campanha boa não começa no anúncio. Ela começa na oferta, na página e na clareza do que será pedido ao visitante.",
+    "content": "<h2>Antes do anúncio, vem a direção</h2><p>É comum investir em mídia paga antes de organizar oferta, página e proposta de valor. O resultado costuma ser clique caro e pouca conversão.</p><h2>Três pontos de partida</h2><ul><li>Oferta simples de entender</li><li>Página com CTA claro</li><li>Métrica definida antes de subir campanha</li></ul><h2>Tráfego pago funciona melhor quando...</h2><p>...o site já transmite segurança e o visitante entende rapidamente qual é o próximo passo. O anúncio atrai, mas a página precisa fechar o raciocínio.</p>",
+    "sources": [
+      "https://support.google.com/google-ads/",
+      "https://neilpatel.com/br/blog/trafego-pago/"
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Orgânico, pago ou os dois? Como decidir o melhor caminho para captar clientes",
+    "banner": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "17/03/2026",
+    "category": "Marketing",
+    "readingTime": "6 min",
+    "summary": "Pago acelera, orgânico consolida. A melhor decisão depende do estágio da empresa e da maturidade da estrutura digital.",
+    "content": "<h2>Não existe resposta única</h2><p>Se a empresa precisa de demanda rápida, o pago costuma ajudar primeiro. Se quer construir presença duradoura e reduzir dependência de mídia, o orgânico precisa entrar na estratégia.</p><h2>Como pensar melhor</h2><ul><li>Pago para acelerar testes e validação</li><li>Orgânico para consolidar autoridade</li><li>SEO e blog para atrair busca qualificada</li></ul><h2>O melhor cenário</h2><p>Na maioria dos casos, o ganho real vem quando os dois trabalham juntos, com um site que suporta bem tanto campanhas quanto crescimento orgânico.</p>",
+    "sources": [
+      "https://web.dev/learn/seo/",
+      "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Desenvolvimento front-end moderno: o que vale priorizar em 2026",
+    "banner": "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?auto=format&fit=crop&w=1200&q=80",
+    "author": "Allan Sants",
+    "date": "16/03/2026",
+    "category": "Desenvolvimento",
+    "readingTime": "6 min",
+    "summary": "Performance, arquitetura simples, acessibilidade e manutenção continuam valendo mais do que excesso de abstração.",
+    "content": "<h2>Nem tudo precisa virar complexidade</h2><p>Em muitos projetos institucionais, o ganho real está em HTML bem estruturado, CSS organizado, JavaScript enxuto e componentes reutilizáveis. Isso costuma entregar mais velocidade e menos atrito na manutenção.</p><h2>O que vale priorizar</h2><ul><li>Estrutura semântica</li><li>Componentes globais consistentes</li><li>Assets organizados</li><li>Menos dependência desnecessária</li></ul><blockquote>Desenvolvimento bom não é só o que impressiona tecnicamente; é o que continua fácil de evoluir daqui a alguns meses.</blockquote><h2>Onde isso ajuda no comercial</h2><p>Um site mais rápido, limpo e confiável melhora experiência, reduz fricção e dá mais base para marketing, SEO e conversão.</p>",
+    "sources": [
+      "https://developer.mozilla.org/en-US/docs/Learn",
+      "https://web.dev/learn/performance/"
+    ]
+  }
+]
