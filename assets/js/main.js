@@ -1,13 +1,13 @@
 // Carrossel infinito e autoplay suave para o portfolio
 function initPortfolioCarousel() {
   document.querySelectorAll(".portfolio-grid").forEach((carousel) => {
-    if (carousel.dataset.carouselBound === "true") return;
-    carousel.dataset.carouselBound = "true";
+    if (carousel.__portfolioController) {
+      carousel.__portfolioController.sync();
+      return;
+    }
 
     const originalItems = Array.from(carousel.children);
     if (!originalItems.length) return;
-
-    carousel.classList.add("portfolio-carousel");
 
     let autoplayPaused = false;
     let animationFrameId = 0;
@@ -15,24 +15,10 @@ function initPortfolioCarousel() {
     let originalTrackWidth = 0;
     let resumeTimeoutId = 0;
     let resizeTimeoutId = 0;
+    let enabled = false;
 
-    function getItemWidth() {
-      const viewportWidth = window.innerWidth;
-
-      if (viewportWidth < 500) return "85vw";
-      if (viewportWidth < 900) return "60vw";
-      return "400px";
-    }
-
-    function applyItemWidths() {
-      const width = getItemWidth();
-
-      Array.from(carousel.children).forEach((item) => {
-        item.style.flex = `0 0 ${width}`;
-        item.style.minWidth = width;
-        item.style.maxWidth = width;
-        item.style.scrollSnapAlign = "center";
-      });
+    function isMobileViewport() {
+      return window.innerWidth <= 768;
     }
 
     function clearClones() {
@@ -50,36 +36,32 @@ function initPortfolioCarousel() {
 
     function buildLoopTrack() {
       clearClones();
-      applyItemWidths();
-
       originalTrackWidth = measureOriginalTrackWidth();
       if (!originalTrackWidth) return;
 
-      const extraSets = Math.max(1, Math.ceil(carousel.clientWidth / originalTrackWidth));
+      const extraSets = Math.max(2, Math.ceil((carousel.clientWidth * 2) / originalTrackWidth));
 
       for (let copyIndex = 0; copyIndex < extraSets; copyIndex += 1) {
         originalItems.forEach((item) => {
           const clone = item.cloneNode(true);
           clone.dataset.clone = "true";
+          clone.setAttribute("aria-hidden", "true");
           carousel.appendChild(clone);
         });
       }
 
-      applyItemWidths();
       originalTrackWidth = measureOriginalTrackWidth();
-      carousel.scrollLeft = carousel.scrollLeft % originalTrackWidth;
-    }
-
-    function getScrollSpeed() {
-      return window.innerWidth <= 768 ? 18 : 24;
+      carousel.scrollLeft = 0;
     }
 
     function pauseAutoplay() {
+      if (!enabled) return;
       autoplayPaused = true;
       window.clearTimeout(resumeTimeoutId);
     }
 
     function resumeAutoplay(delay = 0) {
+      if (!enabled) return;
       window.clearTimeout(resumeTimeoutId);
       resumeTimeoutId = window.setTimeout(() => {
         autoplayPaused = false;
@@ -87,6 +69,8 @@ function initPortfolioCarousel() {
     }
 
     function animate(timestamp) {
+      if (!enabled) return;
+
       if (!lastTimestamp) {
         lastTimestamp = timestamp;
       }
@@ -95,7 +79,7 @@ function initPortfolioCarousel() {
       lastTimestamp = timestamp;
 
       if (!autoplayPaused && !document.hidden && originalTrackWidth > 0) {
-        carousel.scrollLeft += (getScrollSpeed() * delta) / 1000;
+        carousel.scrollLeft += (18 * delta) / 1000;
 
         if (carousel.scrollLeft >= originalTrackWidth) {
           carousel.scrollLeft -= originalTrackWidth;
@@ -105,15 +89,46 @@ function initPortfolioCarousel() {
       animationFrameId = window.requestAnimationFrame(animate);
     }
 
+    function enable() {
+      if (enabled) return;
+      enabled = true;
+      autoplayPaused = false;
+      lastTimestamp = 0;
+      carousel.classList.add("portfolio-carousel");
+      buildLoopTrack();
+      animationFrameId = window.requestAnimationFrame(animate);
+    }
+
+    function disable() {
+      if (!enabled) return;
+      enabled = false;
+      window.cancelAnimationFrame(animationFrameId);
+      window.clearTimeout(resumeTimeoutId);
+      lastTimestamp = 0;
+      originalTrackWidth = 0;
+      clearClones();
+      carousel.classList.remove("portfolio-carousel");
+      carousel.scrollLeft = 0;
+    }
+
+    function sync() {
+      if (isMobileViewport()) {
+        enable();
+      } else {
+        disable();
+      }
+    }
+
     function handleResize() {
       window.clearTimeout(resizeTimeoutId);
       resizeTimeoutId = window.setTimeout(() => {
-        buildLoopTrack();
-        lastTimestamp = 0;
+        sync();
+        if (enabled) {
+          buildLoopTrack();
+          lastTimestamp = 0;
+        }
       }, 120);
     }
-
-    buildLoopTrack();
 
     carousel.addEventListener("mouseenter", pauseAutoplay);
     carousel.addEventListener("mouseleave", () => resumeAutoplay());
@@ -134,8 +149,8 @@ function initPortfolioCarousel() {
       }
     });
 
-    animationFrameId = window.requestAnimationFrame(animate);
-    carousel.dataset.carouselFrame = String(animationFrameId);
+    carousel.__portfolioController = { sync };
+    sync();
   });
 }
 
