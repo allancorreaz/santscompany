@@ -49,11 +49,9 @@ public/config/
 .env
 .env.local
 
-composer.json
 config.php
 deploy.php
 send.php
 setup-security.php
-
 .gitignore
 .htaccess
