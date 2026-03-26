@@ -25,7 +25,6 @@ public/
 scripts/
 server/credentials-local.php
 server/deploy-config.local.php
-server/mail-config.php
 server/contact.php
 server/tools/deploy-webhook.php
 
