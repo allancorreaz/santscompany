@@ -167,19 +167,39 @@ function initMenu() {
     nav.id = "siteNav";
   }
 
+  const closeMenu = () => {
+    nav.classList.remove("active");
+    menuToggle.classList.remove("is-active");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Abrir menu");
+  };
+
   menuToggle.dataset.bound = "true";
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Abrir menu");
   menuToggle.addEventListener("click", () => {
     const isActive = nav.classList.toggle("active");
+    menuToggle.classList.toggle("is-active", isActive);
     menuToggle.setAttribute("aria-expanded", String(isActive));
+    menuToggle.setAttribute("aria-label", isActive ? "Fechar menu" : "Abrir menu");
   });
 
   document.querySelectorAll(".nav-link, .nav-cta").forEach((link) => {
     if (link.dataset.bound === "true") return;
     link.dataset.bound = "true";
-    link.addEventListener("click", () => {
-      nav.classList.remove("active");
-      menuToggle.setAttribute("aria-expanded", "false");
-    });
+    link.addEventListener("click", closeMenu);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!nav.classList.contains("active")) return;
+    if (nav.contains(event.target) || menuToggle.contains(event.target)) return;
+    closeMenu();
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 768) {
+      closeMenu();
+    }
   });
 }
 

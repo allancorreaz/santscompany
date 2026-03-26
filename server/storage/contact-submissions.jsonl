@@ -1,0 +1,1 @@
+{"received_at":"2026-03-26T10:40:00+00:00","name":"Teste","email":"teste@example.com","phone":"21999999999","message":"Mensagem de teste","delivery_fallback":"local_storage","reason":"mail(): Failed to connect to mailserver at \"localhost\" port 25, verify your \"SMTP\" and \"smtp_port\" setting in php.ini or use ini_set()","ip":"127.0.0.1","user_agent":"CodexTest"}

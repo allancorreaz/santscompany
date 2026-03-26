@@ -1,31 +1,66 @@
 <?php
+declare(strict_types=1);
+
+error_reporting(E_ALL);
+ini_set('display_errors', '0');
+ob_start();
+
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Método inválido.']);
+    echo json_encode(['success' => false, 'message' => 'Metodo invalido.'], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
 require_once __DIR__ . '/mail-config.php';
 
+function clear_output_buffer(): void
+{
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+}
+
+function json_success(string $message, array $extra = []): void
+{
+    clear_output_buffer();
+    echo json_encode(array_merge([
+        'success' => true,
+        'message' => $message,
+    ], $extra), JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 function json_error(string $message, int $status = 400): void
 {
+    clear_output_buffer();
     http_response_code($status);
     echo json_encode(['success' => false, 'message' => $message], JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+function has_effective_value(string $value, array $invalidValues = []): bool
+{
+    $trimmed = trim($value);
+    if ($trimmed === '') {
+        return false;
+    }
+
+    return !in_array($trimmed, $invalidValues, true);
 }
 
 function build_html_message(string $name, string $email, string $phone, string $message): string
 {
     $safeName = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
     $safeEmail = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
-    $safePhone = htmlspecialchars($phone ?: 'Não informado', ENT_QUOTES, 'UTF-8');
+    $safePhone = htmlspecialchars($phone !== '' ? $phone : 'Nao informado', ENT_QUOTES, 'UTF-8');
     $safeMessage = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
     $safeIp = htmlspecialchars($_SERVER['REMOTE_ADDR'] ?? 'N/A', ENT_QUOTES, 'UTF-8');
+    $sentAt = date('d/m/Y H:i:s');
 
     return <<<HTML
 <!DOCTYPE html>
@@ -37,7 +72,7 @@ function build_html_message(string $name, string $email, string $phone, string $
   <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:18px;overflow:hidden;border:1px solid #dbe3ef;">
     <div style="padding:28px 32px;background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#ffffff;">
       <p style="margin:0 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;">Novo contato</p>
-      <h1 style="margin:0;font-size:28px;line-height:1.2;">Formulário do site Sants Company</h1>
+      <h1 style="margin:0;font-size:28px;line-height:1.2;">Formulario do site Sants Company</h1>
     </div>
     <div style="padding:28px 32px;">
       <table style="width:100%;border-collapse:collapse;font-size:15px;">
@@ -60,7 +95,7 @@ function build_html_message(string $name, string $email, string $phone, string $
       </div>
     </div>
     <div style="padding:18px 32px;background:#f8fafc;color:#64748b;font-size:13px;border-top:1px solid #e2e8f0;">
-      Enviado em {date('d/m/Y H:i:s')} | IP {$safeIp}
+      Enviado em {$sentAt} | IP {$safeIp}
     </div>
   </div>
 </body>
@@ -68,16 +103,142 @@ function build_html_message(string $name, string $email, string $phone, string $
 HTML;
 }
 
+function build_text_message(string $name, string $email, string $phone, string $message): string
+{
+    $safePhone = $phone !== '' ? $phone : 'Nao informado';
+
+    return "NOVO CONTATO - SANTS COMPANY\n\n"
+        . "Nome: {$name}\n"
+        . "Email: {$email}\n"
+        . "Telefone: {$safePhone}\n\n"
+        . "Mensagem:\n{$message}\n";
+}
+
+function encode_header(string $value): string
+{
+    return '=?UTF-8?B?' . base64_encode($value) . '?=';
+}
+
+function smtp_read_response($socket, array $allowedCodes): string
+{
+    $response = '';
+
+    while (!feof($socket)) {
+        $line = fgets($socket, 515);
+        if ($line === false) {
+            break;
+        }
+
+        $response .= $line;
+
+        if (isset($line[3]) && $line[3] === ' ') {
+            break;
+        }
+    }
+
+    $statusCode = (int) substr($response, 0, 3);
+    if (!in_array($statusCode, $allowedCodes, true)) {
+        throw new RuntimeException('SMTP respondeu com erro: ' . trim($response));
+    }
+
+    return $response;
+}
+
+function smtp_write_command($socket, string $command, array $allowedCodes): string
+{
+    fwrite($socket, $command . "\r\n");
+    return smtp_read_response($socket, $allowedCodes);
+}
+
+function build_mime_message(string $name, string $email, string $phone, string $message): string
+{
+    $subject = 'Novo contato: ' . $name . ' - ' . date('d/m/Y');
+    $htmlBody = build_html_message($name, $email, $phone, $message);
+    $textBody = build_text_message($name, $email, $phone, $message);
+    $boundary = 'bnd_' . bin2hex(random_bytes(12));
+
+    $headers = [
+        'From: Sants Company <' . FROM_EMAIL . '>',
+        'Reply-To: ' . $name . ' <' . $email . '>',
+        'MIME-Version: 1.0',
+        'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
+    ];
+
+    $body = [];
+    $body[] = 'Subject: ' . encode_header($subject);
+    $body = array_merge($body, $headers);
+    $body[] = '';
+    $body[] = '--' . $boundary;
+    $body[] = 'Content-Type: text/plain; charset=UTF-8';
+    $body[] = 'Content-Transfer-Encoding: 8bit';
+    $body[] = '';
+    $body[] = $textBody;
+    $body[] = '--' . $boundary;
+    $body[] = 'Content-Type: text/html; charset=UTF-8';
+    $body[] = 'Content-Transfer-Encoding: 8bit';
+    $body[] = '';
+    $body[] = $htmlBody;
+    $body[] = '--' . $boundary . '--';
+    $body[] = '';
+
+    $payload = implode("\r\n", $body);
+    return preg_replace("/(?m)^\./", '..', $payload) ?? $payload;
+}
+
+function send_with_smtp(string $name, string $email, string $phone, string $message): bool
+{
+    $socket = @stream_socket_client(
+        'tcp://' . SMTP_HOST . ':' . SMTP_PORT,
+        $errorNumber,
+        $errorString,
+        15,
+        STREAM_CLIENT_CONNECT
+    );
+
+    if (!$socket) {
+        throw new RuntimeException('Falha ao conectar no SMTP: ' . $errorString . ' (' . $errorNumber . ')');
+    }
+
+    stream_set_timeout($socket, 15);
+    $localHost = gethostname() ?: 'localhost';
+
+    try {
+        smtp_read_response($socket, [220]);
+        smtp_write_command($socket, 'EHLO ' . $localHost, [250]);
+
+        if ((int) SMTP_PORT === 587) {
+            smtp_write_command($socket, 'STARTTLS', [220]);
+
+            if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                throw new RuntimeException('Nao foi possivel ativar STARTTLS para o SMTP.');
+            }
+
+            smtp_write_command($socket, 'EHLO ' . $localHost, [250]);
+        }
+
+        smtp_write_command($socket, 'AUTH LOGIN', [334]);
+        smtp_write_command($socket, base64_encode(SMTP_USERNAME), [334]);
+        smtp_write_command($socket, base64_encode(SMTP_PASSWORD), [235]);
+        smtp_write_command($socket, 'MAIL FROM:<' . FROM_EMAIL . '>', [250]);
+        smtp_write_command($socket, 'RCPT TO:<' . TO_EMAIL . '>', [250, 251]);
+        smtp_write_command($socket, 'DATA', [354]);
+
+        fwrite($socket, build_mime_message($name, $email, $phone, $message) . "\r\n.\r\n");
+        smtp_read_response($socket, [250]);
+        smtp_write_command($socket, 'QUIT', [221]);
+        fclose($socket);
+
+        return true;
+    } catch (Throwable $exception) {
+        fclose($socket);
+        throw $exception;
+    }
+}
+
 function send_with_mail(string $name, string $email, string $phone, string $message): bool
 {
     $subject = 'Novo contato: ' . $name . ' - ' . date('d/m/Y');
     $htmlBody = build_html_message($name, $email, $phone, $message);
-    $textBody = "NOVO CONTATO - SANTS COMPANY\n\n"
-        . "Nome: {$name}\n"
-        . "Email: {$email}\n"
-        . "Telefone: " . ($phone ?: 'Não informado') . "\n\n"
-        . "Mensagem:\n{$message}\n";
-
     $headers = [
         'MIME-Version: 1.0',
         'Content-type: text/html; charset=UTF-8',
@@ -85,7 +246,51 @@ function send_with_mail(string $name, string $email, string $phone, string $mess
         'Reply-To: ' . $name . ' <' . $email . '>',
     ];
 
-    return mail(TO_EMAIL, '=?UTF-8?B?' . base64_encode($subject) . '?=', $htmlBody, implode("\r\n", $headers), '-f' . FROM_EMAIL);
+    set_error_handler(static function (int $severity, string $warningMessage): never {
+        throw new RuntimeException($warningMessage);
+    });
+
+    try {
+        return mail(
+            TO_EMAIL,
+            encode_header($subject),
+            $htmlBody,
+            implode("\r\n", $headers),
+            '-f' . FROM_EMAIL
+        );
+    } finally {
+        restore_error_handler();
+    }
+}
+
+function persist_submission(string $name, string $email, string $phone, string $message, string $reason): void
+{
+    $storageDir = __DIR__ . '/storage';
+    if (!is_dir($storageDir) && !mkdir($storageDir, 0775, true) && !is_dir($storageDir)) {
+        throw new RuntimeException('Nao foi possivel preparar o diretorio de armazenamento local.');
+    }
+
+    $payload = [
+        'received_at' => date(DATE_ATOM),
+        'name' => $name,
+        'email' => $email,
+        'phone' => $phone,
+        'message' => $message,
+        'delivery_fallback' => 'local_storage',
+        'reason' => $reason,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
+        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+    ];
+
+    $result = file_put_contents(
+        $storageDir . '/contact-submissions.jsonl',
+        json_encode($payload, JSON_UNESCAPED_UNICODE) . PHP_EOL,
+        FILE_APPEND | LOCK_EX
+    );
+
+    if ($result === false) {
+        throw new RuntimeException('Nao foi possivel salvar o contato localmente.');
+    }
 }
 
 function verify_recaptcha(string $captchaResponse): bool
@@ -94,7 +299,7 @@ function verify_recaptcha(string $captchaResponse): bool
         return false;
     }
 
-    if (RECAPTCHA_SECRET === '') {
+    if (!has_effective_value(RECAPTCHA_SECRET, ['SEU_RECAPTCHA_SECRET_AQUI'])) {
         return true;
     }
 
@@ -150,15 +355,19 @@ $phone = trim($_POST['phone'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
 if ($name === '' || $email === '' || $message === '') {
-    json_error('Preencha os campos obrigatórios.');
+    json_error('Preencha os campos obrigatorios.');
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    json_error('Informe um e-mail válido.');
+    json_error('Informe um e-mail valido.');
 }
 
+$smtpConfigured = has_effective_value(SMTP_HOST)
+    && has_effective_value(SMTP_USERNAME)
+    && has_effective_value(SMTP_PASSWORD, ['SUA_SENHA_AQUI']);
+
 $autoloadPath = dirname(__DIR__) . '/vendor/autoload.php';
-$canUsePhpMailer = file_exists($autoloadPath) && SMTP_HOST !== '' && SMTP_USERNAME !== '' && SMTP_PASSWORD !== '';
+$canUsePhpMailer = file_exists($autoloadPath) && $smtpConfigured;
 
 try {
     $sent = false;
@@ -182,21 +391,31 @@ try {
         $mail->isHTML(true);
         $mail->Subject = 'Novo contato: ' . $name . ' - ' . date('d/m/Y');
         $mail->Body = build_html_message($name, $email, $phone, $message);
-        $mail->AltBody = "Nome: {$name}\nEmail: {$email}\nTelefone: {$phone}\n\n{$message}";
+        $mail->AltBody = build_text_message($name, $email, $phone, $message);
         $sent = $mail->send();
+    } elseif ($smtpConfigured) {
+        $sent = send_with_smtp($name, $email, $phone, $message);
     } else {
         $sent = send_with_mail($name, $email, $phone, $message);
     }
 
     if (!$sent) {
-        json_error('Não foi possível enviar agora. Tente pelo WhatsApp ou e-mail.', 500);
+        throw new RuntimeException('O transporte de e-mail nao confirmou o envio.');
     }
 
-    echo json_encode([
-        'success' => true,
-        'message' => 'Mensagem enviada com sucesso. Responderemos em breve.'
-    ], JSON_UNESCAPED_UNICODE);
+    json_success('Mensagem enviada com sucesso. Responderemos em breve.', [
+        'delivery' => 'email',
+    ]);
 } catch (Throwable $exception) {
-    error_log('Erro no formulário de contato: ' . $exception->getMessage());
-    json_error('Não foi possível enviar agora. Tente pelo WhatsApp ou e-mail.', 500);
+    error_log('Erro no formulario de contato: ' . $exception->getMessage());
+
+    try {
+        persist_submission($name, $email, $phone, $message, $exception->getMessage());
+        json_success('Mensagem recebida com sucesso. Nosso envio por e-mail esta em manutencao, mas seu contato foi registrado.', [
+            'delivery' => 'local_storage',
+        ]);
+    } catch (Throwable $storageException) {
+        error_log('Erro ao salvar fallback do formulario: ' . $storageException->getMessage());
+        json_error('Nao foi possivel enviar agora. Tente novamente em alguns minutos ou use outro canal.', 500);
+    }
 }
