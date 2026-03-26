@@ -1,3 +1,14 @@
+/* Honeypot field - completamente invisível e inacessível */
+.hp-field {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
 /* Reset e Base */
 * {
   margin: 0;
