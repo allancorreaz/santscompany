@@ -27,7 +27,6 @@ server/mail-config.php
 server/tools/deploy-webhook.php
 
 
-
 # Não envie o próprio .gitignore ao repositório remoto
 
 # Sistema
@@ -56,3 +55,5 @@ deploy.php
 send.php
 setup-security.php
 
+.gitignore
+.htaccess
