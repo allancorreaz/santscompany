@@ -96,6 +96,8 @@
     </section>
 
     <section class="section">
+      <h1><span class="title-form">Entre em contato conosco e tire todas as suas dúvidas</span></h1>
+      <p><span class="subtitle-form">Estamos aqui para ajudar você a entender como podemos transformar seu negócio. Entre em contato e vamos conversar sobre suas necessidades e objetivos.</span></p>
       <div class="container contact-page-grid">
         <aside class="content-card reveal">
           <h3>Quer receber uma proposta?</h3>
@@ -108,15 +110,15 @@
         </aside>
 
         <div class="content-card reveal">
-          <form class="contact-form" method="POST" action="../server/contact.php">
+          <form class="contact-form reveal" id="contactForm" method="POST" action="../server/contact.php">
             <input type="text" name="name" placeholder="Seu nome" required>
             <input type="email" name="email" placeholder="Seu e-mail" required>
             <input type="tel" name="phone" placeholder="Telefone / WhatsApp">
             <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
-            <textarea name="message" placeholder="Quais serviços você precisa neste momento?" required></textarea>
+            <textarea name="message" placeholder="Conte sobre seu projeto ou objetivo..." required></textarea>
             <div class="g-recaptcha" data-sitekey="6LeFFIEsAAAAAEGyy35ZhMEXIGj-OQAlhm_EYoCd" data-theme="light"></div>
-            <button type="submit" class="btn-primary btn-submit">
-              <i class="fas fa-paper-plane"></i> Solicitar contato
+            <button type="submit" class="btn-primary btn-submit" id="submitBtn">
+              <i class="fas fa-paper-plane"></i> Enviar mensagem
             </button>
           </form>
         </div>

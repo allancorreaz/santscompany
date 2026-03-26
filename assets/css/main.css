@@ -3632,6 +3632,22 @@ footer::after {
   color: #4285f4;
   font-size: 1.2rem;
 }
+.title-form {
+  display: flex;
+  justify-content: center;
+  color: #1a1d26;
+  font-weight: 600;
+  padding-bottom: 8px;
+}
+
+.subtitle-form {
+  display: flex;
+  justify-content: center;
+  color: #1a1d26;
+  font-weight: 400;
+  padding-bottom: 20px;
+}
+
 
 /* Reviews Responsive */
 @media (max-width: 768px) {

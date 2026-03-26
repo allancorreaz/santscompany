@@ -2,7 +2,29 @@
 declare(strict_types=1);
 
 error_reporting(E_ALL);
-ini_set('display_errors', '0');
+ini_set('display_errors', '1');
+set_exception_handler(function ($e) {
+    http_response_code(500);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro interno no servidor.',
+        'error' => $e->getMessage(),
+    ], JSON_UNESCAPED_UNICODE);
+    error_log('Exceção não capturada no contact.php: ' . $e->getMessage());
+    exit;
+});
+set_error_handler(function ($severity, $message, $file, $line) {
+    http_response_code(500);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro interno no servidor.',
+        'error' => $message . ' em ' . $file . ':' . $line,
+    ], JSON_UNESCAPED_UNICODE);
+    error_log('Erro não capturado no contact.php: ' . $message . ' em ' . $file . ':' . $line);
+    exit;
+});
 ob_start();
 
 header('Content-Type: application/json; charset=utf-8');
