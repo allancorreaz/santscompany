@@ -23,7 +23,7 @@ fetch("../data/blog/posts.json")
       : [post.category, "Presença digital", "Captação de clientes"];
 
     const prioritizedRelatedPosts = posts
-      .filter((item) => String(item.id) !== postId)
+      .filter((item) => String(item.id) !== postId && item.visible !== false)
       .sort((a, b) => {
         const aSameCategory = a.category === post.category ? 1 : 0;
         const bSameCategory = b.category === post.category ? 1 : 0;

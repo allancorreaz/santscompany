@@ -1,10 +1,21 @@
 fetch("../data/blog/posts.json")
   .then((response) => response.json())
   .then((posts) => {
+      posts = posts.filter(post => post.visible !== false);
     const blogList = document.getElementById("blogList");
-    if (!blogList || !posts.length) return;
+    const blogWelcome = document.getElementById("blogWelcome");
+    if (!blogList || !posts.length || !blogWelcome) return;
 
     const [featuredPost, ...secondaryPosts] = posts;
+
+    // Bloco de boas-vindas com design aprimorado
+    blogWelcome.innerHTML = `
+      <div class="blog-intro-desc">
+        <h1 class="blog-title">Bem-vindo ao nosso Blog</h1>
+        <span class="blog-intro-highlight">Conteúdo de valor para sua evolução digital.</span>
+        <span class="blog-intro-text">Acompanhe tendências, estratégias e dicas sobre desenvolvimento web, marketing, SEO, tecnologia e negócios. Inspire-se para transformar resultados e crescer online.</span>
+      </div>
+    `;
 
     blogList.innerHTML = `
       <a href="./post.html?id=${featuredPost.id}" class="blog-featured-card">
