@@ -1,10 +1,12 @@
 # Arquivos com suas credenciais (NUNCA fazer commit)
+.gitignore
+.htaccess
 credentials-local.php
 *.local.php
 server/credentials-local.php
 server/deploy-config.local.php
 server/storage/contact-submissions.json
-
+server/contact.php
 # PHPMailer
 vendor/
 
@@ -24,6 +26,7 @@ scripts/
 server/credentials-local.php
 server/deploy-config.local.php
 server/mail-config.php
+server/contact.php
 server/tools/deploy-webhook.php
 
 
@@ -53,5 +56,3 @@ config.php
 deploy.php
 send.php
 setup-security.php
-.gitignore
-.htaccess

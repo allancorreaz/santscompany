@@ -386,7 +386,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 $smtpConfigured = has_effective_value(SMTP_HOST)
     && has_effective_value(SMTP_USERNAME)
-    && has_effective_value(SMTP_PASSWORD, ['SUA_SENHA_AQUI']);
+    && has_effective_value(SMTP_PASSWORD, ['Q8SkbE1Lp3yG']);
 
 $autoloadPath = dirname(__DIR__) . '/vendor/autoload.php';
 $canUsePhpMailer = file_exists($autoloadPath) && $smtpConfigured;

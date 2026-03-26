@@ -356,6 +356,7 @@ async function parseContactResponse(response) {
       message: response.ok
         ? "O servidor respondeu, mas retornou um formato inesperado."
         : "O envio automático não respondeu corretamente.",
+      error: text
     };
   }
 }
@@ -401,7 +402,11 @@ function initContactForms() {
         const result = await parseContactResponse(response);
 
         if (!response.ok || !result.success) {
-          button.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${result.message || "Não foi possível enviar."}`;
+          let msg = result.message || "Não foi possível enviar.";
+          if (result.error) {
+            msg += `<br><small style='font-size:0.9em;color:#fff;'>${result.error}</small>`;
+          }
+          button.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${msg}`;
           button.style.backgroundColor = "#dc2626";
         } else {
           button.innerHTML = '<i class="fas fa-check"></i> Mensagem enviada!';
