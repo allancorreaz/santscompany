@@ -1,0 +1,58 @@
+# Arquivos com suas credenciais (NUNCA fazer commit)
+credentials-local.php
+*.local.php
+server/credentials-local.php
+server/deploy-config.local.php
+server/storage/contact-submissions.json
+
+# PHPMailer
+vendor/
+
+# Logs e temporários
+*.log
+deploy.log
+*.bak
+
+# Backups e temporários
+__backup__/
+blog/__backup__/
+public/
+*.tmp
+
+# Scripts e arquivos sensíveis
+scripts/
+server/credentials-local.php
+server/deploy-config.local.php
+server/mail-config.php
+server/tools/deploy-webhook.php
+
+
+
+# Não envie o próprio .gitignore ao repositório remoto
+
+# Sistema
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*.swo
+
+# Testes
+teste-email.html
+
+# Documentação sensível  
+README-EMAIL.md
+
+# Segurança extra: configs e credenciais
+server/mail-config.php
+public/credentials/
+public/config/
+.env
+.env.local
+
+composer.json
+config.php
+deploy.php
+send.php
+setup-security.php
+
