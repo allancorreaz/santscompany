@@ -3649,6 +3649,7 @@ footer::after {
   color: #1a1d26;
   font-weight: 600;
   padding-bottom: 8px;
+  font-size: 28px;
 }
 
 .subtitle-form {
@@ -3657,6 +3658,28 @@ footer::after {
   color: #1a1d26;
   font-weight: 400;
   padding-bottom: 20px;
+  font-size: 22px;
+}
+
+@media (max-width: 768px) {
+  .title-form {
+  display: flex;
+  justify-content: center;
+  color: #1a1d26;
+  font-weight: 600;
+  padding-bottom: 8px;
+  font-size: 22px;
+}
+
+.subtitle-form {
+  display: flex;
+  justify-content: center;
+  color: #1a1d26;
+  font-weight: 400;
+  padding-bottom: 20px;
+  font-size: 18px;
+}
+  
 }
 
 
