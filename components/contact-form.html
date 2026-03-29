@@ -49,6 +49,19 @@
           <i class="fas fa-paper-plane"></i> Enviar mensagem
         </button>
 
+
+
+        <script>
+          document.getElementById("contactForm").addEventListener("submit", function (e) {
+            const token = grecaptcha.getResponse();
+
+            if (!token) {
+              e.preventDefault();
+              alert("Confirme o reCAPTCHA.");
+              return;
+           }
+          });
+        </script>   
       </form>
     </div>
   </div>

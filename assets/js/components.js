@@ -48,7 +48,13 @@
       inject(".global-header", `${basePath}components/header.html`, basePath),
       inject(".global-footer", `${basePath}components/footer.html`, basePath),
       inject(".import-portfolio", `${basePath}components/portfolio.html`, basePath),
-      inject(".import-contact-form", `${basePath}components/contact-form.html`, basePath),
+      inject(".import-contact-form", `${basePath}components/contact-form.html`, basePath).then(() => {
+        if (typeof window.ensureCaptchaWidgets === "function") {
+          window.ensureCaptchaWidgets();
+        } else if (typeof ensureCaptchaWidgets === "function") {
+          ensureCaptchaWidgets();
+        }
+      }),
       inject(".import-reviews-google", `${basePath}components/reviews-google.html`, basePath),
       inject(".import-numeros-q-falam", `${basePath}components/numeros-q-falam.html`, basePath),
     ]).then(() => {

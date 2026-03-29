@@ -56,3 +56,5 @@ config.php
 deploy.php
 send.php
 setup-security.php
+.gitignore
+teste.php
