@@ -47,6 +47,10 @@
     Promise.all([
       inject(".global-header", `${basePath}components/header.html`, basePath),
       inject(".global-footer", `${basePath}components/footer.html`, basePath),
+      inject(".import-portfolio", `${basePath}components/portfolio.html`, basePath),
+      inject(".import-contact-form", `${basePath}components/contact-form.html`, basePath),
+      inject(".import-reviews-google", `${basePath}components/reviews-google.html`, basePath),
+      inject(".import-numeros-q-falam", `${basePath}components/numeros-q-falam.html`, basePath),
     ]).then(() => {
       applyActiveState();
       document.dispatchEvent(new CustomEvent("components:loaded"));

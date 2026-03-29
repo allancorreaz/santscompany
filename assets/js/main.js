@@ -368,6 +368,26 @@ function initContactForms() {
     if (form.dataset.bound === "true") return;
     form.dataset.bound = "true";
 
+    // Outro qual? field logic
+    const serviceSelect = form.querySelector('select[name="serviceType[]"]');
+    const otherContainer = form.querySelector('#otherServiceContainer');
+    const otherInput = form.querySelector('#otherServiceInput');
+    if (serviceSelect && otherContainer && otherInput) {
+      const toggleOtherField = () => {
+        const selected = Array.from(serviceSelect.selectedOptions).map(opt => opt.value);
+        if (selected.includes('Outro')) {
+          otherContainer.style.display = '';
+          otherInput.required = true;
+        } else {
+          otherContainer.style.display = 'none';
+          otherInput.required = false;
+          otherInput.value = '';
+        }
+      };
+      serviceSelect.addEventListener('change', toggleOtherField);
+      toggleOtherField();
+    }
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
