@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// ✅ CONFIGURAR TIMEZONE DO BRASIL
+date_default_timezone_set('America/Sao_Paulo');
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
@@ -230,6 +233,7 @@ try {
         // ✅ Configurações extras para Zoho
         $mail->SMTPKeepAlive = false;
         $mail->SMTPAutoTLS = true;
+        $mail->Timeout = 10;            // Timeout geral: 10 segundos (balanceado)
         $mail->addCustomHeader('X-Mailer', 'PHP/' . phpversion());
         $mail->WordWrap = 998;  // Evita quebras de linha nos headers
 
@@ -254,7 +258,7 @@ try {
         $htmlBody .= '<div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">';
         
         // Header
-        $htmlBody .= '<div style="background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%); color: #ffffff; padding: 30px 20px; text-align: center;">';
+        $htmlBody .= '<div style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; padding: 30px 20px; text-align: center;">';
         $htmlBody .= '<h1 style="margin: 0; font-size: 24px; font-weight: 600;">Novo Contato Recebido</h1>';
         $htmlBody .= '<p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">De ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</p>';
         $htmlBody .= '</div>';

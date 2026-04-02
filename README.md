@@ -43,6 +43,27 @@ Este repositório contém o código-fonte do site institucional da Sants Company
 4. E-mail é enviado via SMTP (PHPMailer) ou mail() nativo.
 5. Resposta JSON para AJAX, exibindo feedback ao usuário.
 
+## 🎯 Melhorias Recentes (Abril/2026)
+
+### Frontend Aprimorado
+- ✅ **Capitalização Automática de Nome:** Campo de nome capitaliza cada palavra (João Silva)
+- ✅ **Formatação de Telefone:** Seletor de país + DDD com máscara automática (+55 (21) 99911-4096)
+- ✅ **Select Multi-Serviços:** Fecha após seleção e abre em hover (UX melhorada)
+- ✅ **Capitalização de Mensagem:** Primeira letra maiúscula + ponto final automático
+- ✅ **Formatação em Tempo Real:** Todos os campos formatam enquanto usuário digita
+
+### Backend Otimizado
+- ✅ **SMTP Error Resolvido:** Corrigido erro "data not accepted" (veja [README-EMAIL.md](README-EMAIL.md))
+- ✅ **Timeout Balanceado:** Aumentado de 1s para 10s (velocidade + confiabilidade)
+- ✅ **Remetente Correto:** FROM sempre da conta SMTP, REPLY-TO do cliente
+- ✅ **HTML Simplificado:** Zoho aceita facilmente, sem CSS complexo
+- ✅ **Plain Text Fallback:** AltBody com versão texto para compatibilidade
+
+### Documentação Completa
+- 📖 **README-EMAIL.md:** Debug detalhado do erro SMTP ("data not accepted")
+- 📖 **Logging Aprimorado:** 6 níveis de log para diagnóstico rápido
+- 📖 **Configuração Final:** Exemplo completo de setup correto
+
 ## Tecnologias Utilizadas
 - HTML5, CSS3, JavaScript puro
 - PHP 7+

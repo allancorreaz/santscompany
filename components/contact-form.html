@@ -19,7 +19,18 @@
 
         <input type="text" name="name" placeholder="Seu nome" required autocomplete="off">
         <input type="email" name="email" placeholder="Seu e-mail" required autocomplete="off">
-        <input type="tel" name="phone" placeholder="Telefone / WhatsApp" autocomplete="off">
+        
+        <!-- 📱 Telefone com Código de País + DDD -->
+        <div style="display: grid; grid-template-columns: 80px 1fr; gap: 8px;">
+          <select name="phoneCountry" id="phoneCountry" style="border-radius: 10px; border: 1.5px solid #e5e7eb; padding: 12px 8px; background: #fff; font-size: 0.95rem;">
+            <option value="+55">🇧🇷 +55</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+33">🇫🇷 +33</option>
+            <option value="+39">🇮🇹 +39</option>
+          </select>
+          <input type="tel" name="phone" id="phone" placeholder="(21) 99911-4096" autocomplete="off" style="border-radius: 10px; border: 1.5px solid #e5e7eb; padding: 12px;">
+        </div>
 
         <div class="custom-select-wrapper">
          <select name="serviceType" id="serviceType" required multiple class="form-select-multi">

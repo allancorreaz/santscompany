@@ -59,8 +59,85 @@ function resolveContactEndpoint() {
   return "send.php";
 }
 
+/* ================================
+   FORMATAÇÃO DE DADOS
+================================ */
+
+// Capitalizar nome: "joão silva" → "João Silva"
+function capitalizeWords(str) {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .filter(word => word.trim())  // Remove palavras vazias
+    .join(' ');
+}
+
+// Formatar telefone: remover tudo menos números, aplicar máscara (21) 99911-4096
+function formatPhoneNumber(phone) {
+  const numbers = phone.replace(/\D/g, '');  // Remove tudo que não é número
+  
+  if (numbers.length <= 2) return numbers;
+  if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+  
+  // Formato: (XX) XXXXX-XXXX
+  return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+}
+
+// Formatar mensagem: primeira letra maiúscula + ponto final + capitalizar após pontos
+function formatMessage(msg) {
+  if (!msg) return msg;
+  
+  // Remover espaços extras
+  let formatted = msg.trim();
+  
+  // Primeira letra maiúscula
+  formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+  
+  // Adicionar ponto final se não tiver
+  if (!formatted.endsWith('.') && !formatted.endsWith('!') && !formatted.endsWith('?')) {
+    formatted += '.';
+  }
+  
+  // Capitalizar após pontos/exclamações/interrogações
+  formatted = formatted.replace(/([.!?])\s+([a-z])/g, (match, p1, p2) => p1 + ' ' + p2.toUpperCase());
+  
+  return formatted;
+}
+
+function formatFormData(formData) {
+  const nameInput = formData.get('name');
+  if (nameInput) {
+    formData.set('name', capitalizeWords(nameInput));
+  }
+  
+  // Combinar país + DDD + telefone
+  const phoneCountry = formData.get('phoneCountry') || '+55';
+  const phone = formData.get('phone');
+  if (phone) {
+    const formatted = formatPhoneNumber(phone);
+    formData.set('phone', `${phoneCountry} ${formatted}`);
+  }
+  
+  // 💬 Capitalizar mensagem
+  const messageInput = formData.get('message');
+  if (messageInput) {
+    formData.set('message', formatMessage(messageInput));
+  }
+  
+  return formData;
+}
+
 function initContactForms() {
   ensureCaptchaWidgets();
+
+  // 📱 Formatar telefone em tempo real
+  const phoneInput = document.querySelector('input[name="phone"]');
+  if (phoneInput) {
+    phoneInput.addEventListener('input', (e) => {
+      e.target.value = formatPhoneNumber(e.target.value);
+    });
+  }
 
   document.querySelectorAll(".contact-form").forEach((form) => {
     if (form.dataset.bound === "true") return;
@@ -88,7 +165,8 @@ function initContactForms() {
       button.disabled = true;
 
       try {
-        const formData = new FormData(form);
+        let formData = new FormData(form);
+        formData = formatFormData(formData);  // ✅ Capitalizar nome
         formData.set("g-recaptcha-response", captchaResponse);
 
         const response = await fetch(resolveContactEndpoint(), {
@@ -255,6 +333,15 @@ function initCustomSelects(root = document) {
       customSelect.classList.toggle('open');
     });
 
+    // 🎯 Abrir em hover
+    wrapper.addEventListener('mouseenter', () => {
+      customSelect.classList.add('open');
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+      customSelect.classList.remove('open');
+    });
+
     // Fechar dropdown quando clicar fora
     document.addEventListener('click', (e) => {
       if (!wrapper.contains(e.target)) {
@@ -272,6 +359,8 @@ function initCustomSelects(root = document) {
         option.selected = !option.selected;
         updateDisplay();
         updateOptionsUI();
+        // 🎯 FECHAR após seleção
+        customSelect.classList.remove('open');
       }
     });
 
