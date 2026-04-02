@@ -21,7 +21,6 @@
         <input type="email" name="email" placeholder="Seu e-mail" required autocomplete="off">
         <input type="tel" name="phone" placeholder="Telefone / WhatsApp" autocomplete="off">
 
-        <!-- CUSTOM SELECT -->
         <div class="custom-select-wrapper">
          <select name="serviceType" id="serviceType" required class="form-select-multi">
            <option value="" disabled selected>Selecione o seu serviço</option>
@@ -48,7 +47,11 @@
         <button type="submit" class="btn-primary btn-submit" id="submitBtn">
           <i class="fas fa-paper-plane"></i> Enviar mensagem
         </button>
+
       </form>
     </div>
   </div>
 </section>
+
+<!-- 🔥 IMPORTANTE -->
+<script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit" async defer></script>
