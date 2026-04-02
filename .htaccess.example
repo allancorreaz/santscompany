@@ -1,0 +1,173 @@
+# =============================================================================
+# 🔒 SEGURANÇA - Bloquear acesso a arquivos sensíveis
+# =============================================================================
+
+<FilesMatch "^(config|send|deploy|setup-security|teste)\.php$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^(credentials-local|deploy-config)\.(php|example\.php)$">
+    Require all denied
+</FilesMatch>
+
+<Files "composer.json">
+    Require all denied
+</Files>
+
+<Files "mail-config.php">
+    Require all denied
+</Files>
+
+<FilesMatch "\.(log|bak)$">
+    Require all denied
+</FilesMatch>
+
+# Bloquear acesso à pasta vendor
+<Directory "vendor">
+    Require all denied
+</Directory>
+
+# =============================================================================
+# ⚙️  URL REWRITING - Remover extensões e limpar URLs
+# =============================================================================
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# ─────────────────────────────────────────────────────────────────────────
+# 1️⃣  FORÇAR HTTPS + WWW (PADRÃO ÚNICO)
+# Redireciona para versão HTTPS com WWW
+# ─────────────────────────────────────────────────────────────────────────
+
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^(.*)$ https://www.santscompany.com/$1 [R=301,L]
+
+# ─────────────────────────────────────────────────────────────────────────
+# 2️⃣  REDIRECT: URLs com .html → URLs limpas
+# Exemplo: /contato.html → /contato (301 Permanente)
+# ─────────────────────────────────────────────────────────────────────────
+
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.html [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Remove index.html da URL
+RewriteCond %{THE_REQUEST} /index\.html [NC]
+RewriteRule ^(.*)index\.html$ /$1 [R=301,L]
+
+# ─────────────────────────────────────────────────────────────────────────
+# 3️⃣  REWRITE: URLs limpas → arquivos .html (interno, sem redirect)
+# Funciona quando arquivo .html existe mas extensão não está na URL
+# ─────────────────────────────────────────────────────────────────────────
+
+# Não reescrever se for arquivo ou diretório real
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Se existe arquivo .html correspondente, reescreve para ele
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# ─────────────────────────────────────────────────────────────────────────
+# 4️⃣  SUPORTE A PASTAS COM INDEX.HTML
+# Exemplo: /blog → /blog/index.html (interno, sem redirect)
+# ─────────────────────────────────────────────────────────────────────────
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.*)$ $1/index.html [L]
+
+</IfModule>
+
+
+# =============================================================================
+# ⚡ CACHE - Acelerar carregamento do site
+# =============================================================================
+
+<IfModule mod_expires.c>
+ExpiresActive On
+
+# Imagens - Cache de 1 ano (não mudam frequentemente)
+ExpiresByType image/jpg "access plus 1 year"
+ExpiresByType image/jpeg "access plus 1 year"
+ExpiresByType image/png "access plus 1 year"
+ExpiresByType image/webp "access plus 1 year"
+ExpiresByType image/svg+xml "access plus 1 year"
+ExpiresByType image/gif "access plus 1 year"
+ExpiresByType image/x-icon "access plus 1 year"
+
+# Fonts - Cache de 1 ano
+ExpiresByType font/ttf "access plus 1 year"
+ExpiresByType font/otf "access plus 1 year"
+ExpiresByType font/woff "access plus 1 year"
+ExpiresByType font/woff2 "access plus 1 year"
+
+# CSS e JavaScript - Cache de 1 mês
+ExpiresByType text/css "access plus 1 month"
+ExpiresByType application/javascript "access plus 1 month"
+ExpiresByType application/x-javascript "access plus 1 month"
+
+# HTML - Cache curto (5 minutos) para atualizar rápido
+ExpiresByType text/html "access plus 5 minutes"
+
+# Padrão para outros arquivos - 7 dias
+ExpiresDefault "access plus 7 days"
+</IfModule>
+
+# =============================================================================
+# 🚀 COMPRESSÃO - Reduzir tamanho de arquivos transmitidos
+# =============================================================================
+
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE text/javascript
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+AddOutputFilterByType DEFLATE application/json
+AddOutputFilterByType DEFLATE font/ttf
+AddOutputFilterByType DEFLATE font/otf
+AddOutputFilterByType DEFLATE application/x-font-woff
+</IfModule>
+
+# =============================================================================
+# 🔐 HEADERS DE SEGURANÇA + PERFORMANCE
+# =============================================================================
+
+<IfModule mod_headers.c>
+# Previne MIME type sniffing (tipo de ataque)
+Header set X-Content-Type-Options "nosniff"
+
+# Impede clickjacking (carregamento em iframe malicioso)
+Header set X-Frame-Options "SAMEORIGIN"
+
+# Proteção XSS no navegador
+Header set X-XSS-Protection "1; mode=block"
+
+# Controla informação de referrer
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Permissões de Features (segurança)
+Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# =============================================================================
+# 🚫 SEGURANÇA - Bloquear acesso a diretórios/arquivos
+# =============================================================================
+
+# Desabilitar listagem de diretórios
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Tipos MIME corretos
+<IfModule mod_mime.c>
+    AddType application/javascript js
+    AddType application/json json
+    AddType text/css css
+    AddType image/svg+xml svg
+    AddEncoding gzip svgz
+</IfModule>

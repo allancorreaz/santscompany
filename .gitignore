@@ -1,6 +1,7 @@
 # Arquivos com suas credenciais (NUNCA fazer commit)
 .gitignore
 .htaccess
+!.htaccess.example
 credentials-local.php
 *.local.php
 server/credentials-local.php
