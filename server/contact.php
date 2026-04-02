@@ -85,7 +85,7 @@ function verify_recaptcha(string $captchaResponse): bool
         return false;
     }
 
-    if (!has_effective_value(RECAPTCHA_SECRET, ['SEU_RECAPTCHA_SECRET_AQUI'])) {
+    if (!has_effective_value(RECAPTCHA_SECRET, ['6Lef96IsAAAAACIXBe7Uz9lrnOslrhurO2Jxn8HY'])) {
         return true; // modo dev
     }
 
