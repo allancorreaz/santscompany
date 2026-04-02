@@ -198,6 +198,7 @@ $canUsePhpMailer = file_exists($autoloadPath) && $smtpConfigured;
 try {
     $sent = false;
 
+
     if ($canUsePhpMailer) {
         require_once $autoloadPath;
 
@@ -219,11 +220,8 @@ try {
         $mail->Body = $message;
         $mail->AltBody = $message;
         $sent = $mail->send();
-
-    } elseif ($smtpConfigured) {
-        $sent = send_with_smtp($name, $email, $phone, $message);
     } else {
-        $sent = send_with_mail($name, $email, $phone, $message);
+        throw new RuntimeException('O envio de e-mail não está configurado corretamente.');
     }
 
     if (!$sent) {

@@ -15,7 +15,7 @@
     </aside>
 
     <div class="content-card reveal">
-      <form class="contact-form reveal" id="contactForm" method="POST" action="../server/contact.php" autocomplete="off">
+      <form class="contact-form reveal" id="contactForm" autocomplete="off">
 
         <input type="text" name="name" placeholder="Seu nome" required autocomplete="off">
         <input type="email" name="email" placeholder="Seu e-mail" required autocomplete="off">
@@ -48,20 +48,6 @@
         <button type="submit" class="btn-primary btn-submit" id="submitBtn">
           <i class="fas fa-paper-plane"></i> Enviar mensagem
         </button>
-
-
-
-        <script>
-          document.getElementById("contactForm").addEventListener("submit", function (e) {
-            const token = grecaptcha.getResponse();
-
-            if (!token) {
-              e.preventDefault();
-              alert("Confirme o reCAPTCHA.");
-              return;
-           }
-          });
-        </script>   
       </form>
     </div>
   </div>
