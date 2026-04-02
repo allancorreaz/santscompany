@@ -5,6 +5,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 set_exception_handler(function ($e) {
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
     http_response_code(500);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
@@ -18,6 +21,9 @@ set_exception_handler(function ($e) {
 
 // ✅ CORREÇÃO: não quebrar tudo com warning
 set_error_handler(function ($severity, $message, $file, $line) {
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
     if (!(error_reporting() & $severity)) {
         return false;
     }
@@ -176,6 +182,8 @@ if (!$captchaValid) {
 $name = trim($_POST['name'] ?? '');
 $email = trim($_POST['email'] ?? '');
 $phone = trim($_POST['phone'] ?? '');
+$serviceType = trim($_POST['serviceType'] ?? '');
+$otherService = trim($_POST['otherService'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
 if ($name === '' || $email === '' || $message === '') {
@@ -190,7 +198,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 $smtpConfigured = has_effective_value(SMTP_HOST)
     && has_effective_value(SMTP_USERNAME)
-    && has_effective_value(SMTP_PASSWORD, ['Q8SkbE1Lp3yG']);
+    && has_effective_value(SMTP_PASSWORD);
 
 $autoloadPath = dirname(__DIR__) . '/vendor/autoload.php';
 $canUsePhpMailer = file_exists($autoloadPath) && $smtpConfigured;
@@ -198,8 +206,14 @@ $canUsePhpMailer = file_exists($autoloadPath) && $smtpConfigured;
 try {
     $sent = false;
 
-
     if ($canUsePhpMailer) {
+        // ✅ CORPO DO EMAIL COM TODAS AS INFORMAÇÕES
+        $serviceDisplay = $serviceType ? htmlspecialchars($serviceType) : '(não informado)';
+        if ($otherService) {
+            $serviceDisplay .= ' - ' . htmlspecialchars($otherService);
+        }
+
+        // 🚀 ENVIAR REAL VIA SMTP
         require_once $autoloadPath;
 
         $mail = new PHPMailer\PHPMailer\PHPMailer(true);
@@ -211,15 +225,117 @@ try {
         $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = SMTP_PORT;
         $mail->CharSet = 'UTF-8';
+        $mail->Encoding = 'base64';
+        
+        // ✅ Configurações extras para Zoho
+        $mail->SMTPKeepAlive = false;
+        $mail->SMTPAutoTLS = true;
+        $mail->addCustomHeader('X-Mailer', 'PHP/' . phpversion());
+        $mail->WordWrap = 998;  // Evita quebras de linha nos headers
 
-        $mail->setFrom(FROM_EMAIL, 'Sants Company');
+        // ✅ REMETENTE: Email confirmado do Zoho | REPLY-TO: Email do usuário
+        $mail->setFrom(FROM_EMAIL, 'Sants Company - Contato');
         $mail->addAddress(TO_EMAIL, 'Sants Company');
-        $mail->addReplyTo($email, $name);
+        $mail->addReplyTo($email, $name);  // Cliente pode responder para seu email
+        
         $mail->isHTML(true);
-        $mail->Subject = 'Novo contato: ' . $name . ' - ' . date('d/m/Y');
-        $mail->Body = $message;
-        $mail->AltBody = $message;
-        $sent = $mail->send();
+        $mail->Subject = 'Novo contato: ' . $name . ' - ' . date('d/m/Y H:i');
+        
+        // ✅ HTML COM DESIGN PROFISSIONAL
+        $htmlBody = '<!DOCTYPE html>';
+        $htmlBody .= '<html lang="pt-BR">';
+        $htmlBody .= '<head>';
+        $htmlBody .= '<meta charset="UTF-8">';
+        $htmlBody .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+        $htmlBody .= '</head>';
+        $htmlBody .= '<body style="font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f5f5f5;">';
+        
+        // Container
+        $htmlBody .= '<div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">';
+        
+        // Header
+        $htmlBody .= '<div style="background: linear-gradient(135deg, #0052cc 0%, #0066ff 100%); color: #ffffff; padding: 30px 20px; text-align: center;">';
+        $htmlBody .= '<h1 style="margin: 0; font-size: 24px; font-weight: 600;">Novo Contato Recebido</h1>';
+        $htmlBody .= '<p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">De ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</p>';
+        $htmlBody .= '</div>';
+        
+        // Content
+        $htmlBody .= '<div style="padding: 30px 20px;">';
+        
+        // Informações
+        $htmlBody .= '<div style="margin-bottom: 25px;">';
+        $htmlBody .= '<h2 style="margin: 0 0 15px 0; font-size: 14px; font-weight: 600; color: #0052cc; text-transform: uppercase; letter-spacing: 1px;">Informações de Contato</h2>';
+        
+        $htmlBody .= '<div style="padding: 12px; background-color: #f9f9fb; border-left: 4px solid #0052cc; margin-bottom: 10px;">';
+        $htmlBody .= '<p style="margin: 0; font-size: 13px; color: #666;"><strong>Nome:</strong> ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</p>';
+        $htmlBody .= '</div>';
+        
+        $htmlBody .= '<div style="padding: 12px; background-color: #f9f9fb; border-left: 4px solid #0052cc; margin-bottom: 10px;">';
+        $htmlBody .= '<p style="margin: 0; font-size: 13px; color: #666;"><strong>Email:</strong> <a href="mailto:' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '" style="color: #0052cc; text-decoration: none;">' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '</a></p>';
+        $htmlBody .= '</div>';
+        
+        $htmlBody .= '<div style="padding: 12px; background-color: #f9f9fb; border-left: 4px solid #0052cc; margin-bottom: 10px;">';
+        $htmlBody .= '<p style="margin: 0; font-size: 13px; color: #666;"><strong>Telefone:</strong> ' . (htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') ?: '<em style="color: #999;">Não informado</em>') . '</p>';
+        $htmlBody .= '</div>';
+        
+        $htmlBody .= '<div style="padding: 12px; background-color: #f9f9fb; border-left: 4px solid #0052cc;">';
+        $htmlBody .= '<p style="margin: 0; font-size: 13px; color: #666;"><strong>Serviço Solicitado:</strong> ' . $serviceDisplay . '</p>';
+        $htmlBody .= '</div>';
+        
+        $htmlBody .= '</div>';
+        
+        // Mensagem
+        $htmlBody .= '<div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5e5e5;">';
+        $htmlBody .= '<h2 style="margin: 0 0 15px 0; font-size: 14px; font-weight: 600; color: #0052cc; text-transform: uppercase; letter-spacing: 1px;">Mensagem</h2>';
+        $htmlBody .= '<div style="background-color: #f9f9fb; padding: 15px; border-radius: 6px; line-height: 1.8;">';
+        $htmlBody .= '<p style="margin: 0; font-size: 14px; color: #333; white-space: pre-wrap; word-wrap: break-word;">' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . '</p>';
+        $htmlBody .= '</div>';
+        $htmlBody .= '</div>';
+        
+        $htmlBody .= '</div>';
+        
+        // Footer
+        $htmlBody .= '<div style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e5e5e5;">';
+        $htmlBody .= '<p style="margin: 0; font-size: 12px; color: #999;">';
+        $htmlBody .= 'Email automático do formulário de contato<br>';
+        $htmlBody .= 'Sants Company - ' . date('d/m/Y H:i:s');
+        $htmlBody .= '</p>';
+        $htmlBody .= '</div>';
+        
+        $htmlBody .= '</div>';
+        $htmlBody .= '</body>';
+        $htmlBody .= '</html>';
+        
+        $mail->Body = $htmlBody;
+        
+        // ✅ PLAIN TEXT ALTERNATIVO - Zoho requer isso
+        $plainBody = "NOVO CONTATO RECEBIDO\n";
+        $plainBody .= str_repeat("=", 50) . "\n\n";
+        $plainBody .= "Nome: " . $name . "\n";
+        $plainBody .= "Email: " . $email . "\n";
+        $plainBody .= "Telefone: " . ($phone ?: '(não informado)') . "\n";
+        $plainBody .= "Serviço: " . $serviceDisplay . "\n\n";
+        $plainBody .= str_repeat("-", 50) . "\n";
+        $plainBody .= "MENSAGEM:\n\n";
+        $plainBody .= $message . "\n\n";
+        $plainBody .= str_repeat("-", 50) . "\n";
+        $plainBody .= "Data/Hora: " . date('d/m/Y H:i:s') . "\n";
+        
+        $mail->AltBody = $plainBody;
+        
+        error_log("📧 Tentando enviar email...");
+        error_log("  Host: " . SMTP_HOST . ":" . SMTP_PORT);
+        error_log("  De: " . $email . " (" . $name . ")");
+        error_log("  Para: " . TO_EMAIL);
+        error_log("  Assunto: " . $mail->Subject);
+        
+        try {
+            $sent = $mail->send();
+            error_log("✅ Email enviado com sucesso!");
+        } catch (Exception $e) {
+            error_log("❌ Erro ao enviar: " . $e->getMessage());
+            throw new RuntimeException('Erro ao enviar email: ' . $e->getMessage());
+        }
     } else {
         throw new RuntimeException('O envio de e-mail não está configurado corretamente.');
     }
