@@ -217,88 +217,37 @@ function initHeaderScroll() {
   toggleHeaderState();
 }
 
-// ...restante do código...
-    if (form.dataset.bound === "true") return;
-    form.dataset.bound = "true";
+function initReveal() {
+  if (window.__revealBound) return;
+  window.__revealBound = true;
 
-    // Outro qual? field logic
-    const serviceSelect = form.querySelector('select[name="serviceType[]"]');
-    const otherContainer = form.querySelector('#otherServiceContainer');
-    const otherInput = form.querySelector('#otherServiceInput');
-    if (serviceSelect && otherContainer && otherInput) {
-      const toggleOtherField = () => {
-        const selected = Array.from(serviceSelect.selectedOptions).map(opt => opt.value);
-        if (selected.includes('Outro')) {
-          otherContainer.style.display = '';
-          otherInput.required = true;
-        } else {
-          otherContainer.style.display = 'none';
-          otherInput.required = false;
-          otherInput.value = '';
-        }
-      };
-      serviceSelect.addEventListener('change', toggleOtherField);
-      toggleOtherField();
-    }
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      const button = form.querySelector("button[type=submit]");
-      if (!button) return;
-
-      const originalText = button.innerHTML;
-      const captchaResponse = getCaptchaResponse(form);
-
-      if (!captchaResponse) {
-        button.innerHTML = '<i class="fas fa-shield-halved"></i> Confirme o reCAPTCHA.';
-        button.style.backgroundColor = "#b45309";
-        setTimeout(() => {
-          button.innerHTML = originalText;
-          button.style.backgroundColor = "";
-        }, 3000);
-        return;
-      }
-
-      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-      button.disabled = true;
-
-      try {
-        const formData = new FormData(form);
-        formData.set("g-recaptcha-response", captchaResponse);
-
-        const response = await fetch(resolveContactEndpoint(form), {
-          method: "POST",
-          body: formData,
-        });
-
-        const result = await parseContactResponse(response);
-
-        if (!response.ok || !result.success) {
-          let msg = result.message || "Não foi possível enviar.";
-          if (result.error) {
-            msg += `<br><small style='font-size:0.9em;color:#fff;'>${result.error}</small>`;
-          }
-          button.innerHTML = `<i class="fas fa-triangle-exclamation"></i> ${msg}`;
-          button.style.backgroundColor = "#dc2626";
-        } else {
-          button.innerHTML = '<i class="fas fa-check"></i> Mensagem enviada!';
-          button.style.backgroundColor = "#16a34a";
-          form.reset();
-          resetCaptcha(form);
-        }
-      } catch (error) {
-        button.innerHTML = '<i class="fas fa-circle-info"></i> Envio indisponível. Use WhatsApp ou e-mail.';
-        button.style.backgroundColor = "#b45309";
-        resetCaptcha(form);
-      } finally {
-        setTimeout(() => {
-          button.innerHTML = originalText;
-          button.style.backgroundColor = "";
-          button.disabled = false;
-        }, 4500);
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+        observer.unobserve(entry.target);
       }
     });
+  }, { threshold: 0.1 });
+
+  const reveals = document.querySelectorAll(".reveal");
+  console.log(`[initReveal] Observando ${reveals.length} elementos com classe .reveal`);
+  reveals.forEach(elem => {
+    observer.observe(elem);
+  });
+}
+
+function initCards() {
+  // Função para inicializar lógica dos cards se necessário
+  // Por enquanto, pode estar vazia se os cards não requerem JS dinâmico
+}
+
+function initCounters() {
+  // Função para inicializar contadores se necessário
+  // Por enquanto, pode estar vazia se os contadores não requerem JS dinâmico
+}
+
+
 
 function initFloatingButtons() {
   const floatingButtons = document.querySelector(".floating-buttons");
@@ -329,18 +278,26 @@ function initFloatingButtons() {
 }
 
 function initSite() {
+  console.log("[initSite] Iniciando inicializações da página...");
   initHero();
   initMenu();
   initHeaderScroll();
   initReveal();
   initCards();
   initCounters();
-  initContactForms();
   initFloatingButtons();
   initPortfolioCarousel();
+  console.log("[initSite] Todas as inicializações foram completadas!");
 }
 
-document.addEventListener("DOMContentLoaded", initSite);
-document.addEventListener("components:loaded", initSite);
-window.addEventListener("load", ensureCaptchaWidgets);
-window.onRecaptchaReady = ensureCaptchaWidgets;
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("[Main] DOMContentLoaded disparado");
+  initSite();
+});
+
+document.addEventListener("components:loaded", () => {
+  console.log("[Main] components:loaded disparado - reinicializando reveal");
+  // Reinicializar reveal para novos elementos injetados
+  window.__revealBound = false;
+  initReveal();
+});

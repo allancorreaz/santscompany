@@ -1590,7 +1590,7 @@ body {
 .stats-section {
   background: linear-gradient(155deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%);
   color: var(--accent);
-  padding: 100px 0;
+  padding: var(--spacing-component-top-desktop) 0 var(--spacing-component-bottom-desktop);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -3307,7 +3307,7 @@ footer::after {
   color: #ffffff;
   position: relative;
   overflow: hidden;
-  padding: 100px 0;
+  padding: var(--spacing-component-top-desktop) 0 var(--spacing-component-bottom-desktop);
 }
 
 .google-reviews-bg {
@@ -3647,6 +3647,85 @@ footer::after {
 
 .review-read-more i {
   font-size: 0.75rem;
+}
+
+/* ================================
+   INJECTED COMPONENTS - Minimal
+================================ */
+/* ================================
+   CONTROLE CENTRALIZADO DE ESPAÇAMENTO
+   Componentes Injetados
+================================ */
+
+/* Variáveis de espaçamento - EDITAR AQUI */
+:root {
+  /* Desktop */
+    --spacing-component-top-desktop: 20px;
+    --spacing-component-bottom-desktop: 20px;
+  
+  /* Mobile */
+    --spacing-component-top-mobile: 19px;
+    --spacing-component-bottom-mobile: 19px;
+}
+
+/* Display block para todos os componentes */
+.global-header,
+.global-footer,
+.import-portfolio,
+.import-contact-form,
+.import-numeros-q-falam,
+.import-reviews-google {
+  display: block;
+  width: 100%;
+}
+
+/* Espaçamento DESKTOP de componentes injetados */
+.import-numeros-q-falam .stats-section,
+.import-reviews-google {
+  padding-top: var(--spacing-component-top-desktop);
+  padding-bottom: var(--spacing-component-bottom-desktop);
+}
+
+.import-portfolio {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.import-contact-form > section {
+  padding-top: var(--spacing-component-top-desktop);
+  padding-bottom: 100px;
+}
+
+.import-contact-form .title-form {
+  margin-top: 0;
+}
+
+/* Espaçamento MOBILE de componentes injetados */
+@media (max-width: 768px) {
+  :root {
+    --spacing-component-top-desktop: var(--spacing-component-top-mobile);
+    --spacing-component-bottom-desktop: var(--spacing-component-bottom-mobile);
+  }
+  
+  .import-numeros-q-falam .stats-section,
+  .import-reviews-google {
+    padding-top: var(--spacing-component-top-mobile);
+    padding-bottom: var(--spacing-component-bottom-mobile);
+  }
+  
+  .import-contact-form > section {
+    padding-top: var(--spacing-component-top-mobile);
+  }
+}
+
+.global-header,
+.global-footer,
+.import-portfolio,
+.import-contact-form,
+.import-numeros-q-falam,
+.import-reviews-google {
+  display: block;
+  width: 100%;
 }
 
 .review-date {
