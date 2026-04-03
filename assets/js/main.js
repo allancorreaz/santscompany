@@ -158,66 +158,42 @@ function initHero() {
   document.querySelector(".hero .container")?.classList.add("hero-visible");
 }
 
+// ✅ CORRIGIDO AQUI
 function initMenu() {
   const menuToggle = document.getElementById("menuToggle");
   const nav = document.querySelector(".nav");
-  
+
   if (!menuToggle || !nav) {
-    console.log("[Menu] Elementos não encontrados. Tentando novamente em 100ms...");
-    setTimeout(initMenu, 100);
     return;
   }
 
-  if (menuToggle.dataset.menuBound === "true") {
-    return;
-  }
+  if (menuToggle.dataset.bound === "true") return;
+  menuToggle.dataset.bound = "true";
 
-  menuToggle.dataset.menuBound = "true";
-
-  console.log("[Menu] Elementos encontrados. Inicializando...");
-
-  // Click no botão hamburguer
-  menuToggle.addEventListener("click", function(e) {
-    e.preventDefault();
+  menuToggle.addEventListener("click", function (e) {
     e.stopPropagation();
-    
+
     const isActive = nav.classList.toggle("active");
     menuToggle.setAttribute("aria-expanded", isActive ? "true" : "false");
-    console.log("[Menu] Menu " + (isActive ? "ABERTO" : "FECHADO"));
-    console.log("[Menu] Classes do nav:", nav.className);
   });
 
-  // Click em links fecha o menu
-  nav.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", function(e) {
-      // Permite que links com target="_blank" funcionem
-      if (!this.target || this.target !== "_blank") {
-        nav.classList.remove("active");
-        console.log("[Menu] Menu fechado por clique em link");
-      }
+  nav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      nav.classList.remove("active");
+      menuToggle.setAttribute("aria-expanded", "false");
     });
   });
 
-  // Click fora do menu fecha
-  if (!window.__menuDocBound) {
-    window.__menuDocBound = true;
-    document.addEventListener("click", function(e) {
-      const currentNav = document.querySelector(".nav");
-      const currentToggle = document.getElementById("menuToggle");
-
-      if (!currentNav || !currentToggle) return;
-
-      if (currentNav.classList.contains("active")) {
-        if (!currentNav.contains(e.target) && !currentToggle.contains(e.target)) {
-          currentNav.classList.remove("active");
-          currentToggle.setAttribute("aria-expanded", "false");
-          console.log("[Menu] Menu fechado por clique fora");
-        }
-      }
-    });
-  }
-
-  console.log("[Menu] Inicializado com sucesso!");
+  document.addEventListener("click", function (e) {
+    if (
+      nav.classList.contains("active") &&
+      !nav.contains(e.target) &&
+      !menuToggle.contains(e.target)
+    ) {
+      nav.classList.remove("active");
+      menuToggle.setAttribute("aria-expanded", "false");
+    }
+  });
 }
 
 function initHeaderScroll() {
@@ -248,23 +224,11 @@ function initReveal() {
   }, { threshold: 0.1 });
 
   const reveals = document.querySelectorAll(".reveal");
-  console.log(`[initReveal] Observando ${reveals.length} elementos com classe .reveal`);
-  reveals.forEach(elem => {
-    observer.observe(elem);
-  });
+  reveals.forEach(elem => observer.observe(elem));
 }
 
-function initCards() {
-  // Função para inicializar lógica dos cards se necessário
-  // Por enquanto, pode estar vazia se os cards não requerem JS dinâmico
-}
-
-function initCounters() {
-  // Função para inicializar contadores se necessário
-  // Por enquanto, pode estar vazia se os contadores não requerem JS dinâmico
-}
-
-
+function initCards() {}
+function initCounters() {}
 
 function initFloatingButtons() {
   const floatingButtons = document.querySelector(".floating-buttons");
@@ -295,7 +259,6 @@ function initFloatingButtons() {
 }
 
 function initSite() {
-  console.log("[initSite] Iniciando inicializações da página...");
   initHero();
   initMenu();
   initHeaderScroll();
@@ -304,16 +267,13 @@ function initSite() {
   initCounters();
   initFloatingButtons();
   initPortfolioCarousel();
-  console.log("[initSite] Todas as inicializações foram completadas!");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("[Main] DOMContentLoaded disparado");
   initSite();
 });
 
 document.addEventListener("components:loaded", () => {
-  console.log("[Main] components:loaded disparado - reinicializando menu e reveal");
   initMenu();
   window.__revealBound = false;
   initReveal();
