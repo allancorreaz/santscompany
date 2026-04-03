@@ -1,43 +1,52 @@
-function getCaptchaResponse(form) {
-  if (typeof window.grecaptcha === "undefined") return "";
-
-  const captchaElement = form.querySelector(".g-recaptcha");
-  if (!captchaElement) return "";
-
-  const widgetId = captchaElement.dataset.widgetId;
-  if (widgetId === undefined) return window.grecaptcha.getResponse();
-
-  return window.grecaptcha.getResponse(Number(widgetId));
+function getRecaptchaSiteKey(form) {
+  return (
+    form.dataset.recaptchaSitekey ||
+    window.SANTS_CONFIG?.recaptchaSiteKey ||
+    ""
+  );
 }
 
-function resetCaptcha(form) {
-  if (typeof window.grecaptcha === "undefined") return;
+function isLocalEnvironment() {
+  const host = window.location.hostname;
+  return host === "localhost" || host === "127.0.0.1";
+}
 
-  const captchaElement = form.querySelector(".g-recaptcha");
-  if (!captchaElement) return;
-
-  const widgetId = captchaElement.dataset.widgetId;
-  if (widgetId === undefined) {
-    window.grecaptcha.reset();
+async function waitForRecaptcha() {
+  if (typeof window.grecaptcha !== "undefined" && typeof window.grecaptcha.ready === "function") {
     return;
   }
 
-  window.grecaptcha.reset(Number(widgetId));
+  await new Promise((resolve, reject) => {
+    const startedAt = Date.now();
+    const intervalId = window.setInterval(() => {
+      if (typeof window.grecaptcha !== "undefined" && typeof window.grecaptcha.ready === "function") {
+        window.clearInterval(intervalId);
+        resolve();
+        return;
+      }
+
+      if (Date.now() - startedAt > 10000) {
+        window.clearInterval(intervalId);
+        reject(new Error("reCAPTCHA indisponivel"));
+      }
+    }, 100);
+  });
 }
 
-function ensureCaptchaWidgets() {
-  if (typeof window.grecaptcha === "undefined" || typeof window.grecaptcha.render !== "function") return;
+async function getCaptchaResponse(form) {
+  if (isLocalEnvironment()) return "local-dev-bypass";
 
-  document.querySelectorAll(".g-recaptcha").forEach((captchaElement) => {
-    if (captchaElement.dataset.widgetId) return;
+  const sitekey = getRecaptchaSiteKey(form);
+  if (!sitekey) return "";
 
-    const sitekey = captchaElement.dataset.sitekey;
-    const widgetId = window.grecaptcha.render(captchaElement, {
-      sitekey,
-      theme: "light",
+  await waitForRecaptcha();
+
+  return new Promise((resolve, reject) => {
+    window.grecaptcha.ready(() => {
+      window.grecaptcha.execute(sitekey, { action: "contact_form_submit" })
+        .then(resolve)
+        .catch(reject);
     });
-
-    captchaElement.dataset.widgetId = String(widgetId);
   });
 }
 
@@ -61,29 +70,21 @@ function resolveContactEndpoint() {
   return isNestedPage ? "../send.php" : "./send.php";
 }
 
-/* ================================
-   FORMATAÇÃO DE DADOS
-================================ */
-
-// Capitalizar nome: "joão silva" → "João Silva"
 function capitalizeWords(str) {
   return str
     .toLowerCase()
     .replace(/(^|\s+)([^\s])/g, (match, spacing, char) => `${spacing}${char.toUpperCase()}`);
 }
 
-// Formatar telefone: remover tudo menos números, aplicar máscara (21) 99911-4096
 function formatPhoneNumber(phone) {
-  const numbers = phone.replace(/\D/g, '');  // Remove tudo que não é número
-  
+  const numbers = phone.replace(/\D/g, "");
+
   if (numbers.length <= 2) return numbers;
   if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
-  
-  // Formato: (XX) XXXXX-XXXX
+
   return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
 }
 
-// Formatar mensagem: primeira letra maiúscula + ponto final + capitalizar após pontos
 function formatMessage(msg) {
   if (!msg) return msg;
 
@@ -97,66 +98,59 @@ function formatMessage(msg) {
 }
 
 function formatFormData(formData) {
-  const nameInput = formData.get('name');
+  const nameInput = formData.get("name");
   if (nameInput) {
-    formData.set('name', capitalizeWords(nameInput));
+    formData.set("name", capitalizeWords(nameInput));
   }
-  
-  // Combinar país + DDD + telefone
-  const phoneCountry = formData.get('phoneCountry') || '+55';
-  const phone = formData.get('phone');
+
+  const phoneCountry = formData.get("phoneCountry") || "+55";
+  const phone = formData.get("phone");
   if (phone) {
     const formatted = formatPhoneNumber(phone);
-    formData.set('phone', `${phoneCountry} ${formatted}`);
+    formData.set("phone", `${phoneCountry} ${formatted}`);
   }
-  
-  // 💬 Capitalizar mensagem
-  const messageInput = formData.get('message');
+
+  const messageInput = formData.get("message");
   if (messageInput) {
     const formattedMessage = formatMessage(messageInput).trimEnd();
-    formData.set('message', /[.!?]$/.test(formattedMessage) ? formattedMessage : `${formattedMessage}.`);
+    formData.set("message", /[.!?]$/.test(formattedMessage) ? formattedMessage : `${formattedMessage}.`);
   }
-  
+
   return formData;
 }
 
 function initContactForms() {
-  ensureCaptchaWidgets();
-
-  // 📱 Formatar telefone em tempo real
   const phoneInput = document.querySelector('input[name="phone"]');
   if (phoneInput) {
-    phoneInput.addEventListener('input', (e) => {
-      e.target.value = formatPhoneNumber(e.target.value);
+    phoneInput.addEventListener("input", (event) => {
+      event.target.value = formatPhoneNumber(event.target.value);
     });
   }
 
-  // 🔤 Capitalizar NOME em tempo real (letra maiúscula após espaços)
   const nameInput = document.querySelector('input[name="name"]');
   if (nameInput) {
-    nameInput.addEventListener('input', (e) => {
-      e.target.value = capitalizeWords(e.target.value);
+    nameInput.addEventListener("input", (event) => {
+      event.target.value = capitalizeWords(event.target.value);
     });
   }
 
-  // 💬 Formatar MENSAGEM em tempo real (primeira letra + após pontos)
   const messageInput = document.querySelector('textarea[name="message"]');
   if (messageInput) {
-    messageInput.addEventListener('input', (e) => {
-      const { selectionStart, selectionEnd } = e.target;
-      const formattedMessage = formatMessage(e.target.value);
+    messageInput.addEventListener("input", (event) => {
+      const { selectionStart, selectionEnd } = event.target;
+      const formattedMessage = formatMessage(event.target.value);
 
-      if (formattedMessage !== e.target.value) {
-        e.target.value = formattedMessage;
+      if (formattedMessage !== event.target.value) {
+        event.target.value = formattedMessage;
         if (selectionStart !== null && selectionEnd !== null) {
-          e.target.setSelectionRange(selectionStart, selectionEnd);
+          event.target.setSelectionRange(selectionStart, selectionEnd);
         }
       }
     });
 
-    messageInput.addEventListener('blur', (e) => {
-      const formattedMessage = formatMessage(e.target.value).trimEnd();
-      e.target.value = formattedMessage
+    messageInput.addEventListener("blur", (event) => {
+      const formattedMessage = formatMessage(event.target.value).trimEnd();
+      event.target.value = formattedMessage
         ? (/[.!?]$/.test(formattedMessage) ? formattedMessage : `${formattedMessage}.`)
         : "";
     });
@@ -172,24 +166,20 @@ function initContactForms() {
       const button = form.querySelector("button[type=submit]");
       const originalText = button.innerHTML;
 
-      const captchaResponse = getCaptchaResponse(form);
-
-      if (!captchaResponse) {
-        button.innerHTML = "Confirme o reCAPTCHA";
-        button.style.backgroundColor = "#b45309";
-        setTimeout(() => {
-          button.innerHTML = originalText;
-          button.style.backgroundColor = "";
-        }, 3000);
-        return;
-      }
-
       button.innerHTML = "Enviando...";
       button.disabled = true;
 
       try {
+        const captchaResponse = await getCaptchaResponse(form);
+
+        if (!captchaResponse) {
+          button.innerHTML = "Falha no reCAPTCHA";
+          button.style.backgroundColor = "#b45309";
+          return;
+        }
+
         let formData = new FormData(form);
-        formData = formatFormData(formData);  // ✅ Capitalizar nome
+        formData = formatFormData(formData);
         formData.set("g-recaptcha-response", captchaResponse);
 
         const response = await fetch(resolveContactEndpoint(), {
@@ -206,15 +196,13 @@ function initContactForms() {
           button.innerHTML = "Enviado com sucesso!";
           button.style.backgroundColor = "#16a34a";
           form.reset();
-          resetCaptcha(form);
         }
-
       } catch {
         button.innerHTML = "Erro de conexão";
         button.style.backgroundColor = "#b45309";
       }
 
-      setTimeout(() => {
+      window.setTimeout(() => {
         button.innerHTML = originalText;
         button.style.backgroundColor = "";
         button.disabled = false;
@@ -223,91 +211,83 @@ function initContactForms() {
   });
 }
 
-/* ================================
-   CUSTOM SELECT INITIALIZATION (Multi-Select)
-================================ */
 function initCustomSelects(root = document) {
-  root.querySelectorAll('.custom-select-wrapper').forEach(function (wrapper) {
-    if (wrapper.dataset.initialized === 'true') return;
-    wrapper.dataset.initialized = 'true';
+  root.querySelectorAll(".custom-select-wrapper").forEach((wrapper) => {
+    if (wrapper.dataset.initialized === "true") return;
+    wrapper.dataset.initialized = "true";
 
-    const nativeSelect = wrapper.querySelector('select');
+    const nativeSelect = wrapper.querySelector("select");
     if (!nativeSelect) return;
 
-    // Limpar versões antigas
-    wrapper.querySelectorAll('.custom-select, .custom-options').forEach(e => e.remove());
+    wrapper.querySelectorAll(".custom-select, .custom-options").forEach((element) => element.remove());
 
-    // Criar display do select customizado
-    const customSelect = document.createElement('div');
-    customSelect.className = 'custom-select';
+    const customSelect = document.createElement("div");
+    customSelect.className = "custom-select";
     customSelect.tabIndex = 0;
     wrapper.appendChild(customSelect);
 
-    // Criar lista de opções
-    const optionsList = document.createElement('div');
-    optionsList.className = 'custom-options';
+    const optionsList = document.createElement("div");
+    optionsList.className = "custom-options";
     wrapper.appendChild(optionsList);
 
-    // Popular opções
-    Array.from(nativeSelect.options).forEach(function (opt, idx) {
-      const optDiv = document.createElement('div');
-      optDiv.className = 'option';
+    Array.from(nativeSelect.options).forEach((opt, idx) => {
+      const optDiv = document.createElement("div");
+      optDiv.className = "option";
       optDiv.textContent = opt.textContent;
       optDiv.dataset.index = idx;
       optDiv.dataset.value = opt.value;
       optionsList.appendChild(optDiv);
     });
 
-    // Função para atualizar o display
     function updateDisplay() {
       const selectedOptions = Array.from(nativeSelect.selectedOptions);
-      customSelect.innerHTML = '';
+      customSelect.innerHTML = "";
 
       if (selectedOptions.length === 0) {
-        const placeholder = document.createElement('div');
-        placeholder.className = 'placeholder';
-        placeholder.textContent = 'Selecione o seu serviço';
+        const placeholder = document.createElement("div");
+        placeholder.className = "placeholder";
+        placeholder.textContent = "Selecione o seu serviço";
         customSelect.appendChild(placeholder);
-        customSelect.appendChild(document.createElement('span')).className = 'arrow';
-        customSelect.querySelector('.arrow').textContent = '▼';
+        customSelect.appendChild(document.createElement("span")).className = "arrow";
+        customSelect.querySelector(".arrow").textContent = "▼";
       } else {
-        const tagContainer = document.createElement('div');
-        tagContainer.style.display = 'flex';
-        tagContainer.style.flexWrap = 'wrap';
-        tagContainer.style.gap = '6px';
-        tagContainer.style.flex = '1';
+        const tagContainer = document.createElement("div");
+        tagContainer.style.display = "flex";
+        tagContainer.style.flexWrap = "wrap";
+        tagContainer.style.gap = "6px";
+        tagContainer.style.flex = "1";
 
-        selectedOptions.forEach(opt => {
-          const tag = document.createElement('span');
-          tag.className = 'tag';
-          tag.style.display = 'inline-flex';
-          tag.style.alignItems = 'center';
-          tag.style.gap = '4px';
-          tag.style.background = '#e0e7ff';
-          tag.style.color = '#3730a3';
-          tag.style.padding = '4px 8px';
-          tag.style.borderRadius = '6px';
-          tag.style.fontSize = '0.85rem';
+        selectedOptions.forEach((opt) => {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.style.display = "inline-flex";
+          tag.style.alignItems = "center";
+          tag.style.gap = "4px";
+          tag.style.background = "#e0e7ff";
+          tag.style.color = "#3730a3";
+          tag.style.padding = "4px 8px";
+          tag.style.borderRadius = "6px";
+          tag.style.fontSize = "0.85rem";
 
-          const text = document.createElement('span');
+          const text = document.createElement("span");
           text.textContent = opt.textContent;
           tag.appendChild(text);
 
-          const removeBtn = document.createElement('span');
-          removeBtn.className = 'remove-tag';
-          removeBtn.textContent = '×';
-          removeBtn.style.cursor = 'pointer';
-          removeBtn.style.fontWeight = 'bold';
-          removeBtn.style.color = '#3730a3';
-          removeBtn.style.fontSize = '1.2rem';
-          removeBtn.style.lineHeight = '1';
-          removeBtn.style.display = 'flex';
-          removeBtn.style.alignItems = 'center';
-          removeBtn.style.justifyContent = 'center';
+          const removeBtn = document.createElement("span");
+          removeBtn.className = "remove-tag";
+          removeBtn.textContent = "×";
+          removeBtn.style.cursor = "pointer";
+          removeBtn.style.fontWeight = "bold";
+          removeBtn.style.color = "#3730a3";
+          removeBtn.style.fontSize = "1.2rem";
+          removeBtn.style.lineHeight = "1";
+          removeBtn.style.display = "flex";
+          removeBtn.style.alignItems = "center";
+          removeBtn.style.justifyContent = "center";
 
-          removeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+          removeBtn.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
             opt.selected = false;
             updateDisplay();
             updateOptionsUI();
@@ -318,93 +298,83 @@ function initCustomSelects(root = document) {
         });
 
         customSelect.appendChild(tagContainer);
-        const arrow = document.createElement('span');
-        arrow.className = 'arrow';
-        arrow.textContent = '▼';
-        arrow.style.marginLeft = 'auto';
+        const arrow = document.createElement("span");
+        arrow.className = "arrow";
+        arrow.textContent = "▼";
+        arrow.style.marginLeft = "auto";
         customSelect.appendChild(arrow);
       }
 
-      // Mostrar/ocultar campo "Outro"
-      const form = wrapper.closest('form');
+      const form = wrapper.closest("form");
       if (form) {
-        const otherContainer = form.querySelector('#otherServiceContainer');
+        const otherContainer = form.querySelector("#otherServiceContainer");
         if (otherContainer) {
-          const hasOutro = selectedOptions.some(o => o.value === 'Outro');
-          otherContainer.style.display = hasOutro ? 'block' : 'none';
+          const hasOutro = selectedOptions.some((option) => option.value === "Outro");
+          otherContainer.style.display = hasOutro ? "block" : "none";
         }
       }
     }
 
-    // Função para atualizar visual das opções
     function updateOptionsUI() {
       Array.from(nativeSelect.options).forEach((opt, idx) => {
         const optDiv = optionsList.querySelector(`[data-index="${idx}"]`);
-        if (optDiv) {
-          if (opt.selected) {
-            optDiv.classList.add('selected');
-          } else {
-            optDiv.classList.remove('selected');
-          }
+        if (!optDiv) return;
+
+        if (opt.selected) {
+          optDiv.classList.add("selected");
+        } else {
+          optDiv.classList.remove("selected");
         }
       });
     }
 
-    // Toggle dropdown
-    customSelect.addEventListener('click', (e) => {
-      e.stopPropagation();
-      customSelect.classList.toggle('open');
+    customSelect.addEventListener("click", (event) => {
+      event.stopPropagation();
+      customSelect.classList.toggle("open");
     });
 
-    // 🎯 Abrir em hover
-    wrapper.addEventListener('mouseenter', () => {
-      customSelect.classList.add('open');
+    wrapper.addEventListener("mouseenter", () => {
+      customSelect.classList.add("open");
     });
 
-    wrapper.addEventListener('mouseleave', () => {
-      customSelect.classList.remove('open');
+    wrapper.addEventListener("mouseleave", () => {
+      customSelect.classList.remove("open");
     });
 
-    // Fechar dropdown quando clicar fora
-    document.addEventListener('click', (e) => {
-      if (!wrapper.contains(e.target)) {
-        customSelect.classList.remove('open');
+    document.addEventListener("click", (event) => {
+      if (!wrapper.contains(event.target)) {
+        customSelect.classList.remove("open");
       }
     });
 
-    // Clicar em opção
-    optionsList.addEventListener('click', (e) => {
-      if (!e.target.classList.contains('option')) return;
+    optionsList.addEventListener("click", (event) => {
+      if (!event.target.classList.contains("option")) return;
 
-      const index = parseInt(e.target.dataset.index);
+      const index = parseInt(event.target.dataset.index, 10);
       const option = nativeSelect.options[index];
       if (option) {
         option.selected = !option.selected;
         updateDisplay();
         updateOptionsUI();
-        // 🎯 FECHAR após seleção
-        customSelect.classList.remove('open');
+        customSelect.classList.remove("open");
       }
     });
 
-    // Atualizar quando select nativo muda
-    nativeSelect.addEventListener('change', () => {
+    nativeSelect.addEventListener("change", () => {
       updateDisplay();
       updateOptionsUI();
     });
 
-    // Inicializar
     updateDisplay();
     updateOptionsUI();
   });
 }
 
-/* Auto-detect new selects when DOM changes */
 const observer = new MutationObserver((mutations) => {
   for (const mutation of mutations) {
     for (const node of mutation.addedNodes) {
       if (node.nodeType === 1) {
-        if (node.matches?.('.custom-select-wrapper') || node.querySelector?.('.custom-select-wrapper')) {
+        if (node.matches?.(".custom-select-wrapper") || node.querySelector?.(".custom-select-wrapper")) {
           initCustomSelects(node);
         }
       }
@@ -417,9 +387,6 @@ observer.observe(document.body, {
   subtree: true
 });
 
-/* ================================
-   UNIFIED FORMS INITIALIZATION
-================================ */
 function initFormsBundle() {
   initCustomSelects();
   initContactForms();
@@ -427,4 +394,3 @@ function initFormsBundle() {
 
 document.addEventListener("DOMContentLoaded", initFormsBundle);
 document.addEventListener("components:loaded", initFormsBundle);
-window.onRecaptchaReady = ensureCaptchaWidgets;

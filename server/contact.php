@@ -75,6 +75,26 @@ function json_error(string $message, int $status = 400): void
     exit;
 }
 
+function append_submission_log(array $payload): void
+{
+    $storageDir = __DIR__ . '/storage';
+    $storageFile = $storageDir . '/contact-submissions.jsonl';
+
+    if (!is_dir($storageDir) && !mkdir($storageDir, 0775, true) && !is_dir($storageDir)) {
+        throw new RuntimeException('Nao foi possivel preparar o armazenamento local dos leads.');
+    }
+
+    $jsonLine = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if ($jsonLine === false) {
+        throw new RuntimeException('Nao foi possivel serializar o lead para armazenamento local.');
+    }
+
+    $written = file_put_contents($storageFile, $jsonLine . PHP_EOL, FILE_APPEND | LOCK_EX);
+    if ($written === false) {
+        throw new RuntimeException('Nao foi possivel gravar o lead no armazenamento local.');
+    }
+}
+
 function has_effective_value(string $value, array $invalidValues = []): bool
 {
     $trimmed = trim($value);
@@ -85,16 +105,40 @@ function has_effective_value(string $value, array $invalidValues = []): bool
     return !in_array($trimmed, $invalidValues, true);
 }
 
+function is_local_request(): bool
+{
+    $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
+    $serverName = strtolower($_SERVER['SERVER_NAME'] ?? '');
+    $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '';
+
+    foreach ([$host, $serverName] as $candidate) {
+        if ($candidate === '') {
+            continue;
+        }
+
+        if (str_contains($candidate, 'localhost') || str_contains($candidate, '127.0.0.1')) {
+            return true;
+        }
+    }
+
+    return in_array($remoteAddr, ['127.0.0.1', '::1'], true);
+}
+
 /* ========================= RECAPTCHA (FIX COMPLETO) ========================= */
 
 function verify_recaptcha(string $captchaResponse): bool
 {
+    if (is_local_request()) {
+        error_log('reCAPTCHA ignorado em ambiente local.');
+        return true;
+    }
+
     if ($captchaResponse === '') {
         error_log('reCAPTCHA vazio');
         return false;
     }
 
-    if (!has_effective_value(RECAPTCHA_SECRET, ['6Lef96IsAAAAACIXBe7Uz9lrnOslrhurO2Jxn8HY'])) {
+    if (!has_effective_value(RECAPTCHA_SECRET, ['6Le_Z6UsAAAAABGcDakFgW0ghkPSpsO9aFdNC1cA', 'SEU_RECAPTCHA_SECRET_AQUI'])) {
         return true; // modo dev
     }
 
@@ -157,9 +201,23 @@ function verify_recaptcha(string $captchaResponse): bool
 
     if (!($decoded['success'] ?? false)) {
         error_log('reCAPTCHA falhou: ' . json_encode($decoded));
+        return false;
     }
 
-    return (bool) ($decoded['success'] ?? false);
+    $action = $decoded['action'] ?? '';
+    $score = (float) ($decoded['score'] ?? 0);
+
+    if ($action !== '' && $action !== 'contact_form_submit') {
+        error_log('reCAPTCHA action invalida: ' . $action);
+        return false;
+    }
+
+    if (array_key_exists('score', $decoded) && $score < 0.5) {
+        error_log('reCAPTCHA score baixo: ' . $score);
+        return false;
+    }
+
+    return true;
 }
 
 /* ========================= RESTO DO SEU CÓDIGO (INALTERADO) ========================= */
@@ -196,6 +254,18 @@ if ($name === '' || $email === '' || $message === '') {
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     json_error('Informe um e-mail valido.');
 }
+
+$submissionData = [
+    'received_at' => date(DATE_ATOM),
+    'name' => $name,
+    'email' => $email,
+    'phone' => $phone,
+    'service' => $serviceType,
+    'otherService' => $otherService,
+    'message' => $message,
+    'ip' => $_SERVER['REMOTE_ADDR'] ?? '',
+    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
+];
 
 /* ========================= ENVIO ORIGINAL ========================= */
 
@@ -348,11 +418,30 @@ try {
         throw new RuntimeException('O transporte de e-mail nao confirmou o envio.');
     }
 
+    append_submission_log(array_merge($submissionData, [
+        'delivery' => 'email',
+        'delivery_status' => 'sent',
+        'date' => date('d/m/Y H:i:s'),
+    ]));
+
     json_success('Mensagem enviada com sucesso.', [
         'delivery' => 'email',
     ]);
 
 } catch (Throwable $exception) {
     error_log('Erro no formulario de contato: ' . $exception->getMessage());
-    json_error('Erro ao enviar.', 500);
+
+    try {
+        append_submission_log(array_merge($submissionData, [
+            'delivery' => 'local_storage',
+            'delivery_status' => 'failed_email',
+            'date' => date('d/m/Y H:i:s'),
+            'reason' => $exception->getMessage(),
+        ]));
+
+        json_error('Lead salvo localmente, mas houve falha no envio por e-mail.', 500);
+    } catch (Throwable $storageException) {
+        error_log('Erro ao salvar lead localmente: ' . $storageException->getMessage());
+        json_error('Erro ao enviar.', 500);
+    }
 }

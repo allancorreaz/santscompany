@@ -1,4 +1,5 @@
 <?php
+define('RECAPTCHA_SITE_KEY', 'SUA_RECAPTCHA_SITE_KEY_AQUI');
 define('FROM_EMAIL', 'contato@santscompany.com');
 define('TO_EMAIL', 'contato@santscompany.com');
 define('SMTP_HOST', 'smtp.zoho.com');

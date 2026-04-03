@@ -15,12 +15,10 @@
     </aside>
 
     <div class="content-card reveal">
-      <form class="contact-form reveal" id="contactForm" autocomplete="off">
-
+      <form class="contact-form reveal" id="contactForm" autocomplete="off" data-recaptcha-sitekey="{{RECAPTCHA_SITE_KEY}}">
         <input type="text" name="name" placeholder="Seu nome" required autocomplete="off">
         <input type="email" name="email" placeholder="Seu e-mail" required autocomplete="off">
-        
-        <!-- 📱 Telefone com Código de País + DDD -->
+
         <div style="display: grid; grid-template-columns: 80px 1fr; gap: 8px;">
           <select name="phoneCountry" id="phoneCountry" style="border-radius: 10px; border: 1.5px solid #e5e7eb; padding: 12px 8px; background: #fff; font-size: 0.95rem;">
             <option value="+55">🇧🇷 +55</option>
@@ -33,13 +31,13 @@
         </div>
 
         <div class="custom-select-wrapper">
-         <select name="serviceType" id="serviceType" required multiple class="form-select-multi">
-           <option value="Desenvolvimento Web">Desenvolvimento Web</option>
-           <option value="Trafego Pago & SEO">Trafego Pago & SEO</option>
-           <option value="Social Media">Social Media</option>
-           <option value="Marketing Digital">Marketing Digital</option>
-           <option value="Web Designer">Web Designer</option>
-           <option value="Outro">Outro</option>
+          <select name="serviceType" id="serviceType" required multiple class="form-select-multi">
+            <option value="Desenvolvimento Web">Desenvolvimento Web</option>
+            <option value="Trafego Pago & SEO">Trafego Pago & SEO</option>
+            <option value="Social Media">Social Media</option>
+            <option value="Marketing Digital">Marketing Digital</option>
+            <option value="Web Designer">Web Designer</option>
+            <option value="Outro">Outro</option>
           </select>
         </div>
 
@@ -51,16 +49,12 @@
 
         <textarea name="message" placeholder="Conte sobre seu projeto ou objetivo..." required autocomplete="off"></textarea>
 
-        <div class="g-recaptcha" data-sitekey="6Lef96IsAAAAALwi_sCd91i6ZA9RhB0OoxkYX0CP"></div>
+        <p class="form-note">Este formulário é protegido por reCAPTCHA v3.</p>
 
         <button type="submit" class="btn-primary btn-submit" id="submitBtn">
           <i class="fas fa-paper-plane"></i> Enviar mensagem
         </button>
-
       </form>
     </div>
   </div>
 </section>
-
-<!-- 🔥 IMPORTANTE -->
-<script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaReady&render=explicit" async defer></script>

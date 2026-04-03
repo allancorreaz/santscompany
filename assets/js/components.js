@@ -7,7 +7,10 @@
   }
 
   function resolveTemplate(html, basePath) {
-    return html.replaceAll("{{BASE_PATH}}", basePath);
+    const recaptchaSiteKey = window.SANTS_CONFIG?.recaptchaSiteKey || "";
+    return html
+      .replaceAll("{{BASE_PATH}}", basePath)
+      .replaceAll("{{RECAPTCHA_SITE_KEY}}", recaptchaSiteKey);
   }
 
   function applyActiveState() {
@@ -59,22 +62,14 @@
       inject(".import-numeros-q-falam", `${basePath}components/numeros-q-falam.html`, basePath),
     ];
 
-    // Após injetar contact-form, garantir que reCAPTCHA widgets sejam renderizados
-    Promise.resolve(injections[3]).then(() => {
-      if (typeof window.ensureCaptchaWidgets === "function") {
-        window.ensureCaptchaWidgets();
-      }
-    });
-
     Promise.all(injections)
       .then(() => {
         applyActiveState();
-        
-        // Re-inicializar animações de reveal para elementos injetados
+
         if (typeof window.initReveal === "function") {
           window.initReveal();
         }
-        
+
         console.log("[Components] Todos os componentes foram injetados!");
         document.dispatchEvent(new CustomEvent("components:loaded"));
       })
