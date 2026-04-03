@@ -175,27 +175,26 @@ function initContactForms() {
         if (!captchaResponse) {
           button.innerHTML = "Falha no reCAPTCHA";
           button.style.backgroundColor = "#b45309";
-          return;
-        }
-
-        let formData = new FormData(form);
-        formData = formatFormData(formData);
-        formData.set("g-recaptcha-response", captchaResponse);
-
-        const response = await fetch(resolveContactEndpoint(), {
-          method: "POST",
-          body: formData,
-        });
-
-        const result = await parseContactResponse(response);
-
-        if (!response.ok || !result.success) {
-          button.innerHTML = result.message || "Erro ao enviar";
-          button.style.backgroundColor = "#dc2626";
         } else {
-          button.innerHTML = "Enviado com sucesso!";
-          button.style.backgroundColor = "#16a34a";
-          form.reset();
+          let formData = new FormData(form);
+          formData = formatFormData(formData);
+          formData.set("g-recaptcha-response", captchaResponse);
+
+          const response = await fetch(resolveContactEndpoint(), {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await parseContactResponse(response);
+
+          if (!response.ok || !result.success) {
+            button.innerHTML = result.message || "Erro ao enviar";
+            button.style.backgroundColor = "#dc2626";
+          } else {
+            button.innerHTML = "Enviado com sucesso!";
+            button.style.backgroundColor = "#16a34a";
+            form.reset();
+          }
         }
       } catch {
         button.innerHTML = "Erro de conexão";
@@ -318,12 +317,8 @@ function initCustomSelects(root = document) {
     function updateOptionsUI() {
       Array.from(nativeSelect.options).forEach((opt, idx) => {
         const optDiv = optionsList.querySelector(`[data-index="${idx}"]`);
-        if (!optDiv) return;
-
-        if (opt.selected) {
-          optDiv.classList.add("selected");
-        } else {
-          optDiv.classList.remove("selected");
+        if (optDiv) {
+          optDiv.classList.toggle("selected", opt.selected);
         }
       });
     }
