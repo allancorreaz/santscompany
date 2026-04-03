@@ -161,46 +161,63 @@ function initHero() {
 function initMenu() {
   const menuToggle = document.getElementById("menuToggle");
   const nav = document.querySelector(".nav");
-  if (!menuToggle || !nav || menuToggle.dataset.bound === "true") return;
-
-  if (!nav.id) {
-    nav.id = "siteNav";
+  
+  if (!menuToggle || !nav) {
+    console.log("[Menu] Elementos não encontrados. Tentando novamente em 100ms...");
+    setTimeout(initMenu, 100);
+    return;
   }
 
-  const closeMenu = () => {
-    nav.classList.remove("active");
-    menuToggle.classList.remove("is-active");
-    menuToggle.setAttribute("aria-expanded", "false");
-    menuToggle.setAttribute("aria-label", "Abrir menu");
-  };
+  if (menuToggle.dataset.menuBound === "true") {
+    return;
+  }
 
-  menuToggle.dataset.bound = "true";
-  menuToggle.setAttribute("aria-expanded", "false");
-  menuToggle.setAttribute("aria-label", "Abrir menu");
-  menuToggle.addEventListener("click", () => {
+  menuToggle.dataset.menuBound = "true";
+
+  console.log("[Menu] Elementos encontrados. Inicializando...");
+
+  // Click no botão hamburguer
+  menuToggle.addEventListener("click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
     const isActive = nav.classList.toggle("active");
-    menuToggle.classList.toggle("is-active", isActive);
-    menuToggle.setAttribute("aria-expanded", String(isActive));
-    menuToggle.setAttribute("aria-label", isActive ? "Fechar menu" : "Abrir menu");
+    menuToggle.setAttribute("aria-expanded", isActive ? "true" : "false");
+    console.log("[Menu] Menu " + (isActive ? "ABERTO" : "FECHADO"));
+    console.log("[Menu] Classes do nav:", nav.className);
   });
 
-  document.querySelectorAll(".nav-link, .nav-cta").forEach((link) => {
-    if (link.dataset.bound === "true") return;
-    link.dataset.bound = "true";
-    link.addEventListener("click", closeMenu);
+  // Click em links fecha o menu
+  nav.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", function(e) {
+      // Permite que links com target="_blank" funcionem
+      if (!this.target || this.target !== "_blank") {
+        nav.classList.remove("active");
+        console.log("[Menu] Menu fechado por clique em link");
+      }
+    });
   });
 
-  document.addEventListener("click", (event) => {
-    if (!nav.classList.contains("active")) return;
-    if (nav.contains(event.target) || menuToggle.contains(event.target)) return;
-    closeMenu();
-  });
+  // Click fora do menu fecha
+  if (!window.__menuDocBound) {
+    window.__menuDocBound = true;
+    document.addEventListener("click", function(e) {
+      const currentNav = document.querySelector(".nav");
+      const currentToggle = document.getElementById("menuToggle");
 
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 768) {
-      closeMenu();
-    }
-  });
+      if (!currentNav || !currentToggle) return;
+
+      if (currentNav.classList.contains("active")) {
+        if (!currentNav.contains(e.target) && !currentToggle.contains(e.target)) {
+          currentNav.classList.remove("active");
+          currentToggle.setAttribute("aria-expanded", "false");
+          console.log("[Menu] Menu fechado por clique fora");
+        }
+      }
+    });
+  }
+
+  console.log("[Menu] Inicializado com sucesso!");
 }
 
 function initHeaderScroll() {
@@ -296,8 +313,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("components:loaded", () => {
-  console.log("[Main] components:loaded disparado - reinicializando reveal");
-  // Reinicializar reveal para novos elementos injetados
+  console.log("[Main] components:loaded disparado - reinicializando menu e reveal");
+  initMenu();
   window.__revealBound = false;
   initReveal();
 });

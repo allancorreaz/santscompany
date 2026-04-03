@@ -139,6 +139,22 @@ function initContactForms() {
     });
   }
 
+  // 🔤 Capitalizar NOME em tempo real (letra maiúscula após espaços)
+  const nameInput = document.querySelector('input[name="name"]');
+  if (nameInput) {
+    nameInput.addEventListener('input', (e) => {
+      e.target.value = capitalizeWords(e.target.value);
+    });
+  }
+
+  // 💬 Formatar MENSAGEM em tempo real (primeira letra + após pontos)
+  const messageInput = document.querySelector('textarea[name="message"]');
+  if (messageInput) {
+    messageInput.addEventListener('blur', (e) => {
+      e.target.value = formatMessage(e.target.value);
+    });
+  }
+
   document.querySelectorAll(".contact-form").forEach((form) => {
     if (form.dataset.bound === "true") return;
     form.dataset.bound = "true";
