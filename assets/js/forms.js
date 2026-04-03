@@ -56,7 +56,9 @@ async function parseContactResponse(response) {
 }
 
 function resolveContactEndpoint() {
-  return "send.php";
+  const pathname = window.location.pathname.replace(/\\/g, "/");
+  const isNestedPage = ["/pages/", "/blog/"].some((segment) => pathname.includes(segment));
+  return isNestedPage ? "../send.php" : "./send.php";
 }
 
 /* ================================
@@ -67,10 +69,7 @@ function resolveContactEndpoint() {
 function capitalizeWords(str) {
   return str
     .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .filter(word => word.trim())  // Remove palavras vazias
-    .join(' ');
+    .replace(/(^|\s+)([^\s])/g, (match, spacing, char) => `${spacing}${char.toUpperCase()}`);
 }
 
 // Formatar telefone: remover tudo menos números, aplicar máscara (21) 99911-4096
@@ -87,21 +86,13 @@ function formatPhoneNumber(phone) {
 // Formatar mensagem: primeira letra maiúscula + ponto final + capitalizar após pontos
 function formatMessage(msg) {
   if (!msg) return msg;
-  
-  // Remover espaços extras
-  let formatted = msg.trim();
-  
-  // Primeira letra maiúscula
+
+  let formatted = msg.trimStart();
+  if (!formatted) return "";
+
   formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
-  
-  // Adicionar ponto final se não tiver
-  if (!formatted.endsWith('.') && !formatted.endsWith('!') && !formatted.endsWith('?')) {
-    formatted += '.';
-  }
-  
-  // Capitalizar após pontos/exclamações/interrogações
-  formatted = formatted.replace(/([.!?])\s+([a-z])/g, (match, p1, p2) => p1 + ' ' + p2.toUpperCase());
-  
+  formatted = formatted.replace(/([.!?])(\s+)([a-zà-ÿ])/g, (match, punctuation, spacing, char) => `${punctuation}${spacing}${char.toUpperCase()}`);
+
   return formatted;
 }
 
@@ -122,7 +113,8 @@ function formatFormData(formData) {
   // 💬 Capitalizar mensagem
   const messageInput = formData.get('message');
   if (messageInput) {
-    formData.set('message', formatMessage(messageInput));
+    const formattedMessage = formatMessage(messageInput).trimEnd();
+    formData.set('message', /[.!?]$/.test(formattedMessage) ? formattedMessage : `${formattedMessage}.`);
   }
   
   return formData;
@@ -150,8 +142,23 @@ function initContactForms() {
   // 💬 Formatar MENSAGEM em tempo real (primeira letra + após pontos)
   const messageInput = document.querySelector('textarea[name="message"]');
   if (messageInput) {
+    messageInput.addEventListener('input', (e) => {
+      const { selectionStart, selectionEnd } = e.target;
+      const formattedMessage = formatMessage(e.target.value);
+
+      if (formattedMessage !== e.target.value) {
+        e.target.value = formattedMessage;
+        if (selectionStart !== null && selectionEnd !== null) {
+          e.target.setSelectionRange(selectionStart, selectionEnd);
+        }
+      }
+    });
+
     messageInput.addEventListener('blur', (e) => {
-      e.target.value = formatMessage(e.target.value);
+      const formattedMessage = formatMessage(e.target.value).trimEnd();
+      e.target.value = formattedMessage
+        ? (/[.!?]$/.test(formattedMessage) ? formattedMessage : `${formattedMessage}.`)
+        : "";
     });
   }
 
