@@ -43,6 +43,77 @@ Este repositório contém o código-fonte do site institucional da Sants Company
 4. E-mail é enviado via SMTP (PHPMailer) ou mail() nativo.
 5. Resposta JSON para AJAX, exibindo feedback ao usuário.
 
+## Estrutura Completa do Projeto
+
+```text
+Sants Company/
+├── .gitignore
+├── .htaccess
+├── .htaccess.example
+├── composer.json
+├── composer.lock
+├── config.php
+├── deploy.php
+├── index.html
+├── README-EMAIL.md
+├── README.md
+├── send.php
+├── setup-security.php
+├── teste.php
+├── assets/
+│   ├── css/
+│   │   ├── form-custom-select.css
+│   │   └── main.css
+│   ├── images/
+│   │   ├── branding/
+│   │   │   ├── Image.jpeg
+│   │   │   ├── Image.png
+│   │   │   ├── logo.png
+│   │   │   ├── logo.svg
+│   │   │   └── logo1.png
+│   │   └── library/
+│   │       ├── logo.png
+│   │       └── WhatsApp Image 2026-02-26 at 13.58.22.jpeg
+│   └── js/
+│       ├── blog-list.js
+│       ├── blog-post.js
+│       ├── components.js
+│       ├── forms.js
+│       └── main.js
+├── blog/
+│   ├── index.html
+│   ├── post.html
+│   ├── __backup__/
+│   └── img/
+├── components/
+│   ├── contact-form.html
+│   ├── footer.html
+│   ├── header.html
+│   ├── numeros-q-falam.html
+│   ├── portfolio.html
+│   └── reviews-google.html
+├── data/
+│   └── blog/
+│       └── posts.json
+├── pages/
+│   ├── contato.html
+│   ├── servicos.html
+│   └── sobre.html
+├── scripts/
+│   └── setup-security.php
+├── server/
+│   ├── contact.php
+│   ├── credentials-local.example.php
+│   ├── credentials-local.php
+│   ├── deploy-config.example.php
+│   ├── mail-config.php
+│   ├── storage/
+│   │   └── contact-submissions.jsonl
+│   └── tools/
+│       └── deploy-webhook.php
+└── vendor/
+```
+
 ## Tecnologias Utilizadas
 - HTML5, CSS3, JavaScript puro
 - PHP 7+

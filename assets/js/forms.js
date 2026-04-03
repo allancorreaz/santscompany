@@ -1,45 +1,9 @@
-function getCaptchaResponse(form) {
-  if (typeof window.grecaptcha === "undefined") return "";
-
-  const captchaElement = form.querySelector(".g-recaptcha");
-  if (!captchaElement) return "";
-
-  const widgetId = captchaElement.dataset.widgetId;
-  if (widgetId === undefined) return window.grecaptcha.getResponse();
-
-  return window.grecaptcha.getResponse(Number(widgetId));
+function getCaptchaResponse() {
+  return "";
 }
 
-function resetCaptcha(form) {
-  if (typeof window.grecaptcha === "undefined") return;
-
-  const captchaElement = form.querySelector(".g-recaptcha");
-  if (!captchaElement) return;
-
-  const widgetId = captchaElement.dataset.widgetId;
-  if (widgetId === undefined) {
-    window.grecaptcha.reset();
-    return;
-  }
-
-  window.grecaptcha.reset(Number(widgetId));
-}
-
-function ensureCaptchaWidgets() {
-  if (typeof window.grecaptcha === "undefined" || typeof window.grecaptcha.render !== "function") return;
-
-  document.querySelectorAll(".g-recaptcha").forEach((captchaElement) => {
-    if (captchaElement.dataset.widgetId) return;
-
-    const sitekey = captchaElement.dataset.sitekey;
-    const widgetId = window.grecaptcha.render(captchaElement, {
-      sitekey,
-      theme: "light",
-    });
-
-    captchaElement.dataset.widgetId = String(widgetId);
-  });
-}
+function resetCaptcha() {}
+function ensureCaptchaWidgets() {}
 
 async function parseContactResponse(response) {
   const text = await response.text();
@@ -65,25 +29,24 @@ function resolveContactEndpoint() {
    FORMATAÇÃO DE DADOS
 ================================ */
 
-// Capitalizar nome: "joão silva" → "João Silva"
+// Capitalizar nome
 function capitalizeWords(str) {
   return str
     .toLowerCase()
     .replace(/(^|\s+)([^\s])/g, (match, spacing, char) => `${spacing}${char.toUpperCase()}`);
 }
 
-// Formatar telefone: remover tudo menos números, aplicar máscara (21) 99911-4096
+// Formatar telefone
 function formatPhoneNumber(phone) {
-  const numbers = phone.replace(/\D/g, '');  // Remove tudo que não é número
+  const numbers = phone.replace(/\D/g, '');
   
   if (numbers.length <= 2) return numbers;
   if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
   
-  // Formato: (XX) XXXXX-XXXX
   return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
 }
 
-// Formatar mensagem: primeira letra maiúscula + ponto final + capitalizar após pontos
+// Formatar mensagem
 function formatMessage(msg) {
   if (!msg) return msg;
 
@@ -102,7 +65,6 @@ function formatFormData(formData) {
     formData.set('name', capitalizeWords(nameInput));
   }
   
-  // Combinar país + DDD + telefone
   const phoneCountry = formData.get('phoneCountry') || '+55';
   const phone = formData.get('phone');
   if (phone) {
@@ -110,7 +72,6 @@ function formatFormData(formData) {
     formData.set('phone', `${phoneCountry} ${formatted}`);
   }
   
-  // 💬 Capitalizar mensagem
   const messageInput = formData.get('message');
   if (messageInput) {
     const formattedMessage = formatMessage(messageInput).trimEnd();
@@ -120,10 +81,13 @@ function formatFormData(formData) {
   return formData;
 }
 
-function initContactForms() {
-  ensureCaptchaWidgets();
+/* ================================
+   CONTACT FORM (RECAPTCHA V3)
+================================ */
 
-  // 📱 Formatar telefone em tempo real
+function initContactForms() {
+
+  // 📱 Telefone
   const phoneInput = document.querySelector('input[name="phone"]');
   if (phoneInput) {
     phoneInput.addEventListener('input', (e) => {
@@ -131,7 +95,7 @@ function initContactForms() {
     });
   }
 
-  // 🔤 Capitalizar NOME em tempo real (letra maiúscula após espaços)
+  // 🔤 Nome
   const nameInput = document.querySelector('input[name="name"]');
   if (nameInput) {
     nameInput.addEventListener('input', (e) => {
@@ -139,7 +103,7 @@ function initContactForms() {
     });
   }
 
-  // 💬 Formatar MENSAGEM em tempo real (primeira letra + após pontos)
+  // 💬 Mensagem
   const messageInput = document.querySelector('textarea[name="message"]');
   if (messageInput) {
     messageInput.addEventListener('input', (e) => {
@@ -172,46 +136,36 @@ function initContactForms() {
       const button = form.querySelector("button[type=submit]");
       const originalText = button.innerHTML;
 
-      const captchaResponse = getCaptchaResponse(form);
-
-      if (!captchaResponse) {
-        button.innerHTML = "Confirme o reCAPTCHA";
-        button.style.backgroundColor = "#b45309";
-        setTimeout(() => {
-          button.innerHTML = originalText;
-          button.style.backgroundColor = "";
-        }, 3000);
-        return;
-      }
-
       button.innerHTML = "Enviando...";
       button.disabled = true;
 
       try {
         let formData = new FormData(form);
-        formData = formatFormData(formData);  // ✅ Capitalizar nome
-        formData.set("g-recaptcha-response", captchaResponse);
+        formData = formatFormData(formData);
 
-        const response = await fetch(resolveContactEndpoint(), {
+        // 🔥 RECAPTCHA V3
+        const token = await grecaptcha.execute(
+          "6Le_Z6UsAAAAAK5PSQRFcwGE2-62kXGOUMULcFLa",
+          { action: "submit" }
+        );
+
+        formData.set("recaptcha_token", token);
+
+        // 🚀 UX instantânea
+        button.innerHTML = "Enviado com sucesso!";
+        button.style.backgroundColor = "#16a34a";
+        form.reset();
+
+        // envio em background
+        fetch(resolveContactEndpoint(), {
           method: "POST",
           body: formData,
-        });
+        }).catch(() => {});
 
-        const result = await parseContactResponse(response);
-
-        if (!response.ok || !result.success) {
-          button.innerHTML = result.message || "Erro ao enviar";
-          button.style.backgroundColor = "#dc2626";
-        } else {
-          button.innerHTML = "Enviado com sucesso!";
-          button.style.backgroundColor = "#16a34a";
-          form.reset();
-          resetCaptcha(form);
-        }
-
-      } catch {
-        button.innerHTML = "Erro de conexão";
-        button.style.backgroundColor = "#b45309";
+      } catch (error) {
+        console.error(error);
+        button.innerHTML = "Erro ao enviar";
+        button.style.backgroundColor = "#dc2626";
       }
 
       setTimeout(() => {
@@ -224,7 +178,7 @@ function initContactForms() {
 }
 
 /* ================================
-   CUSTOM SELECT INITIALIZATION (Multi-Select)
+   CUSTOM SELECT (MULTI-SELECT)
 ================================ */
 function initCustomSelects(root = document) {
   root.querySelectorAll('.custom-select-wrapper').forEach(function (wrapper) {
@@ -234,21 +188,17 @@ function initCustomSelects(root = document) {
     const nativeSelect = wrapper.querySelector('select');
     if (!nativeSelect) return;
 
-    // Limpar versões antigas
     wrapper.querySelectorAll('.custom-select, .custom-options').forEach(e => e.remove());
 
-    // Criar display do select customizado
     const customSelect = document.createElement('div');
     customSelect.className = 'custom-select';
     customSelect.tabIndex = 0;
     wrapper.appendChild(customSelect);
 
-    // Criar lista de opções
     const optionsList = document.createElement('div');
     optionsList.className = 'custom-options';
     wrapper.appendChild(optionsList);
 
-    // Popular opções
     Array.from(nativeSelect.options).forEach(function (opt, idx) {
       const optDiv = document.createElement('div');
       optDiv.className = 'option';
@@ -258,7 +208,6 @@ function initCustomSelects(root = document) {
       optionsList.appendChild(optDiv);
     });
 
-    // Função para atualizar o display
     function updateDisplay() {
       const selectedOptions = Array.from(nativeSelect.selectedOptions);
       customSelect.innerHTML = '';
@@ -325,7 +274,6 @@ function initCustomSelects(root = document) {
         customSelect.appendChild(arrow);
       }
 
-      // Mostrar/ocultar campo "Outro"
       const form = wrapper.closest('form');
       if (form) {
         const otherContainer = form.querySelector('#otherServiceContainer');
@@ -336,27 +284,20 @@ function initCustomSelects(root = document) {
       }
     }
 
-    // Função para atualizar visual das opções
     function updateOptionsUI() {
       Array.from(nativeSelect.options).forEach((opt, idx) => {
         const optDiv = optionsList.querySelector(`[data-index="${idx}"]`);
         if (optDiv) {
-          if (opt.selected) {
-            optDiv.classList.add('selected');
-          } else {
-            optDiv.classList.remove('selected');
-          }
+          optDiv.classList.toggle('selected', opt.selected);
         }
       });
     }
 
-    // Toggle dropdown
     customSelect.addEventListener('click', (e) => {
       e.stopPropagation();
       customSelect.classList.toggle('open');
     });
 
-    // 🎯 Abrir em hover
     wrapper.addEventListener('mouseenter', () => {
       customSelect.classList.add('open');
     });
@@ -365,14 +306,12 @@ function initCustomSelects(root = document) {
       customSelect.classList.remove('open');
     });
 
-    // Fechar dropdown quando clicar fora
     document.addEventListener('click', (e) => {
       if (!wrapper.contains(e.target)) {
         customSelect.classList.remove('open');
       }
     });
 
-    // Clicar em opção
     optionsList.addEventListener('click', (e) => {
       if (!e.target.classList.contains('option')) return;
 
@@ -382,24 +321,21 @@ function initCustomSelects(root = document) {
         option.selected = !option.selected;
         updateDisplay();
         updateOptionsUI();
-        // 🎯 FECHAR após seleção
         customSelect.classList.remove('open');
       }
     });
 
-    // Atualizar quando select nativo muda
     nativeSelect.addEventListener('change', () => {
       updateDisplay();
       updateOptionsUI();
     });
 
-    // Inicializar
     updateDisplay();
     updateOptionsUI();
   });
 }
 
-/* Auto-detect new selects when DOM changes */
+/* OBSERVER */
 const observer = new MutationObserver((mutations) => {
   for (const mutation of mutations) {
     for (const node of mutation.addedNodes) {
@@ -417,9 +353,7 @@ observer.observe(document.body, {
   subtree: true
 });
 
-/* ================================
-   UNIFIED FORMS INITIALIZATION
-================================ */
+/* INIT */
 function initFormsBundle() {
   initCustomSelects();
   initContactForms();
@@ -427,4 +361,3 @@ function initFormsBundle() {
 
 document.addEventListener("DOMContentLoaded", initFormsBundle);
 document.addEventListener("components:loaded", initFormsBundle);
-window.onRecaptchaReady = ensureCaptchaWidgets;
