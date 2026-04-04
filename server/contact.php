@@ -4,7 +4,8 @@ declare(strict_types=1);
 date_default_timezone_set('America/Sao_Paulo');
 
 error_reporting(E_ALL);
-ini_set('display_errors', '1');
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
 
 set_exception_handler(function (Throwable $e) {
     while (ob_get_level() > 0) {
@@ -15,8 +16,9 @@ set_exception_handler(function (Throwable $e) {
     echo json_encode([
         'success' => false,
         'message' => 'Erro interno no servidor.',
+        'debug'   => $e->getMessage(), // remover após resolver
     ], JSON_UNESCAPED_UNICODE);
-    error_log('Excecao nao capturada no contact.php: ' . $e->getMessage());
+    error_log('Excecao nao capturada no contact.php: ' . $e->getMessage() . ' em ' . $e->getFile() . ':' . $e->getLine());
     exit;
 });
 
@@ -58,11 +60,11 @@ function json_success(string $message, array $extra = []): void
     exit;
 }
 
-function json_error(string $message, int $status = 400): void
+function json_error(string $message, int $status = 400, array $extra = []): void
 {
     clear_output_buffer();
     http_response_code($status);
-    echo json_encode(['success' => false, 'message' => $message], JSON_UNESCAPED_UNICODE);
+    echo json_encode(array_merge(['success' => false, 'message' => $message], $extra), JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -204,6 +206,10 @@ function send_via_resend(
         return ['sent' => false, 'error' => 'RESEND_API_KEY nao configurada.'];
     }
 
+    if (!function_exists('curl_init')) {
+        return ['sent' => false, 'error' => 'cURL nao disponivel no servidor.'];
+    }
+
     $subject = 'Novo contato: ' . $name . ' - ' . date('d/m/Y H:i');
 
     $htmlBody = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"></head><body style="font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:0;background:#f5f5f5;">'
@@ -256,11 +262,12 @@ function send_via_resend(
             'Content-Type: application/json',
         ],
         CURLOPT_TIMEOUT        => 15,
+        CURLOPT_SSL_VERIFYPEER => true,
     ]);
 
-    $response   = curl_exec($ch);
-    $httpCode   = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $curlError  = curl_error($ch);
+    $response  = curl_exec($ch);
+    $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
     curl_close($ch);
 
     if ($response === false) {
@@ -291,7 +298,7 @@ if (!verify_recaptcha($captchaResponse)) {
     json_error('Falha na verificacao do reCAPTCHA.', 422);
 }
 
-// ─── Campos do formulário ────────────────────────────────────────────────────
+// ─── Campos ──────────────────────────────────────────────────────────────────
 
 $name         = trim($_POST['name'] ?? '');
 $email        = trim($_POST['email'] ?? '');
@@ -358,10 +365,11 @@ try {
             'date'            => date('d/m/Y H:i:s'),
             'reason'          => $exception->getMessage(),
         ]));
-
-        json_error('Houve uma falha no envio. Tente novamente ou entre em contato pelo WhatsApp.', 500);
     } catch (Throwable $storageException) {
         error_log('Erro ao salvar lead localmente: ' . $storageException->getMessage());
-        json_error('Erro ao enviar.', 500);
     }
+
+    json_error('Houve uma falha no envio. Tente novamente ou entre em contato pelo WhatsApp.', 500, [
+        'debug' => $exception->getMessage(), // remover após resolver
+    ]);
 }
