@@ -4,7 +4,7 @@ declare(strict_types=1);
 date_default_timezone_set('America/Sao_Paulo');
 
 error_reporting(E_ALL);
-ini_set('display_errors', '0');
+ini_set('display_errors', '1');
 
 set_exception_handler(function (Throwable $e) {
     while (ob_get_level() > 0) {
