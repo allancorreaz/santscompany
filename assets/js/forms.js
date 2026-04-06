@@ -175,7 +175,14 @@ function initContactForms() {
           button.innerHTML = "Falha no reCAPTCHA";
           button.style.backgroundColor = "#b45309";
         } else {
+          const honeypotInput = form.querySelector('input[name="company"]');
+          if (honeypotInput) {
+            // Some password managers/autofill tools can populate hidden fields.
+            honeypotInput.value = "";
+          }
+
           let formData = new FormData(form);
+          formData.delete("company");
           formData = formatFormData(formData);
           formData.set("g-recaptcha-response", captchaResponse);
 
