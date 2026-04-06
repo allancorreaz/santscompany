@@ -305,8 +305,54 @@ function initThemeToggle() {
   });
 }
 
+function initHeroMediaBackgrounds() {
+  const heroes = document.querySelectorAll(".hero, .page-hero");
+  if (!heroes.length) return;
+
+  heroes.forEach((hero) => {
+    const imageSrc = hero.dataset.heroBgImage;
+    const videoSrc = hero.dataset.heroBgVideo;
+    const videoPoster = hero.dataset.heroBgPoster;
+
+    if (!imageSrc && !videoSrc) return;
+
+    hero.classList.add("has-media-bg");
+    const existingMedia = hero.querySelector(".hero-bg-media");
+    if (existingMedia) existingMedia.remove();
+
+    if (videoSrc) {
+      const video = document.createElement("video");
+      video.className = "hero-bg-media";
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.setAttribute("aria-hidden", "true");
+      if (videoPoster) video.poster = videoPoster;
+
+      const source = document.createElement("source");
+      source.src = videoSrc;
+      source.type = "video/mp4";
+      video.appendChild(source);
+
+      hero.prepend(video);
+      return;
+    }
+
+    const image = document.createElement("img");
+    image.className = "hero-bg-media";
+    image.src = imageSrc;
+    image.alt = "";
+    image.loading = "eager";
+    image.decoding = "async";
+    image.setAttribute("aria-hidden", "true");
+    hero.prepend(image);
+  });
+}
+
 function initSite() {
   initHero();
+  initHeroMediaBackgrounds();
   initMenu();
   initHeaderScroll();
   initReveal();

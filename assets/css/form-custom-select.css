@@ -119,6 +119,34 @@
   box-shadow: 0 4px 16px rgba(37, 99, 235, 0.13);
 }
 
+.contact-unified-premium .contact-form .form-privacy {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #475569;
+  text-align: center;
+}
+
+.contact-unified-premium .contact-form .form-privacy {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.contact-form .form-privacy {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #475569;
+  text-align: center;
+}
+
+.contact-form .form-privacy {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
 @media (max-width: 900px) {
   .contact-unified-premium {
     grid-template-columns: 1fr;
@@ -317,6 +345,56 @@
   border-radius: 6px;
   font-size: 0.85rem;
   gap: 6px;
+}
+
+body.dark-mode .contact-unified-premium,
+body.dark-mode .contact-unified-premium .contact-form,
+body.dark-mode .contact-unified-premium .contact-info-card {
+  background: #050505 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body.dark-mode .contact-unified-premium .contact-form input,
+body.dark-mode .contact-unified-premium .contact-form textarea,
+body.dark-mode .contact-unified-premium .contact-form select,
+body.dark-mode .custom-select {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+body.dark-mode .contact-unified-premium .contact-form select option {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .custom-select .selected,
+body.dark-mode .custom-select .placeholder,
+body.dark-mode .custom-select .arrow {
+  color: #ffffff !important;
+}
+
+body.dark-mode .custom-options,
+body.dark-mode .custom-options .option,
+body.dark-mode .custom-options .option.selected,
+body.dark-mode .custom-options .option:hover {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+body.dark-mode #otherServiceInput.form-input {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+body.dark-mode .contact-unified-premium .contact-form .form-privacy {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+body.dark-mode .contact-form .form-privacy {
+  color: rgba(255, 255, 255, 0.92) !important;
 }
 
 .remove-tag {
