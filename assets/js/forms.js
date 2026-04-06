@@ -179,12 +179,29 @@ function initContactForms() {
           formData = formatFormData(formData);
           formData.set("g-recaptcha-response", captchaResponse);
 
-          const response = await fetch(resolveContactEndpoint(), {
+          let response = await fetch(resolveContactEndpoint(), {
             method: "POST",
             body: formData,
           });
 
-          const result = await parseContactResponse(response);
+          let result = await parseContactResponse(response);
+
+          const shouldRetryCaptcha =
+            response.status === 422 &&
+            typeof result?.message === "string" &&
+            result.message.toLowerCase().includes("recaptcha");
+
+          if (shouldRetryCaptcha) {
+            const freshCaptcha = await getCaptchaResponse(form);
+            if (freshCaptcha) {
+              formData.set("g-recaptcha-response", freshCaptcha);
+              response = await fetch(resolveContactEndpoint(), {
+                method: "POST",
+                body: formData,
+              });
+              result = await parseContactResponse(response);
+            }
+          }
 
           if (!response.ok || !result.success) {
             button.innerHTML = result.message || "Erro ao enviar";
