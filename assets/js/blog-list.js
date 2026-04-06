@@ -55,6 +55,7 @@ fetch("../data/blog/posts.json")
     const visiblePosts = posts.filter((post) => post.visible !== false);
     const blogList = document.getElementById("blogList");
     const blogWelcome = document.getElementById("blogWelcome");
+    const blogSearchInput = document.getElementById("blogSearchInput");
     const blogCategoryFilter = document.getElementById("blogCategoryFilter");
 
     if (!blogList || !blogWelcome || !visiblePosts.length) return;
@@ -68,6 +69,80 @@ fetch("../data/blog/posts.json")
         "beforeend",
         categories.map((category) => `<option value="${category}">${category}</option>`).join("")
       );
+      
+      // Criar dropdown customizado
+      const filterFieldLabel = blogCategoryFilter.closest(".blog-filter-field");
+      const customDropdown = document.createElement("div");
+      customDropdown.className = "custom-dropdown";
+      
+      const dropdownButton = document.createElement("button");
+      dropdownButton.className = "custom-dropdown-button";
+      dropdownButton.textContent = "Todas as categorias";
+      dropdownButton.type = "button";
+      
+      const dropdownMenu = document.createElement("div");
+      dropdownMenu.className = "custom-dropdown-menu";
+      
+      const optionsHtml = [
+        '<div class="custom-dropdown-option" data-value="">Todas as categorias</div>',
+        ...categories.map((category) => `<div class="custom-dropdown-option" data-value="${category}">${category}</div>`)
+      ].join("");
+      
+      dropdownMenu.innerHTML = optionsHtml;
+      customDropdown.appendChild(dropdownButton);
+      customDropdown.appendChild(dropdownMenu);
+      
+      // Inserir dropdown customizado e esconder select nativo
+      filterFieldLabel.appendChild(customDropdown);
+      blogCategoryFilter.style.display = "none";
+      
+      // Gerenciar abertura/fechamento
+      let isOpen = false;
+      
+      const openDropdown = () => {
+        isOpen = true;
+        customDropdown.classList.add("open");
+      };
+      
+      const closeDropdown = () => {
+        isOpen = false;
+        customDropdown.classList.remove("open");
+      };
+      
+      // Abrir/fechar com clique
+      dropdownButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        isOpen ? closeDropdown() : openDropdown();
+      });
+      
+      // Abrir/fechar com hover
+      customDropdown.addEventListener("mouseenter", openDropdown);
+      customDropdown.addEventListener("mouseleave", closeDropdown);
+      
+      // Fechar ao clicar fora
+      document.addEventListener("click", (e) => {
+        if (!customDropdown.contains(e.target)) {
+          closeDropdown();
+        }
+      });
+      
+      // Gerenciar seleção de opções
+      const options = dropdownMenu.querySelectorAll(".custom-dropdown-option");
+      options.forEach((option) => {
+        option.addEventListener("click", () => {
+          const value = option.getAttribute("data-value");
+          const text = option.textContent;
+          
+          blogCategoryFilter.value = value;
+          dropdownButton.textContent = text;
+          
+          isOpen = false;
+          customDropdown.classList.remove("open");
+          
+          // Trigger change event
+          blogCategoryFilter.dispatchEvent(new Event("change"));
+        });
+      });
     }
 
     blogWelcome.innerHTML = `
@@ -79,15 +154,23 @@ fetch("../data/blog/posts.json")
     `;
 
     const applyFilter = () => {
+      const query = normalizeText(blogSearchInput ? blogSearchInput.value : "");
       const selectedCategory = blogCategoryFilter ? blogCategoryFilter.value : "";
 
       const filteredPosts = visiblePosts.filter((post) => {
-        if (!selectedCategory) return true;
-        return normalizeText(post.category) === normalizeText(selectedCategory);
+        const matchesTitle = !query || normalizeText(post.title).includes(query);
+        const matchesCategory =
+          !selectedCategory || normalizeText(post.category) === normalizeText(selectedCategory);
+
+        return matchesTitle && matchesCategory;
       });
 
       renderPosts(filteredPosts, blogList);
     };
+
+    if (blogSearchInput) {
+      blogSearchInput.addEventListener("input", applyFilter);
+    }
 
     if (blogCategoryFilter) {
       blogCategoryFilter.addEventListener("change", applyFilter);
