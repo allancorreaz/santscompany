@@ -286,50 +286,23 @@ function updateThemeToggleLabel(button, theme) {
 function initThemeToggle() {
   const storageKey = "sants-theme";
   const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-  const mobileQuery = window.matchMedia("(max-width: 768px)");
   const button = createThemeToggleButton();
 
-  function resolveDesktopTheme() {
-    const preferredFromStorage = window.localStorage.getItem(storageKey);
-    return preferredFromStorage || (colorSchemeQuery.matches ? "dark" : "light");
-  }
-
-  function syncThemeMode() {
-    const isMobile = mobileQuery.matches;
-
-    if (isMobile) {
-      const mobileTheme = colorSchemeQuery.matches ? "dark" : "light";
-      applyTheme(mobileTheme);
-      updateThemeToggleLabel(button, mobileTheme);
-      button.style.display = "none";
-      return;
-    }
-
-    const desktopTheme = resolveDesktopTheme();
-    applyTheme(desktopTheme);
-    updateThemeToggleLabel(button, desktopTheme);
-    button.style.display = "inline-flex";
-  }
-
-  syncThemeMode();
+  const preferredFromStorage = window.localStorage.getItem(storageKey);
+  const initialTheme = preferredFromStorage || (colorSchemeQuery.matches ? "dark" : "light");
+  applyTheme(initialTheme);
+  updateThemeToggleLabel(button, initialTheme);
+  button.style.display = "inline-flex";
 
   if (button.dataset.bound === "true") return;
   button.dataset.bound = "true";
 
   button.addEventListener("click", () => {
-    if (mobileQuery.matches) return;
     const nextTheme = document.body.classList.contains("dark-mode") ? "light" : "dark";
     applyTheme(nextTheme);
     updateThemeToggleLabel(button, nextTheme);
     window.localStorage.setItem(storageKey, nextTheme);
   });
-
-  const handleMediaChange = () => {
-    syncThemeMode();
-  };
-
-  colorSchemeQuery.addEventListener("change", handleMediaChange);
-  mobileQuery.addEventListener("change", handleMediaChange);
 }
 
 function initSite() {
