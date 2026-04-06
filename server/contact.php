@@ -92,6 +92,15 @@ function has_effective_value(string $value, array $invalidValues = []): bool
     return $trimmed !== '' && !in_array($trimmed, $invalidValues, true);
 }
 
+function string_contains(string $haystack, string $needle): bool
+{
+    if ($needle === '') {
+        return true;
+    }
+
+    return strpos($haystack, $needle) !== false;
+}
+
 function is_local_request(): bool
 {
     $host       = strtolower($_SERVER['HTTP_HOST'] ?? '');
@@ -100,7 +109,7 @@ function is_local_request(): bool
 
     foreach ([$host, $serverName] as $candidate) {
         if ($candidate === '') continue;
-        if (str_contains($candidate, 'localhost') || str_contains($candidate, '127.0.0.1')) {
+        if (string_contains($candidate, 'localhost') || string_contains($candidate, '127.0.0.1')) {
             return true;
         }
     }
@@ -122,8 +131,9 @@ function verify_recaptcha(string $captchaResponse): bool
         return false;
     }
 
-    if (!has_effective_value(RECAPTCHA_SECRET, ['6Le_Z6UsAAAAABGcDakFgW0ghkPSpsO9aFdNC1cA'])) {
-        return true;
+    if (!has_effective_value(RECAPTCHA_SECRET) || strlen(RECAPTCHA_SECRET) < 30) {
+        error_log('reCAPTCHA secret nao configurada corretamente.');
+        return false;
     }
 
     $postData = http_build_query([
@@ -241,8 +251,8 @@ function send_via_resend(
         . 'Data/Hora: ' . date('d/m/Y H:i:s') . "\n";
 
     $payload = json_encode([
-        'from'     => 'Sants Company <contato@santscompany.com>',
-        'to'       => ['contato@santscompany.com'],
+        'from'     => 'Sants Company <' . FROM_EMAIL . '>',
+        'to'       => [TO_EMAIL],
         'reply_to' => $email,
         'subject'  => $subject,
         'html'     => $htmlBody,
@@ -333,101 +343,29 @@ $submissionData = [
     'user_agent'   => $_SERVER['HTTP_USER_AGENT'] ?? '',
 ];
 
-// ─── Envio via Resend ou Fallback SMTP ───────────────────────────────────────
+// ─── Envio via Resend (unico provedor) ───────────────────────────────────────
 
 try {
     $hasResendKey = defined('RESEND_API_KEY') && has_effective_value(RESEND_API_KEY);
-    
-    if ($hasResendKey) {
-        $result = send_via_resend($name, $email, $phone, $message, $serviceDisplay);
-        
-        if ($result['sent']) {
-            append_submission_log(array_merge($submissionData, [
-                'delivery'        => 'resend',
-                'delivery_status' => 'sent',
-                'resend_id'       => $result['id'] ?? null,
-                'date'            => date('d/m/Y H:i:s'),
-            ]));
-            json_success('Mensagem enviada com sucesso.', ['delivery' => 'resend']);
-        }
-        
-        error_log('Resend falhou (' . $result['error'] . '), tentando SMTP fallback...');
-    }
-    
-    // Fallback: usar SMTP direto (PHPMailer)
-    $smtpConfigured = has_effective_value(SMTP_HOST)
-        && has_effective_value(SMTP_USERNAME)
-        && has_effective_value(SMTP_PASSWORD);
 
-    if (!$smtpConfigured) {
-        throw new RuntimeException('Nenhum método de envio foi configurado corretamente.');
+    if (!$hasResendKey) {
+        throw new RuntimeException('RESEND_API_KEY nao configurada.');
     }
 
-    require_once dirname(__DIR__) . '/vendor/autoload.php';
+    $result = send_via_resend($name, $email, $phone, $message, $serviceDisplay);
 
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-    $mail->isSMTP();
-    $mail->Host       = SMTP_HOST;
-    $mail->SMTPAuth   = true;
-    $mail->Username   = SMTP_USERNAME;
-    $mail->Password   = SMTP_PASSWORD;
-    $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = SMTP_PORT;
-    $mail->CharSet    = 'UTF-8';
-    $mail->Encoding   = 'base64';
-    $mail->Timeout    = 15;
-
-    $mail->setFrom(FROM_EMAIL, 'Sants Company - Contato');
-    $mail->addAddress(TO_EMAIL, 'Sants Company');
-    $mail->addReplyTo($email, $name);
-    $mail->isHTML(true);
-    $mail->Subject = 'Novo contato: ' . $name . ' - ' . date('d/m/Y H:i');
-
-    $htmlBody = '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"></head><body style="font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:0;padding:0;background:#f5f5f5;">'
-        . '<div style="max-width:600px;margin:20px auto;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1);overflow:hidden;">'
-        . '<div style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;padding:30px 20px;text-align:center;">'
-        . '<h1 style="margin:0;font-size:24px;font-weight:600;">Novo Contato Recebido</h1>'
-        . '<p style="margin:8px 0 0;font-size:14px;opacity:.9;">De ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</p>'
-        . '</div>'
-        . '<div style="padding:30px 20px;">'
-        . '<h2 style="margin:0 0 15px;font-size:14px;font-weight:600;color:#0052cc;text-transform:uppercase;letter-spacing:1px;">Informações de Contato</h2>'
-        . '<div style="padding:12px;background:#f9f9fb;border-left:4px solid #0052cc;margin-bottom:10px;"><p style="margin:0;font-size:13px;color:#666;"><strong>Nome:</strong> ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</p></div>'
-        . '<div style="padding:12px;background:#f9f9fb;border-left:4px solid #0052cc;margin-bottom:10px;"><p style="margin:0;font-size:13px;color:#666;"><strong>Email:</strong> <a href="mailto:' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '" style="color:#0052cc;">' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '</a></p></div>'
-        . '<div style="padding:12px;background:#f9f9fb;border-left:4px solid #0052cc;margin-bottom:10px;"><p style="margin:0;font-size:13px;color:#666;"><strong>Telefone:</strong> ' . ($phone !== '' ? htmlspecialchars($phone, ENT_QUOTES, 'UTF-8') : '<em style="color:#999;">Não informado</em>') . '</p></div>'
-        . '<div style="padding:12px;background:#f9f9fb;border-left:4px solid #0052cc;"><p style="margin:0;font-size:13px;color:#666;"><strong>Serviço:</strong> ' . $serviceDisplay . '</p></div>'
-        . '<div style="margin-top:25px;padding-top:20px;border-top:1px solid #e5e5e5;">'
-        . '<h2 style="margin:0 0 15px;font-size:14px;font-weight:600;color:#0052cc;text-transform:uppercase;letter-spacing:1px;">Mensagem</h2>'
-        . '<div style="background:#f9f9fb;padding:15px;border-radius:6px;"><p style="margin:0;font-size:14px;color:#333;white-space:pre-wrap;word-wrap:break-word;">' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8') . '</p></div>'
-        . '</div></div>'
-        . '<div style="background:#f5f5f5;padding:20px;text-align:center;border-top:1px solid #e5e5e5;">'
-        . '<p style="margin:0;font-size:12px;color:#999;">Email automático · Sants Company · ' . date('d/m/Y H:i:s') . '</p>'
-        . '</div></div></body></html>';
-
-    $plainBody = "NOVO CONTATO RECEBIDO\n"
-        . str_repeat('=', 50) . "\n\n"
-        . "Nome: $name\n"
-        . "Email: $email\n"
-        . "Telefone: " . ($phone !== '' ? $phone : '(não informado)') . "\n"
-        . "Serviço: " . strip_tags($serviceDisplay) . "\n\n"
-        . str_repeat('-', 50) . "\n"
-        . "MENSAGEM:\n\n$message\n\n"
-        . str_repeat('-', 50) . "\n"
-        . 'Data/Hora: ' . date('d/m/Y H:i:s') . "\n";
-
-    $mail->Body    = $htmlBody;
-    $mail->AltBody = $plainBody;
-
-    if (!$mail->send()) {
-        throw new RuntimeException('Falha ao enviar via SMTP: ' . $mail->ErrorInfo);
+    if (!$result['sent']) {
+        throw new RuntimeException($result['error'] ?? 'Falha desconhecida no Resend.');
     }
 
     append_submission_log(array_merge($submissionData, [
-        'delivery'        => 'smtp_zoho',
+        'delivery'        => 'resend',
         'delivery_status' => 'sent',
+        'resend_id'       => $result['id'] ?? null,
         'date'            => date('d/m/Y H:i:s'),
     ]));
 
-    json_success('Mensagem enviada com sucesso.', ['delivery' => 'smtp_zoho']);
+    json_success('Mensagem enviada com sucesso.', ['delivery' => 'resend']);
 
 } catch (Throwable $exception) {
     error_log('Erro no formulario de contato: ' . $exception->getMessage());
@@ -443,5 +381,7 @@ try {
         error_log('Erro ao salvar lead localmente: ' . $storageException->getMessage());
     }
 
-    json_error('Houve uma falha no envio. Tente novamente ou entre em contato pelo WhatsApp.', 500);
+    json_error('Falha ao enviar agora. Tente novamente em instantes ou chame no WhatsApp.', 502, [
+        'delivery' => 'failed',
+    ]);
 }

@@ -103,11 +103,10 @@ function formatFormData(formData) {
     formData.set("name", capitalizeWords(nameInput));
   }
 
-  const phoneCountry = formData.get("phoneCountry") || "+55";
   const phone = formData.get("phone");
   if (phone) {
     const formatted = formatPhoneNumber(phone);
-    formData.set("phone", `${phoneCountry} ${formatted}`);
+    formData.set("phone", formatted);
   }
 
   const messageInput = formData.get("message");

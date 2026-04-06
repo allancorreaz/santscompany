@@ -743,7 +743,7 @@ body {
 .floating-buttons {
   position: fixed;
   right: 20px;
-  bottom: 20px;
+  bottom: 150px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -801,13 +801,25 @@ body {
 @media (max-width: 768px) {
   .floating-buttons {
     right: 15px;
-    bottom: 15px;
+    bottom: 145px;
+  }
+
+  .grecaptcha-badge {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
   }
   
   .floating-btn {
     width: 50px;
     height: 50px;
     font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .floating-buttons {
+    bottom: 135px;
   }
 }
 .footer-bottom {
