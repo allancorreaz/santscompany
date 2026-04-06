@@ -77,6 +77,156 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.theme-toggle {
+  position: fixed;
+  right: 16px;
+  top: 96px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: #ffffff;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+  z-index: 1001;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25);
+}
+
+body.dark-mode {
+  background: #000000;
+  color: #ffffff;
+}
+
+body.dark-mode .header {
+  background: rgba(0, 0, 0, 0.96);
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+}
+
+body.dark-mode .section,
+body.dark-mode .page-hero,
+body.dark-mode .hero {
+  background: #000000;
+  color: #ffffff;
+}
+
+body.dark-mode .card,
+body.dark-mode .content-card,
+body.dark-mode .service-detail-card,
+body.dark-mode .benefit-item,
+body.dark-mode .process-step,
+body.dark-mode .testimonial-card,
+body.dark-mode .review-card,
+body.dark-mode .blog-card,
+body.dark-mode .blog-featured-card,
+body.dark-mode .portfolio-item,
+body.dark-mode .review-card-full,
+body.dark-mode .google-review-card {
+  background: #050505;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+body.dark-mode .section-title,
+body.dark-mode .section-subtitle,
+body.dark-mode p,
+body.dark-mode li,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4 {
+  color: #ffffff;
+}
+
+body.dark-mode .section-subtitle,
+body.dark-mode .footer-copyright,
+body.dark-mode .footer-legal a,
+body.dark-mode .footer-contact .contact-item,
+body.dark-mode .footer-links a,
+body.dark-mode .footer p {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+body.dark-mode .footer,
+body.dark-mode footer,
+body.dark-mode .cta-final,
+body.dark-mode .why-choose-us,
+body.dark-mode .process,
+body.dark-mode .section-services {
+  background: #000000;
+}
+
+body.dark-mode .contact-form input,
+body.dark-mode .contact-form textarea,
+body.dark-mode .contact-form select,
+body.dark-mode .custom-select {
+  background: #000000;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+body.dark-mode .custom-options {
+  background: #000000;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+body.dark-mode .custom-options .option {
+  color: #ffffff;
+}
+
+body.dark-mode .badge,
+body.dark-mode .header-tag,
+body.dark-mode .footer-badge,
+body.dark-mode .portfolio-link,
+body.dark-mode .btn-reviews,
+body.dark-mode .tag,
+body.dark-mode .option.active {
+  color: #0f172a;
+}
+
+body.dark-mode .portfolio-link,
+body.dark-mode .btn-reviews {
+  background: #ffffff;
+}
+
+body.dark-mode .blog-card p,
+body.dark-mode .blog-featured-card p,
+body.dark-mode .portfolio-item p,
+body.dark-mode .review-card-full p,
+body.dark-mode .google-review-card p {
+  color: #ffffff;
+}
+
+body.dark-mode .theme-toggle {
+  background: #000000;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 768px) {
+  .theme-toggle {
+    right: 12px;
+    top: 84px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 420px) {
+  .theme-toggle {
+    top: 78px;
+  }
+}
+
 /* Variáveis de Cor e Design */
 :root {
   --primary-dark: #0f172a;

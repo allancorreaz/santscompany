@@ -258,6 +258,80 @@ function initFloatingButtons() {
   toggleFloatingButtons();
 }
 
+function applyTheme(theme) {
+  const isDark = theme === "dark";
+  document.body.classList.toggle("dark-mode", isDark);
+}
+
+function createThemeToggleButton() {
+  let button = document.querySelector(".theme-toggle");
+  if (button) return button;
+
+  button = document.createElement("button");
+  button.type = "button";
+  button.className = "theme-toggle";
+  button.setAttribute("aria-label", "Alternar modo noturno");
+  document.body.appendChild(button);
+  return button;
+}
+
+function updateThemeToggleLabel(button, theme) {
+  if (!button) return;
+  const isDark = theme === "dark";
+  button.innerHTML = isDark ? "☀️" : "🌙";
+  button.setAttribute("title", isDark ? "Ativar modo claro" : "Ativar modo noturno");
+  button.setAttribute("aria-pressed", isDark ? "true" : "false");
+}
+
+function initThemeToggle() {
+  const storageKey = "sants-theme";
+  const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const mobileQuery = window.matchMedia("(max-width: 768px)");
+  const button = createThemeToggleButton();
+
+  function resolveDesktopTheme() {
+    const preferredFromStorage = window.localStorage.getItem(storageKey);
+    return preferredFromStorage || (colorSchemeQuery.matches ? "dark" : "light");
+  }
+
+  function syncThemeMode() {
+    const isMobile = mobileQuery.matches;
+
+    if (isMobile) {
+      const mobileTheme = colorSchemeQuery.matches ? "dark" : "light";
+      applyTheme(mobileTheme);
+      updateThemeToggleLabel(button, mobileTheme);
+      button.style.display = "none";
+      return;
+    }
+
+    const desktopTheme = resolveDesktopTheme();
+    applyTheme(desktopTheme);
+    updateThemeToggleLabel(button, desktopTheme);
+    button.style.display = "inline-flex";
+  }
+
+  syncThemeMode();
+
+  if (button.dataset.bound === "true") return;
+  button.dataset.bound = "true";
+
+  button.addEventListener("click", () => {
+    if (mobileQuery.matches) return;
+    const nextTheme = document.body.classList.contains("dark-mode") ? "light" : "dark";
+    applyTheme(nextTheme);
+    updateThemeToggleLabel(button, nextTheme);
+    window.localStorage.setItem(storageKey, nextTheme);
+  });
+
+  const handleMediaChange = () => {
+    syncThemeMode();
+  };
+
+  colorSchemeQuery.addEventListener("change", handleMediaChange);
+  mobileQuery.addEventListener("change", handleMediaChange);
+}
+
 function initSite() {
   initHero();
   initMenu();
@@ -267,6 +341,7 @@ function initSite() {
   initCounters();
   initFloatingButtons();
   initPortfolioCarousel();
+  initThemeToggle();
 }
 
 document.addEventListener("DOMContentLoaded", () => {

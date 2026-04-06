@@ -178,20 +178,29 @@ function verify_recaptcha(string $captchaResponse): bool
     }
 
     if (!($decoded['success'] ?? false)) {
-        error_log('reCAPTCHA falhou: ' . json_encode($decoded));
+        $errorCodes = $decoded['error-codes'] ?? [];
+        error_log('reCAPTCHA falhou: ' . json_encode([
+            'success' => $decoded['success'] ?? false,
+            'error-codes' => $errorCodes,
+            'hostname' => $decoded['hostname'] ?? '',
+            'action' => $decoded['action'] ?? '',
+            'score' => $decoded['score'] ?? null,
+        ]));
         return false;
     }
 
     $action = $decoded['action'] ?? '';
     $score  = (float) ($decoded['score'] ?? 0);
+    $minScore = defined('RECAPTCHA_MIN_SCORE') ? (float) RECAPTCHA_MIN_SCORE : 0.3;
+    $allowedActions = ['contact_form_submit', 'contact_submit', 'submit'];
 
-    if ($action !== '' && $action !== 'contact_form_submit') {
+    if ($action !== '' && !in_array($action, $allowedActions, true)) {
         error_log('reCAPTCHA action invalida: ' . $action);
         return false;
     }
 
-    if (array_key_exists('score', $decoded) && $score < 0.5) {
-        error_log('reCAPTCHA score baixo: ' . $score);
+    if (array_key_exists('score', $decoded) && $score < $minScore) {
+        error_log('reCAPTCHA score baixo: ' . $score . ' (minimo: ' . $minScore . ')');
         return false;
     }
 
