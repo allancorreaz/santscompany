@@ -232,8 +232,34 @@ function initSite() {
   initThemeToggle();
 }
 
+function loadFontAwesomeDeferred() {
+  if (document.getElementById("fa-deferred-css")) return;
+
+  const link = document.createElement("link");
+  link.id = "fa-deferred-css";
+  link.rel = "stylesheet";
+  link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css";
+  link.media = "print";
+  link.onload = function () {
+    this.media = "all";
+  };
+  document.head.appendChild(link);
+}
+
+function scheduleDeferredAssets() {
+  const run = () => loadFontAwesomeDeferred();
+
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(run, { timeout: 1500 });
+    return;
+  }
+
+  window.setTimeout(run, 900);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   initSite();
+  scheduleDeferredAssets();
 });
 
 document.addEventListener("components:loaded", () => {

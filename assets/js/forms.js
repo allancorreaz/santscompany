@@ -14,6 +14,52 @@ function isLocalEnvironment() {
   return host === "localhost" || host === "127.0.0.1";
 }
 
+function buildRecaptchaApiUrl(sitekey) {
+  const encodedKey = encodeURIComponent(sitekey || "");
+  return `https://www.google.com/recaptcha/api.js?render=${encodedKey}`;
+}
+
+function ensureRecaptchaApiLoaded(form) {
+  if (isLocalEnvironment()) {
+    return Promise.resolve();
+  }
+
+  if (typeof window.grecaptcha !== "undefined" && typeof window.grecaptcha.ready === "function") {
+    return Promise.resolve();
+  }
+
+  if (window.__santsRecaptchaPromise) {
+    return window.__santsRecaptchaPromise;
+  }
+
+  const sitekey = getRecaptchaSiteKey(form);
+  if (!sitekey) {
+    return Promise.resolve();
+  }
+
+  const existingScript = document.querySelector('script[data-recaptcha-loader="true"]');
+  if (existingScript) {
+    window.__santsRecaptchaPromise = new Promise((resolve, reject) => {
+      existingScript.addEventListener("load", resolve, { once: true });
+      existingScript.addEventListener("error", () => reject(new Error("Falha ao carregar reCAPTCHA")), { once: true });
+    });
+    return window.__santsRecaptchaPromise;
+  }
+
+  window.__santsRecaptchaPromise = new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = buildRecaptchaApiUrl(sitekey);
+    script.async = true;
+    script.defer = true;
+    script.dataset.recaptchaLoader = "true";
+    script.onload = resolve;
+    script.onerror = () => reject(new Error("Falha ao carregar reCAPTCHA"));
+    document.head.appendChild(script);
+  });
+
+  return window.__santsRecaptchaPromise;
+}
+
 async function waitForRecaptcha() {
   if (typeof window.grecaptcha !== "undefined" && typeof window.grecaptcha.ready === "function") {
     return;
@@ -42,6 +88,7 @@ async function getCaptchaResponse(form) {
   const sitekey = getRecaptchaSiteKey(form);
   if (!sitekey) return "";
 
+  await ensureRecaptchaApiLoaded(form);
   await waitForRecaptcha();
 
   return new Promise((resolve, reject) => {
@@ -161,6 +208,15 @@ function initContactForms() {
   document.querySelectorAll(".contact-form").forEach((form) => {
     if (form.dataset.bound === "true") return;
     form.dataset.bound = "true";
+
+    const warmupRecaptcha = () => {
+      ensureRecaptchaApiLoaded(form).catch(() => {
+        // Fail silently here; submit flow already handles errors and user feedback.
+      });
+    };
+
+    form.addEventListener("focusin", warmupRecaptcha, { once: true });
+    form.addEventListener("pointerdown", warmupRecaptcha, { once: true });
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
