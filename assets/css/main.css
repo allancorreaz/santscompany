@@ -44,7 +44,7 @@
     margin-bottom: 1.1em;
   }
 }
-/* Honeypot field - completamente invisível e inacessível */
+
 .hp-field {
   position: absolute !important;
   left: -9999px !important;
@@ -55,7 +55,7 @@
   pointer-events: none !important;
   z-index: -1 !important;
 }
-/* Reset e Base */
+
 * {
   margin: 0;
   padding: 0;
@@ -256,7 +256,6 @@ body.dark-mode .theme-toggle {
   }
 }
 
-/* Variáveis de Cor e Design */
 :root {
   --primary-dark: #0f172a;
   --primary-blue: #1e3a5f;
@@ -274,11 +273,6 @@ body.dark-mode .theme-toggle {
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
-/* logo header */
-
-
-/* Container */
 .container {
   width: 90%;
   max-width: 1200px;
@@ -286,7 +280,6 @@ body.dark-mode .theme-toggle {
   padding: 0 20px;
 }
 
-/* Header */
 .header {
   background: rgba(15, 23, 42, 0.95);
   padding: 28px 0;
@@ -335,46 +328,6 @@ body.dark-mode .theme-toggle {
   gap: 12px;
 }
 
-/* 🎯 CSS PARA LOGO NO HEADER - DESCOMENTAR QUANDO LOGO ESTIVER ATIVA 
-   Tamanhos responsivos:
-   - Desktop: 60px
-   - Tablet (max-width: 900px): 50px
-   - Mobile (max-width: 600px): 40px
-*/
-/*
-.brand-logo-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.brand-logo {
-  width: 60px;
-  height: auto;
-  object-fit: contain;
-  display: block;
-}
-
-@media (max-width: 900px) {
-  .brand-logo {
-    width: 50px;
-  }
-}
-
-@media (max-width: 600px) {
-  .brand-logo {
-    width: 40px;
-  }
-}
-*/
-
-/* Nome da Empresa no Header */
-/* Controle visual do texto Sants Company e Marketing & Dev no header:
-   - Para alinhar Sants Company em uma única linha e Marketing & Dev embaixo, use flex-direction: column;
-   - Para garantir que Sants Company não quebre, use white-space: nowrap.
-   - Para ajustar espaçamento, edite gap e margin.
-*/
 .company-name {
   display: flex;
   flex-direction: column;
@@ -502,10 +455,9 @@ body.dark-mode .theme-toggle {
   gap: 22px;
 }
 
-/* SMARTPHONE: Menu escondido por padrão, abre com .active */
 @media (max-width: 900px) {
   .nav {
-    /* Base: escondido */
+    
     display: flex !important;
     position: absolute !important;
     top: calc(100% + 10px) !important;
@@ -533,7 +485,7 @@ body.dark-mode .theme-toggle {
     overflow-y: auto;
   }
 
-  /* Quando abrir, mostrar do mesmo jeito */
+  
   .nav.active {
     opacity: 1;
     visibility: visible;
@@ -563,10 +515,6 @@ body.dark-mode .theme-toggle {
   letter-spacing: 0.01em;
   white-space: nowrap;
 }
-/* Controle visual do header:
-  - Altura: .header { padding: 28px 0; min-height: 90px; }
-  - Largura: .container { width: 90%; max-width: 1200px; }
-  Edite esses valores para ajustar visualmente. */
 
 .nav-link::after {
   content: '';
@@ -646,7 +594,6 @@ body.dark-mode .theme-toggle {
   transform: scale(1.1);
 }
 
-/* Animação para o ícone quando menu está aberto */
 .menu-mobile.is-active svg {
   animation: spin-close 0.3s ease;
 }
@@ -696,7 +643,6 @@ body.dark-mode .theme-toggle {
   }
 }
 
-/* Footer Modernizado */
 .footer-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -712,7 +658,6 @@ body.dark-mode .theme-toggle {
   margin-bottom: 20px;
 }
 
-/* Nome da Empresa no Footer */
 .footer-company-name {
   display: flex;
   flex-direction: column;
@@ -740,41 +685,6 @@ body.dark-mode .theme-toggle {
   margin-top: -2px;
   opacity: 0.9;
 }
-
-/* 🎯 CSS PARA LOGO NO FOOTER - DESCOMENTAR QUANDO LOGO ESTIVER ATIVA 
-   Tamanhos responsivos:
-   - Desktop: 120px
-   - Tablet (max-width: 900px): 100px
-   - Mobile (max-width: 600px): 80px
-*/
-/*
-.footer-brand-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.footer-brand-logo-image {
-  width: 120px;
-  height: auto;
-  object-fit: contain;
-  display: block;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
-}
-
-@media (max-width: 900px) {
-  .footer-brand-logo-image {
-    width: 100px;
-  }
-}
-
-@media (max-width: 600px) {
-  .footer-brand-logo-image {
-    width: 80px;
-  }
-}
-*/
 
 .footer-badges {
   display: flex;
@@ -885,7 +795,6 @@ body.dark-mode .theme-toggle {
   border-color: transparent;
 }
 
-/* Ícones de redes sociais desabilitados (sem link) - OCULTOS */
 .social-link-disabled {
   display: none !important;
   cursor: default;
@@ -900,7 +809,6 @@ body.dark-mode .theme-toggle {
   border-color: rgba(255,255,255,0.12);
 }
 
-/* Botões Flutuantes Mobile */
 .floating-buttons {
   position: fixed;
   right: 20px;
@@ -951,14 +859,12 @@ body.dark-mode .theme-toggle {
   }
 }
 
-/* Esconder botões flutuantes em desktop */
 @media (min-width: 769px) {
   .floating-buttons {
     display: none !important;
   }
 }
 
-/* Ajustes para mobile */
 @media (max-width: 768px) {
   .floating-buttons {
     right: 15px;
@@ -1086,8 +992,6 @@ body.dark-mode .theme-toggle {
   box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 }
 
-
-/* Hero Section Profissional */
 .hero {
   background: linear-gradient(155deg, #0f172a 0%, #1e3a5f 40%, #1e40af 100%);
   color: var(--accent);
@@ -1419,7 +1323,6 @@ body.dark-mode .theme-toggle {
   opacity: 0.9;
 }
 
-/* Hero: centralizar todo o conteúdo (título, texto, features, botão) */
 .hero .container {
   display: flex;
   flex-direction: column;
@@ -1531,7 +1434,6 @@ body.dark-mode .theme-toggle {
   to { text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.5); }
 }
 
-/* Sections */
 .section {
   padding: 100px 0;
   position: relative;
@@ -1594,20 +1496,17 @@ body.dark-mode .theme-toggle {
   background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.9));
 }
 
-/* Services Section */
 .section-services {
   background: #fff;
   box-shadow: 0 1px 0 rgba(0,0,0,0.04);
 }
 
-/* Services Grid */
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 28px;
 }
 
-/* Cards */
 .card {
   background: #fff;
   padding: 36px 28px;
@@ -1706,7 +1605,6 @@ body.dark-mode .theme-toggle {
   color: var(--text-light);
 }
 
-/* Dark Section */
 .dark {
   background: linear-gradient(135deg, var(--primary-dark), #000033);
   color: var(--accent);
@@ -1722,7 +1620,6 @@ body.dark-mode .theme-toggle {
   animation: fadeInUp 0.8s ease-out;
 }
 
-/* Counter Animation */
 .stat-content .count {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(2.5rem, 4vw, 3.25rem);
@@ -1745,7 +1642,6 @@ body.dark-mode .theme-toggle {
   font-weight: 500;
 }
 
-/* About Section Modernizada */
 .section {
   padding: 80px 0;
 }
@@ -1799,7 +1695,6 @@ body.dark-mode .theme-toggle {
   flex-shrink: 0;
 }
 
-/* Lista "Sobre a Sants Company" – destaque visual */
 .about-highlights {
   list-style: none;
   margin: 24px 0 0;
@@ -1882,7 +1777,6 @@ body.dark-mode .theme-toggle {
   font-weight: 500;
 }
 
-/* Stats Section Melhorada */
 .stats-section {
   background: linear-gradient(155deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%);
   color: var(--accent);
@@ -2002,7 +1896,6 @@ body.dark-mode .theme-toggle {
   line-height: 1.5;
 }
 
-/* Why Choose Us Section */
 .why-choose-us {
   background: #f1f5f9;
   position: relative;
@@ -2119,7 +2012,6 @@ body.dark-mode .theme-toggle {
   line-height: 1.6;
 }
 
-/* Process Section Profissional */
 .process {
   background: #fff;
   position: relative;
@@ -2194,7 +2086,6 @@ body.dark-mode .theme-toggle {
   font-size: 1rem;
 }
 
-/* Contact Section */
 .section-contact {
   background: #f8f9fc;
   margin-top: 0px !important;
@@ -2330,7 +2221,6 @@ body.dark-mode .theme-toggle {
   background: linear-gradient(135deg, var(--primary-mid), var(--primary-light));
 }
 
-/* CTA Final Section */
 .cta-final {
   padding: 100px 0;
   position: relative;
@@ -2416,7 +2306,6 @@ body.dark-mode .theme-toggle {
   transform: translateY(-3px);
 }
 
-/* Testimonials Section */
 .testimonials {
   background: linear-gradient(155deg, #1e3a5f 0%, #0f172a 100%);
   color: var(--accent);
@@ -2531,7 +2420,6 @@ body.dark-mode .theme-toggle {
   font-size: 0.9rem;
 }
 
-/* Footer Melhorado */
 footer {
   background: linear-gradient(135deg, var(--primary-dark), var(--primary-blue));
   color: var(--accent);
@@ -2539,8 +2427,6 @@ footer {
   position: relative;
   overflow: hidden;
 }
-
-/* Removido footer::before que criava linha azul */
 
 footer::after {
   content: '';
@@ -2751,7 +2637,6 @@ footer::after {
   font-size: 0.9rem;
 }
 
-/* Reveal Animation */
 .reveal {
   opacity: 0;
   transform: translateY(20px);
@@ -2763,7 +2648,6 @@ footer::after {
   transform: translateY(0);
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .header-logo-img {
     height: 36px;
@@ -3006,7 +2890,7 @@ footer::after {
     gap: 28px;
   }
 
-  /* Responsivo - Nome da empresa no header */
+  
   .company-main {
     font-size: 1.4rem;
   }
@@ -3015,7 +2899,7 @@ footer::after {
     font-size: 0.7rem;
   }
 
-  /* Responsivo - Nome da empresa no footer */
+  
   .footer-company-main {
     font-size: 1.6rem;
   }
@@ -3033,7 +2917,6 @@ footer::after {
   }
 }
 
-/* Animações Premium */
 @keyframes fadeInUp {
   from { 
     transform: translateY(50px); 
@@ -3077,7 +2960,6 @@ footer::after {
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Scroll Animations */
 .reveal {
   opacity: 0;
   transform: translateY(20px);
@@ -3089,7 +2971,6 @@ footer::after {
   transform: translateY(0);
 }
 
-/* About Highlights */
 .about-highlights {
   display: flex;
   flex-direction: column;
@@ -3140,7 +3021,6 @@ footer::after {
   font-size: 1.5rem;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .about-highlights {
     gap: 12px;
@@ -3154,15 +3034,11 @@ footer::after {
   }
 }
 
-/* ================================
-   PORTFOLIO SECTION
-================================ */
 .section-portfolio {
   background: #f8f9fc;
   overflow: hidden;
 }
 
-/* Desktop: Grid layout */
 .portfolio-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -3230,7 +3106,6 @@ footer::after {
   pointer-events: none;
 }
 
-/* Portfolio Preview com Imagem (para sites que bloqueiam iframe) */
 .portfolio-preview-image {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3434,7 +3309,6 @@ footer::after {
   font-weight: 500;
 }
 
-/* Portfolio Mobile */
 @media (max-width: 1024px) {
   .portfolio-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3469,7 +3343,7 @@ footer::after {
     font-size: 1rem;
   }
   
-  /* Mobile: Show overlay always for touch */
+  
   .portfolio-overlay {
     opacity: 1;
     background: rgba(15, 23, 42, 0.7);
@@ -3500,26 +3374,16 @@ footer::after {
   }
 }
 
-/* ================================
-   INJECTED COMPONENTS - Minimal
-================================ */
-/* ================================
-   CONTROLE CENTRALIZADO DE ESPAÇAMENTO
-   Componentes Injetados
-================================ */
-
-/* Variáveis de espaçamento - EDITAR AQUI */
 :root {
-  /* Desktop */
+  
     --spacing-component-top-desktop: 20px;
     --spacing-component-bottom-desktop: 20px;
   
-  /* Mobile */
+  
     --spacing-component-top-mobile: 19px;
     --spacing-component-bottom-mobile: 19px;
 }
 
-/* Display block para todos os componentes */
 .global-header,
 .global-footer,
 .import-portfolio,
@@ -3529,7 +3393,6 @@ footer::after {
   width: 100%;
 }
 
-/* Reserve space for async-injected header to reduce initial CLS */
 .global-header {
   min-height: 90px;
 }
@@ -3540,7 +3403,6 @@ footer::after {
   }
 }
 
-/* Espaçamento DESKTOP de componentes injetados */
 .import-numeros-q-falam .stats-section {
   padding-top: var(--spacing-component-top-desktop);
   padding-bottom: var(--spacing-component-bottom-desktop);
@@ -3551,7 +3413,6 @@ footer::after {
   margin-bottom: 0;
 }
 
-/* Reduz custo de render inicial em blocos pesados abaixo da dobra */
 .import-portfolio,
 .import-numeros-q-falam,
 .why-choose-us,
@@ -3570,7 +3431,6 @@ footer::after {
   margin-top: 0;
 }
 
-/* Espaçamento MOBILE de componentes injetados */
 @media (max-width: 768px) {
   :root {
     --spacing-component-top-desktop: var(--spacing-component-top-mobile);
@@ -3635,10 +3495,6 @@ footer::after {
   
 }
 
-
-/* ================================
-   REVIEWS PAGE - ALL REVIEWS
-================================ */
 .all-reviews-page {
   padding: 120px 0 80px;
   background: #f8f9fc;
@@ -3679,7 +3535,6 @@ footer::after {
   color: #4285f4;
 }
 
-/* Navegação global */
 .nav-link.is-current {
   background: rgba(255, 255, 255, 0.13);
 }
@@ -3687,8 +3542,6 @@ footer::after {
 .nav-link.is-current::after {
   width: 100%;
 }
-
-/* Páginas institucionais */
 
 .page-hero {
   position: relative;
@@ -3704,7 +3557,6 @@ footer::after {
   overflow: hidden;
 }
 
-/* Permite background-image customizado via inline style ou classe extra */
 .page-hero[data-bg],
 .page-hero.has-bg {
   background-size: cover;
@@ -3712,11 +3564,10 @@ footer::after {
   background-repeat: no-repeat;
 }
 
-/* Overlay editável para imagem de fundo */
 .page-hero .hero-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(15,23,42,0.45); /* overlay padrão, pode ser customizado */
+  background: rgba(15,23,42,0.45); 
   z-index: 0;
   pointer-events: none;
   transition: background 0.3s;
@@ -3747,7 +3598,6 @@ footer::after {
   z-index: 1;
 }
 
-
 .page-hero .section-eyebrow,
 .page-hero .section-title,
 .page-hero .section-subtitle {
@@ -3755,13 +3605,11 @@ footer::after {
   text-align: center;
 }
 
-
 .page-hero .section-title {
   max-width: 720px;
   margin-left: auto;
   margin-right: auto;
 }
-
 
 .page-hero .section-subtitle {
   max-width: 720px;
@@ -3819,7 +3667,6 @@ footer::after {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
-
 
 .stat-panel .stat-item {
   background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-light) 100%);
@@ -3957,7 +3804,7 @@ footer::after {
 }
 
 .service-detail-card li::before {
-  content: "•";
+  content: "â€¢";
   color: var(--primary-light);
   margin-right: 8px;
 }
@@ -4041,8 +3888,6 @@ footer::after {
     grid-template-columns: 1fr;
   }
 
-/* Ao descomentar, esta base abaixo entra em ação sem alterar o visual atual.
-   Edite largura, altura, escala e filter para ajustar o PNG branco sobre fundo escuro. */
 .brand-logo-wrap {
   display: inline-flex;
   align-items: center;
@@ -4181,7 +4026,6 @@ footer::after {
   }
 }
 
-/* Overrides finais para mobile: header e blog */
 @media (max-width: 768px) {
   .header {
     padding: 14px 0;
