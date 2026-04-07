@@ -1,7 +1,10 @@
 function getRecaptchaSiteKey(form) {
+  const configSiteKey = window.SANTS_CONFIG && window.SANTS_CONFIG.recaptchaSiteKey
+    ? window.SANTS_CONFIG.recaptchaSiteKey
+    : "";
   return (
     form.dataset.recaptchaSitekey ||
-    window.SANTS_CONFIG?.recaptchaSiteKey ||
+    configSiteKey ||
     ""
   );
 }
@@ -195,7 +198,7 @@ function initContactForms() {
 
           const shouldRetryCaptcha =
             response.status === 422 &&
-            typeof result?.message === "string" &&
+            result && typeof result.message === "string" &&
             result.message.toLowerCase().includes("recaptcha");
 
           if (shouldRetryCaptcha) {
@@ -388,22 +391,27 @@ function initCustomSelects(root = document) {
   });
 }
 
-const observer = new MutationObserver((mutations) => {
-  for (const mutation of mutations) {
-    for (const node of mutation.addedNodes) {
-      if (node.nodeType === 1) {
-        if (node.matches?.(".custom-select-wrapper") || node.querySelector?.(".custom-select-wrapper")) {
-          initCustomSelects(node);
+if (typeof MutationObserver === "function") {
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeType === 1) {
+          const hasWrapper =
+            (typeof node.matches === "function" && node.matches(".custom-select-wrapper")) ||
+            (typeof node.querySelector === "function" && node.querySelector(".custom-select-wrapper"));
+          if (hasWrapper) {
+            initCustomSelects(node);
+          }
         }
       }
     }
-  }
-});
+  });
 
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
-});
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+}
 
 function initFormsBundle() {
   initCustomSelects();

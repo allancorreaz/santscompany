@@ -1,6 +1,6 @@
 function getPostId() {
-  const url = new URL(window.location.href);
-  return url.searchParams.get("id") || "1";
+  const match = window.location.search.match(/[?&]id=([^&]+)/);
+  return match ? decodeURIComponent(match[1]) : "1";
 }
 
 fetch("../data/blog/posts.json")
@@ -43,7 +43,7 @@ fetch("../data/blog/posts.json")
               <p class="blog-post-intro">${post.summary}</p>
             </div>
             <div class="blog-post-body">${post.content}</div>
-            ${post.sources?.length ? `
+            ${post.sources && post.sources.length ? `
               <div class="source-list">
                 <strong>Fontes recomendadas</strong>
                 <ul>
