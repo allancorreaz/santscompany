@@ -7,10 +7,14 @@
   }
 
   function resolveTemplate(html, basePath) {
-    const recaptchaSiteKey = window.SANTS_CONFIG?.recaptchaSiteKey || "";
+    const recaptchaSiteKey = window.SANTS_CONFIG && window.SANTS_CONFIG.recaptchaSiteKey
+      ? window.SANTS_CONFIG.recaptchaSiteKey
+      : "";
     return html
-      .replaceAll("{{BASE_PATH}}", basePath)
-      .replaceAll("{{RECAPTCHA_SITE_KEY}}", recaptchaSiteKey);
+      .split("{{BASE_PATH}}")
+      .join(basePath)
+      .split("{{RECAPTCHA_SITE_KEY}}")
+      .join(recaptchaSiteKey);
   }
 
   function applyActiveState() {
@@ -28,7 +32,6 @@
   function inject(selector, url, basePath) {
     const container = document.querySelector(selector);
     if (!container) {
-      console.log(`[Components] Container não encontrado: ${selector}`);
       return Promise.resolve();
     }
 
@@ -41,7 +44,6 @@
       })
       .then((html) => {
         container.innerHTML = resolveTemplate(html, basePath);
-        console.log(`[Components] ${selector} injetado com sucesso`);
       })
       .catch((error) => {
         console.error("Erro ao injetar componente:", error);
@@ -50,15 +52,12 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const basePath = getBasePath();
-    console.log("[Components] Base path:", basePath);
-    console.log("[Components] Location pathname:", window.location.pathname);
 
     const injections = [
       inject(".global-header", `${basePath}components/header.html`, basePath),
       inject(".global-footer", `${basePath}components/footer.html`, basePath),
       inject(".import-portfolio", `${basePath}components/portfolio.html`, basePath),
       inject(".import-contact-form", `${basePath}components/contact-form.html`, basePath),
-      inject(".import-reviews-google", `${basePath}components/reviews-google.html`, basePath),
       inject(".import-numeros-q-falam", `${basePath}components/numeros-q-falam.html`, basePath),
     ];
 
@@ -70,8 +69,14 @@
           window.initReveal();
         }
 
-        console.log("[Components] Todos os componentes foram injetados!");
-        document.dispatchEvent(new CustomEvent("components:loaded"));
+        let event;
+        if (typeof window.CustomEvent === "function") {
+          event = new CustomEvent("components:loaded");
+        } else {
+          event = document.createEvent("Event");
+          event.initEvent("components:loaded", false, false);
+        }
+        document.dispatchEvent(event);
       })
       .catch((error) => {
         console.error("[Components] Erro ao injetar componentes:", error);
