@@ -215,6 +215,20 @@
   color: #888;
 }
 
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  text-indent: 0;
+}
+
+.contact-form #phone::placeholder {
+  text-indent: 13px;
+}
+
+.custom-select .placeholder {
+  display: block;
+  padding-left: 7px;
+}
+
 .custom-select .arrow {
   margin-left: auto;
   font-size: 1.1em;
