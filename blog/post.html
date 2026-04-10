@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="../assets/css/main.css?v=1.1">
   <link rel="stylesheet" href="../assets/css/blog.css?v=1.1">
+  <link rel="preload" href="../assets/css/form-custom-select.css?v=1.1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="../assets/css/form-custom-select.css?v=1.1"></noscript>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=optional" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=optional"></noscript>
 </head>
@@ -20,8 +22,14 @@
       <div class="container blog-post-layout">
         <a href="./index.html" class="blog-back-link"><i class="fas fa-arrow-left"></i> Voltar para o Blog</a>
         <div id="postContent"></div>
+        <section class="blog-post-contact" aria-label="Formulario de contato">
+          <div class="import-contact-form"></div>
+        </section>
         <section class="related-posts">
-          <div class="related-title">Leia também</div>
+          <div class="related-header">
+            <div class="related-title">Leia também</div>
+            <a href="./index.html" class="related-all-posts-link">Ver todos os posts</a>
+          </div>
           <div class="related-list" id="relatedPosts"></div>
         </section>
       </div>
@@ -30,8 +38,10 @@
 
   <div class="global-footer"></div>
 
+  <script src="../assets/js/site-config.js?v=1.1" defer></script>
   <script src="../assets/js/components.js?v=1.1" defer></script>
   <script src="../assets/js/main.js?v=1.1" defer></script>
   <script src="../assets/js/blog-post.js?v=1.1" defer></script>
+  <script src="../assets/js/forms.js?v=1.1" defer></script>
 </body>
 </html>

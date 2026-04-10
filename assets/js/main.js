@@ -264,6 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener("components:loaded", () => {
   initMenu();
+  initFloatingButtons();
   window.__revealBound = false;
   initReveal();
 });
