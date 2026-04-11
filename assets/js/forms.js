@@ -213,6 +213,8 @@ function initContactForms() {
     form.dataset.bound = "true";
 
     const warmupRecaptcha = () => {
+      if (form.dataset.recaptchaWarmed === "true") return;
+      form.dataset.recaptchaWarmed = "true";
       ensureRecaptchaApiLoaded(form).catch(() => {
         // Fail silently here; submit flow already handles errors and user feedback.
       });
@@ -220,9 +222,21 @@ function initContactForms() {
 
     form.addEventListener("focusin", warmupRecaptcha, { once: true });
     form.addEventListener("pointerdown", warmupRecaptcha, { once: true });
+    form.addEventListener("submit", warmupRecaptcha, { once: true });
 
-    // Carrega o reCAPTCHA na montagem do form para exibir o selo tambem sem interacao previa.
-    warmupRecaptcha();
+    // Pre-aquece somente quando o form entra perto da viewport, evitando custo inicial no mobile.
+    if (typeof window.IntersectionObserver === "function") {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            warmupRecaptcha();
+            observer.disconnect();
+          }
+        });
+      }, { root: null, rootMargin: "300px 0px", threshold: 0.01 });
+
+      observer.observe(form);
+    }
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -476,17 +490,6 @@ if (typeof MutationObserver === "function") {
 }
 
 function initFormsBundle() {
-  const bodyPage = document.body && document.body.dataset
-    ? document.body.dataset.page
-    : "";
-
-  // No blog (lista e post), garante o carregamento do script para o selo aparecer.
-  if (bodyPage === "blog") {
-    ensureRecaptchaApiLoaded().catch(() => {
-      // O submit ja trata erro; aqui evita ruido visual.
-    });
-  }
-
   initCustomSelects();
   initContactForms();
 }

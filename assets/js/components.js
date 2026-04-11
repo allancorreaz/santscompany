@@ -1,9 +1,17 @@
 (function injectGlobalComponents() {
-  const nestedPaths = ["/blog/", "/pages/"];
-
   function getBasePath() {
     const pathname = window.location.pathname.replace(/\\/g, "/");
-    return nestedPaths.some((segment) => pathname.includes(segment)) ? "../" : "./";
+
+    // Blog post pages are nested one level deeper than /blog and /pages.
+    if (/\/blog\/posts(?:\/|$)/.test(pathname)) {
+      return "../../";
+    }
+
+    if (/\/blog(?:\/|$)/.test(pathname) || /\/pages(?:\/|$)/.test(pathname)) {
+      return "../";
+    }
+
+    return "./";
   }
 
   function resolveTemplate(html, basePath) {
