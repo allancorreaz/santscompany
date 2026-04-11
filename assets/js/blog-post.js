@@ -3,6 +3,14 @@ function getPostId() {
   return match ? decodeURIComponent(match[1]) : "1";
 }
 
+function redirectToStaticPost() {
+  const postId = getPostId();
+  if (!postId) return;
+  window.location.replace(`./posts/${encodeURIComponent(postId)}.html`);
+}
+
+redirectToStaticPost();
+
 const postAssetVersion = window.SANTS_CONFIG && window.SANTS_CONFIG.assetVersion
   ? String(window.SANTS_CONFIG.assetVersion)
   : "";
@@ -83,7 +91,7 @@ fetch(postDataUrl, { cache: "no-store" })
 
     relatedPosts.innerHTML = prioritizedRelatedPosts
       .map((item) => `
-        <a href="./post.html?id=${item.id}" class="blog-card">
+        <a href="./posts/${item.id}.html" class="blog-card">
           <img src="${item.banner}" alt="${item.title}" class="blog-card-img" loading="lazy" decoding="async">
           <div class="blog-card-content">
             <span class="blog-category-chip">${item.category}</span>
