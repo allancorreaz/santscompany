@@ -218,6 +218,9 @@ function initContactForms() {
     form.addEventListener("focusin", warmupRecaptcha, { once: true });
     form.addEventListener("pointerdown", warmupRecaptcha, { once: true });
 
+    // Carrega o reCAPTCHA na montagem do form para exibir o selo tambem sem interacao previa.
+    warmupRecaptcha();
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 

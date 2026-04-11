@@ -816,6 +816,13 @@ body.dark-mode .theme-toggle {
   .floating-buttons {
     display: none !important;
   }
+
+  .grecaptcha-badge {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -3754,12 +3761,6 @@ footer::after {
 
 .service-detail-card li {
   color: var(--text-light);
-}
-
-.service-detail-card li::before {
-  content: "â€¢";
-  color: var(--primary-light);
-  margin-right: 8px;
 }
 
 .contact-page-grid {
