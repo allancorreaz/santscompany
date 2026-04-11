@@ -35,8 +35,8 @@ A **Sants Company** é uma agência de marketing e programação que atua na cri
 |--------|-----------|
 | **Frontend** | HTML5, CSS3, JavaScript Puro |
 | **Backend** | PHP 7.2+ |
-| **Email** | PHPMailer + Zoho SMTP |
-| **Segurança** | Google reCAPTCHA v2 |
+| **Email** | PHPMailer + Resend API |
+| **Segurança** | Google reCAPTCHA v3 |
 | **Servidor** | Apache com mod_rewrite |
 | **Versionamento** | Git + GitHub |
 | **CMS/Blog** | JSON + JavaScript (sem banco de dados) |
@@ -45,15 +45,11 @@ A **Sants Company** é uma agência de marketing e programação que atua na cri
 
 ## 🔌 APIs Integradas
 
-1. **Google reCAPTCHA v2** — Proteção contra bots no formulário
+1. **Google reCAPTCHA v3** — Proteção contra bots no formulário
    - Validação backend obrigatória
    - Honeypot invisível para detectar automação
 
-2. **Zoho Mail SMTP** — Envio de emails
-   - Servidor: smtp.zoho.com:587 (TLS)
-   - PHPMailer com retry automático
-
-3. **Google Fonts** — Tipografia otimizada
+2. **Google Fonts** — Tipografia otimizada
    - Plus Jakarta Sans (400/600/700 weights)
    - Display=optional (fallback sistema)
 
@@ -98,7 +94,7 @@ O site permite que visitantes entrem em contato diretamente através de um formu
 5. Feedback é exibido ao usuário
 
 **Segurança:**
-- ✅ reCAPTCHA v2 obrigatório
+- ✅ reCAPTCHA v3 obrigatório
 - ✅ Validação de formato (email, etc)
 - ✅ Rate limiting (1 envio/min por IP)
 - ✅ Honeypot invisível
