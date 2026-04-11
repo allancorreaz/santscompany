@@ -2,8 +2,11 @@ function getRecaptchaSiteKey(form) {
   const configSiteKey = window.SANTS_CONFIG && window.SANTS_CONFIG.recaptchaSiteKey
     ? window.SANTS_CONFIG.recaptchaSiteKey
     : "";
+  const formSiteKey = form && form.dataset
+    ? (form.dataset.recaptchaSitekey || "")
+    : "";
   return (
-    form.dataset.recaptchaSitekey ||
+    formSiteKey ||
     configSiteKey ||
     ""
   );
@@ -473,6 +476,17 @@ if (typeof MutationObserver === "function") {
 }
 
 function initFormsBundle() {
+  const bodyPage = document.body && document.body.dataset
+    ? document.body.dataset.page
+    : "";
+
+  // No blog (lista e post), garante o carregamento do script para o selo aparecer.
+  if (bodyPage === "blog") {
+    ensureRecaptchaApiLoaded().catch(() => {
+      // O submit ja trata erro; aqui evita ruido visual.
+    });
+  }
+
   initCustomSelects();
   initContactForms();
 }

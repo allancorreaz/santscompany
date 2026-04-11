@@ -957,9 +957,15 @@ body.dark-mode .blog-card-readmore:hover {
 /* Mobile card layout final override */
 @media (max-width: 768px) {
   .related-header {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
     gap: 8px;
+  }
+
+  .related-all-posts-link {
+    margin-left: auto;
+    font-size: 0.95rem;
   }
 
   .blog-list,
