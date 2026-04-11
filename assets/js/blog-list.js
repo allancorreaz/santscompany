@@ -49,7 +49,14 @@ function renderPosts(postList, blogList) {
   `;
 }
 
-fetch("../data/blog/posts.json")
+const blogAssetVersion = window.SANTS_CONFIG && window.SANTS_CONFIG.assetVersion
+  ? String(window.SANTS_CONFIG.assetVersion)
+  : "";
+const blogPostsUrl = blogAssetVersion
+  ? `../data/blog/posts.json?v=${encodeURIComponent(blogAssetVersion)}`
+  : "../data/blog/posts.json";
+
+fetch(blogPostsUrl, { cache: "no-store" })
   .then((response) => response.json())
   .then((posts) => {
     const visiblePosts = posts.filter((post) => post.visible !== false);

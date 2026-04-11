@@ -17,6 +17,17 @@
       .join(recaptchaSiteKey);
   }
 
+  function withAssetVersion(url) {
+    const version = window.SANTS_CONFIG && window.SANTS_CONFIG.assetVersion
+      ? String(window.SANTS_CONFIG.assetVersion)
+      : "";
+
+    if (!version) return url;
+
+    const separator = url.includes("?") ? "&" : "?";
+    return `${url}${separator}v=${encodeURIComponent(version)}`;
+  }
+
   function applyActiveState() {
     const currentPage = document.body.dataset.page;
     if (!currentPage) return;
@@ -35,7 +46,7 @@
       return Promise.resolve();
     }
 
-    return fetch(url)
+    return fetch(withAssetVersion(url), { cache: "no-store" })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Falha ao carregar ${url}: ${response.status} ${response.statusText}`);

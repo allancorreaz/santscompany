@@ -3,7 +3,14 @@ function getPostId() {
   return match ? decodeURIComponent(match[1]) : "1";
 }
 
-fetch("../data/blog/posts.json")
+const postAssetVersion = window.SANTS_CONFIG && window.SANTS_CONFIG.assetVersion
+  ? String(window.SANTS_CONFIG.assetVersion)
+  : "";
+const postDataUrl = postAssetVersion
+  ? `../data/blog/posts.json?v=${encodeURIComponent(postAssetVersion)}`
+  : "../data/blog/posts.json";
+
+fetch(postDataUrl, { cache: "no-store" })
   .then((response) => response.json())
   .then((posts) => {
     const postId = getPostId();
