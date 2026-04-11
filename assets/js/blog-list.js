@@ -22,7 +22,7 @@ function renderPosts(postList, blogList) {
   const [featuredPost, ...secondaryPosts] = postList;
 
   blogList.innerHTML = `
-    <a href="./post.html?id=${featuredPost.id}" class="blog-featured-card">
+    <a href="./posts/${featuredPost.id}.html" class="blog-featured-card">
       <img src="${featuredPost.banner}" alt="${featuredPost.title}" class="blog-featured-img" loading="lazy" decoding="async">
       <div class="blog-featured-content">
         <span class="blog-category-chip">${decodeHtmlEntities(featuredPost.category)}</span>
@@ -34,7 +34,7 @@ function renderPosts(postList, blogList) {
     </a>
     <div class="blog-cards">
       ${secondaryPosts.map((post) => `
-        <a href="./post.html?id=${post.id}" class="blog-card">
+        <a href="./posts/${post.id}.html" class="blog-card">
           <img src="${post.banner}" alt="${post.title}" class="blog-card-img" loading="lazy" decoding="async">
           <div class="blog-card-content">
             <span class="blog-category-chip">${decodeHtmlEntities(post.category)}</span>
