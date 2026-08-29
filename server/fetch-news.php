@@ -193,7 +193,9 @@ foreach ($sources as $source) {
     $raw = @file_get_contents($source['url'], false, $context);
     if (!$raw) continue;
 
-    $xml = @simplexml_load_string($raw);
+    libxml_use_internal_errors(true);
+    $xml = @simplexml_load_string($raw, 'SimpleXMLElement', LIBXML_NONET);
+    libxml_clear_errors();
     if (!$xml) continue;
 
     $feedNamespaces = $xml->getNamespaces(true);

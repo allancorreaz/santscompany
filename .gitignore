@@ -32,3 +32,7 @@ ehthumbs.db
 
 # Ignorar o arquivo .htaccess real se ele contiver regras específicas de IP local/ambiente de teste
 # .htaccess
+
+# Dados operacionais e registros de contatos nunca entram no repositório.
+server/storage/*
+!server/storage/.gitkeep

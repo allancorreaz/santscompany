@@ -31,7 +31,19 @@ set_error_handler(function ($severity, $message, $file, $line) {
 ob_start();
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+
+// O endpoint atende somente formulários enviados pelo próprio domínio.
+$allowedOrigins = ['https://santscompany.com', 'https://www.santscompany.com'];
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if ($requestOrigin !== '' && !in_array($requestOrigin, $allowedOrigins, true)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'message' => 'Origem não permitida.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+if ($requestOrigin !== '') {
+    header('Access-Control-Allow-Origin: ' . $requestOrigin);
+    header('Vary: Origin');
+}
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -92,31 +104,55 @@ function has_effective_value(string $value, array $invalidValues = []): bool
     return $trimmed !== '' && !in_array($trimmed, $invalidValues, true);
 }
 
-function string_contains(string $haystack, string $needle): bool
-{
-    if ($needle === '') {
-        return true;
-    }
-
-    return strpos($haystack, $needle) !== false;
-}
-
 function is_local_request(): bool
 {
-    $host       = strtolower($_SERVER['HTTP_HOST'] ?? '');
-    $serverName = strtolower($_SERVER['SERVER_NAME'] ?? '');
     $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '';
-
-    foreach ([$host, $serverName] as $candidate) {
-        if ($candidate === '') continue;
-        if (string_contains($candidate, 'localhost') || string_contains($candidate, '127.0.0.1')) {
-            return true;
-        }
-    }
-
     return in_array($remoteAddr, ['127.0.0.1', '::1'], true);
 }
 
+function enforce_rate_limit(): void
+{
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    if ($ip === '') {
+        json_error('Não foi possível validar a requisição.', 400);
+    }
+
+    $directory = __DIR__ . '/storage/rate-limits';
+    if (!is_dir($directory) && !mkdir($directory, 0700, true) && !is_dir($directory)) {
+        throw new RuntimeException('Não foi possível preparar o controle de envio.');
+    }
+    @chmod($directory, 0700);
+
+    $file = $directory . '/' . hash('sha256', $ip) . '.json';
+    $handle = fopen($file, 'c+');
+    if ($handle === false || !flock($handle, LOCK_EX)) {
+        if (is_resource($handle)) fclose($handle);
+        throw new RuntimeException('Não foi possível validar o limite de envio.');
+    }
+
+    $now = time();
+    $windowSeconds = 900;
+    $maxRequests = 5;
+    $raw = stream_get_contents($handle);
+    $attempts = json_decode($raw ?: '[]', true);
+    $attempts = is_array($attempts) ? $attempts : [];
+    $attempts = array_values(array_filter($attempts, static fn ($timestamp) => is_int($timestamp) && $timestamp > ($now - $windowSeconds)));
+
+    if (count($attempts) >= $maxRequests) {
+        flock($handle, LOCK_UN);
+        fclose($handle);
+        json_error('Aguarde alguns minutos antes de enviar outra mensagem.', 429);
+    }
+
+    $attempts[] = $now;
+    rewind($handle);
+    ftruncate($handle, 0);
+    fwrite($handle, json_encode($attempts));
+    fflush($handle);
+    flock($handle, LOCK_UN);
+    fclose($handle);
+    @chmod($file, 0600);
+}
 // ─── reCAPTCHA v3 ───────────────────────────────────────────────────────────
 
 function verify_recaptcha(string $captchaResponse): bool
@@ -189,6 +225,12 @@ function verify_recaptcha(string $captchaResponse): bool
         return false;
     }
 
+    $hostname = strtolower(rtrim((string) ($decoded['hostname'] ?? ''), '.'));
+    $allowedHostnames = ['santscompany.com', 'www.santscompany.com'];
+    if (!in_array($hostname, $allowedHostnames, true)) {
+        error_log('reCAPTCHA hostname inválido: ' . $hostname);
+        return false;
+    }
     $action = $decoded['action'] ?? '';
     $score  = (float) ($decoded['score'] ?? 0);
     $minScore = defined('RECAPTCHA_MIN_SCORE') ? (float) RECAPTCHA_MIN_SCORE : 0.3;
@@ -305,6 +347,8 @@ $honeypot = trim($_POST['company'] ?? '');
 if ($honeypot !== '') {
     json_error('Envio bloqueado.', 422);
 }
+enforce_rate_limit();
+
 
 // ─── reCAPTCHA ───────────────────────────────────────────────────────────────
 
@@ -329,6 +373,9 @@ if ($name === '' || $email === '' || $message === '') {
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     json_error('Informe um e-mail válido.');
 }
+if (mb_strlen($name) > 120 || mb_strlen($email) > 254 || mb_strlen($phone) > 40 || mb_strlen($serviceType) > 160 || mb_strlen($otherService) > 160 || mb_strlen($message) > 5000) {
+    json_error('Algum campo excede o tamanho permitido.', 422);
+}
 
 $serviceDisplay = $serviceType !== ''
     ? htmlspecialchars($serviceType, ENT_QUOTES, 'UTF-8')
@@ -349,7 +396,7 @@ $submissionData = [
     'otherService' => $otherService,
     'message'      => $message,
     'ip'           => $_SERVER['REMOTE_ADDR'] ?? '',
-    'user_agent'   => $_SERVER['HTTP_USER_AGENT'] ?? '',
+    'user_agent'   => mb_substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500),
 ];
 
 // ─── Envio via Resend (unico provedor) ───────────────────────────────────────

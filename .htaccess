@@ -25,7 +25,7 @@
     Require all denied
 </Files>
 
-<FilesMatch "\.(log|bak)$">
+<FilesMatch "\.(log|bak|jsonl|sql|sqlite|swp)$">
     Require all denied
 </FilesMatch>
 
@@ -33,6 +33,12 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule ^vendor(?:/|$) - [F,L,NC]
+
+# Arquivos internos, dados de leads e metadados de dependências não são públicos.
+RewriteRule ^server/storage(?:/|$) - [F,L,NC]
+RewriteRule ^(?:\.git|\.svn|\.hg)(?:/|$) - [F,L,NC]
+RewriteRule ^(?:composer\.(?:json|lock)|config\.php)$ - [F,L,NC]
+RewriteRule ^server/(?:credentials-local|mail-config|deploy-config)(?:\.example)?\.php$ - [F,L,NC]
 </IfModule>
 
 # =============================================================================
@@ -170,6 +176,11 @@ Header set Referrer-Policy "strict-origin-when-cross-origin"
 
 # Permissões de Features (segurança)
 Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+# Diretivas seguras que não restringem os recursos externos já usados pelo site.
+Header always set Content-Security-Policy "base-uri 'self'; object-src 'none'; frame-ancestors 'self'"
+Header always set Strict-Transport-Security "max-age=31536000"
+Header always set X-Permitted-Cross-Domain-Policies "none"
 
 # Garante cache separado para respostas comprimidas
 Header append Vary Accept-Encoding
