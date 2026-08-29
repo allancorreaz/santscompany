@@ -1,0 +1,213 @@
+# =============================================================================
+# 🔒 SEGURANÇA - Bloquear acesso a arquivos sensíveis
+# =============================================================================
+
+<FilesMatch "^(config|deploy|setup-security|teste)\.php$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^(credentials-local|deploy-config)\.(php|example\.php)$">
+    Require all denied
+</FilesMatch>
+
+<Files "leads.php">
+    AuthType Basic
+    AuthName "Área Restrita - Sants Company"
+    AuthUserFile /home/u294732256/.htpasswd
+    Require valid-user
+</Files>
+
+<Files "composer.json">
+    Require all denied
+</Files>
+
+<Files "mail-config.php">
+    Require all denied
+</Files>
+
+<FilesMatch "\.(log|bak)$">
+    Require all denied
+</FilesMatch>
+
+# Bloquear acesso à pasta vendor (compatível com .htaccess)
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^vendor(?:/|$) - [F,L,NC]
+</IfModule>
+
+# =============================================================================
+# ⚙️  URL REWRITING - Remover extensões e limpar URLs
+# =============================================================================
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# ─────────────────────────────────────────────────────────────────────────
+# 1️⃣  FORÇAR HOST CANÔNICO + HTTPS (PADRÃO ÚNICO)
+# Evita loops quando o site está atrás de proxy/CDN
+# ─────────────────────────────────────────────────────────────────────────
+
+# 1.1 Força HTTPS (com suporte a proxy/CDN)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# 2️⃣  REDIRECT: URLs com .html → URLs limpas
+# Exemplo: /contato.html → /contato (301 Permanente)
+# ─────────────────────────────────────────────────────────────────────────
+
+# Remove index.html da URL raiz ou de subpastas
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s?] [NC]
+RewriteRule ^(.*/)?index\.html$ /$1 [R=301,L]
+
+# Remove .html das demais páginas
+RewriteCond %{THE_REQUEST} \s/+(.+)\.html[\s?] [NC]
+RewriteRule ^(.+)\.html$ /$1 [R=301,L]
+
+# Painel de leads protegido em /leads
+RewriteRule ^leads/?$ leads.php [L]
+
+# ─────────────────────────────────────────────────────────────────────────
+# 3️⃣  REWRITE: URLs limpas → arquivos .html (interno, sem redirect)
+# Funciona quando arquivo .html existe mas extensão não está na URL
+# ─────────────────────────────────────────────────────────────────────────
+
+# Não reescrever se for arquivo ou diretório real
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Se existe arquivo .html correspondente, reescreve para ele
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# ─────────────────────────────────────────────────────────────────────────
+# 4️⃣  SUPORTE A PASTAS COM INDEX.HTML
+# Exemplo: /blog → /blog/index.html (interno, sem redirect)
+# ─────────────────────────────────────────────────────────────────────────
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}/index.html -f
+RewriteRule ^(.*)$ $1/index.html [L]
+
+</IfModule>
+
+
+# =============================================================================
+# ⚡ CACHE - Acelerar carregamento do site
+# =============================================================================
+
+<IfModule mod_expires.c>
+ExpiresActive On
+
+# Imagens - Cache de 1 ano (não mudam frequentemente)
+ExpiresByType image/jpg "access plus 1 year"
+ExpiresByType image/jpeg "access plus 1 year"
+ExpiresByType image/png "access plus 1 year"
+ExpiresByType image/webp "access plus 1 year"
+ExpiresByType image/svg+xml "access plus 1 year"
+ExpiresByType image/gif "access plus 1 year"
+ExpiresByType image/x-icon "access plus 1 year"
+
+# Fonts - Cache de 1 ano
+ExpiresByType font/ttf "access plus 1 year"
+ExpiresByType font/otf "access plus 1 year"
+ExpiresByType font/woff "access plus 1 year"
+ExpiresByType font/woff2 "access plus 1 year"
+
+# CSS e JavaScript - Cache de 1 mês
+ExpiresByType text/css "access plus 1 month"
+ExpiresByType application/javascript "access plus 1 month"
+ExpiresByType application/x-javascript "access plus 1 month"
+
+# HTML - sempre revalidar para evitar versão antiga em webviews/in-app browsers
+ExpiresByType text/html "access plus 0 seconds"
+
+# Padrão para outros arquivos - 7 dias
+ExpiresDefault "access plus 7 days"
+</IfModule>
+
+# =============================================================================
+# 🚀 COMPRESSÃO - Reduzir tamanho de arquivos transmitidos
+# =============================================================================
+
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE text/javascript
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
+AddOutputFilterByType DEFLATE application/json
+AddOutputFilterByType DEFLATE font/ttf
+AddOutputFilterByType DEFLATE font/otf
+AddOutputFilterByType DEFLATE application/x-font-woff
+</IfModule>
+
+<IfModule mod_brotli.c>
+AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml
+</IfModule>
+
+# =============================================================================
+# 🔐 HEADERS DE SEGURANÇA + PERFORMANCE
+# =============================================================================
+
+<IfModule mod_headers.c>
+# Previne MIME type sniffing (tipo de ataque)
+Header set X-Content-Type-Options "nosniff"
+
+# Impede clickjacking (carregamento em iframe malicioso)
+Header set X-Frame-Options "SAMEORIGIN"
+
+# Proteção XSS no navegador
+Header set X-XSS-Protection "1; mode=block"
+
+# Controla informação de referrer
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Permissões de Features (segurança)
+Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+# Garante cache separado para respostas comprimidas
+Header append Vary Accept-Encoding
+
+# Cache explícito para ativos estáticos
+<FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+</FilesMatch>
+
+<FilesMatch "\.(jpg|jpeg|png|webp|gif|svg|ico|woff|woff2|ttf|otf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+<FilesMatch "\.(html|php)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+</IfModule>
+
+# =============================================================================
+# 🚫 SEGURANÇA - Bloquear acesso a diretórios/arquivos
+# =============================================================================
+
+# Desabilitar listagem de diretórios
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Tipos MIME corretos
+<IfModule mod_mime.c>
+    AddType application/javascript js
+    AddType application/json json
+    AddType text/css css
+    AddType image/svg+xml svg
+    AddEncoding gzip svgz
+</IfModule>
+
+<FilesMatch "^(config|deploy|setup-security|teste|fetch-news)\.php$">
+    Require all denied
+</FilesMatch>

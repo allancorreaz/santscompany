@@ -3,24 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blog | Sants Company</title>
-  <meta name="description" content="Blog da Sants Company com conteúdo sobre marketing digital, SEO, desenvolvimento web, design e performance para empresas.">
+  <title>Notícias e Artigos de Tecnologia e Marketing | Sants Company</title>
+  <meta name="description" content="Notícias atualizadas sobre marketing digital, SEO, desenvolvimento web e IA, além de artigos autorais da Sants Company sobre como estruturar presença digital.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://santscompany.com/blog">
+  <link rel="alternate" type="application/rss+xml" title="Sants Company - Notícias" href="https://santscompany.com/blog/rss.php">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
   <meta property="og:site_name" content="Sants Company">
-  <meta property="og:title" content="Blog | Sants Company">
-  <meta property="og:description" content="Blog da Sants Company com conteúdo sobre marketing digital, SEO, desenvolvimento web, design e performance para empresas.">
+  <meta property="og:title" content="Notícias e Artigos de Tecnologia e Marketing | Sants Company">
+  <meta property="og:description" content="Notícias atualizadas sobre marketing digital, SEO, desenvolvimento web e IA, além de artigos autorais da Sants Company sobre como estruturar presença digital.">
   <meta property="og:url" content="https://santscompany.com/blog">
+  <meta property="og:image" content="https://santscompany.com/assets/images/branding/logo.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Blog | Sants Company">
-  <meta name="twitter:description" content="Blog da Sants Company com conteúdo sobre marketing digital, SEO, desenvolvimento web, design e performance para empresas.">
+  <meta name="twitter:title" content="Notícias e Artigos de Tecnologia e Marketing | Sants Company">
+  <meta name="twitter:description" content="Notícias atualizadas sobre marketing digital, SEO, desenvolvimento web e IA, além de artigos autorais da Sants Company sobre como estruturar presença digital.">
+  <meta name="twitter:image" content="https://santscompany.com/assets/images/branding/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="stylesheet" href="../assets/css/main.css?v=1.2.5">
-  <link rel="stylesheet" href="../assets/css/blog.css?v=1.2.5">
+  <link rel="stylesheet" href="../assets/css/main.css?v=1.2.6">
+  <link rel="stylesheet" href="../assets/css/blog.css?v=1.2.6">
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=optional" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=optional"></noscript>
 </head>
@@ -30,12 +33,11 @@
   <main>
     <section class="blog-section">
       <div class="container">
-        <!-- Bloco de boas-vindas removido para design mais limpo -->
         <div id="blogWelcome" class="blog-welcome"></div>
         <div class="blog-filter-bar">
           <label class="blog-filter-field" for="blogSearchInput">
             <span>Buscar por título</span>
-            <input id="blogSearchInput" type="search" placeholder="Digite o título do post" autocomplete="off">
+            <input id="blogSearchInput" type="search" placeholder="Digite o título da notícia" autocomplete="off">
           </label>
           <label class="blog-filter-field" for="blogCategoryFilter">
             <span>Filtrar por categoria</span>
@@ -44,18 +46,27 @@
             </select>
           </label>
         </div>
-        <div id="blogList" class="blog-list"></div>
+        <div id="blogList" class="blog-list" aria-live="polite"></div>
       </div>
     </section>
 
+    <section class="blog-section blog-section-own">
+      <div class="container">
+        <div class="blog-own-header">
+          <h2 class="blog-own-title">Artigos da Sants Company</h2>
+          <p class="blog-own-subtitle">Conteúdo autoral sobre como estruturar presença digital, sites institucionais e blogs que geram resultado.</p>
+        </div>
+        <div id="ownArticlesList" class="blog-cards" aria-live="polite"></div>
+      </div>
+    </section>
   </main>
 
   <div class="global-footer"></div>
 
-  <script src="../assets/js/site-config.js?v=1.2.5" defer></script>
-  <script src="../assets/js/components.js?v=1.2.5" defer></script>
-  <script src="../assets/js/main.js?v=1.2.5" defer></script>
-  <script src="../assets/js/blog-list.js?v=1.2.5" defer></script>
-  <script src="../assets/js/forms.js?v=1.2.5" defer></script>
+  <script src="../assets/js/site-config.js?v=1.2.6" defer></script>
+  <script src="../assets/js/components.js?v=1.2.6" defer></script>
+  <script src="../assets/js/main.js?v=1.2.6" defer></script>
+  <script src="../assets/js/blog-list.js?v=1.2.6" defer></script>
+  <script src="../assets/js/forms.js?v=1.2.6" defer></script>
 </body>
 </html>

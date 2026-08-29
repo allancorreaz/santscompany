@@ -10,12 +10,14 @@ deploy-config.php
 config.local.php
 .env
 .env.*
+data/blog/news.json
 
 # Logs, Storage e Sessões Locais
 server/storage/*.log
 server/storage/cache/
 server/storage/sessions/
 *.log
+server/credentials-local.php
 
 # IDEs e Editores de Código
 .vscode/
