@@ -116,12 +116,22 @@ function fetchOpenGraphImage($url) {
 
     if (isset($openGraphImageCache[$url])) return $openGraphImageCache[$url];
 
-    $context = stream_context_create([
-        'http' => ['timeout' => 6, 'user_agent' => 'SantsCompanyNewsBot/1.0'],
-        'https' => ['timeout' => 6, 'user_agent' => 'SantsCompanyNewsBot/1.0'],
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT => 10,
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (compatible; SantsCompanyNewsBot/1.0; +https://santscompany.com)',
+        CURLOPT_HTTPHEADER => ['Accept: text/html,application/xhtml+xml'],
     ]);
-    $html = @file_get_contents($url, false, $context);
-    $openGraphImageCache[$url] = is_string($html) ? extractImageFromHtml($html) : '';
+    $html = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $openGraphImageCache[$url] = is_string($html) && $httpCode >= 200 && $httpCode < 400
+        ? extractImageFromHtml($html)
+        : '';
 
     return $openGraphImageCache[$url];
 }
@@ -187,6 +197,8 @@ foreach ($sources as $source) {
         $titlePtBr = translateToPtBr($originalTitle);
         $summaryPtBr = $originalSummary !== '' ? translateToPtBr($originalSummary) : 'Leia a cobertura completa na fonte original.';
         $banner = extractBanner($item, $namespaces, $link);
+        if ($banner === '../assets/images/branding/logo.png') continue;
+
         $pubDateRaw = extractItemText($item, $namespaces, ['pubDate', 'published', 'updated', 'dc:date']);
         $pubDate = strtotime($pubDateRaw) ?: time();
 

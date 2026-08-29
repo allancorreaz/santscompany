@@ -235,5 +235,71 @@
       "https://www.facebook.com/business/learn",
       "https://www.facebook.com/business/help"
     ]
+  },
+  {
+    "visible": true,
+    "id": 16,
+    "title": "Busca com IA: o que muda na estratégia de conteúdo do seu site",
+    "banner": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "SEO",
+    "readingTime": "7 min",
+    "tags": [
+      "SEO",
+      "Busca com IA",
+      "Conteúdo autoral"
+    ],
+    "summary": "Experiências de busca com IA não pedem atalhos novos: o ponto de partida continua sendo conteúdo útil, rastreável, tecnicamente acessível e feito para responder dúvidas reais do público.",
+    "content": "<h2>Não existe um atalho exclusivo para busca com IA</h2><p>Quando o assunto é aparecer em experiências de busca com IA, a tentação é procurar uma configuração secreta, uma nova marcação obrigatória ou uma coleção de páginas feitas apenas para robôs. A orientação oficial do Google aponta em outra direção: os fundamentos de busca continuam sendo a base. Uma página precisa estar acessível ao rastreamento, ser elegível para indexação e entregar conteúdo útil para pessoas.</p><h2>O que vale fortalecer</h2><p>Para uma empresa, isso começa com páginas que expliquem claramente o serviço, o contexto em que ele ajuda e o próximo passo para o visitante. Também vale transformar dúvidas reais de clientes em conteúdo próprio: comparações honestas, critérios de decisão, bastidores de implementação e aprendizados que a equipe realmente acumulou.</p><ul><li>Use títulos e subtítulos que deixem o assunto claro.</li><li>Publique conteúdo com experiência própria, não apenas resumos genéricos.</li><li>Mantenha páginas rastreáveis, rápidas e fáceis de ler no celular.</li><li>Inclua imagens relevantes quando elas ajudarem a explicar o tema.</li></ul><h2>O que evitar</h2><p>Criar muitas páginas quase iguais para cobrir variações de palavras-chave é uma estratégia frágil. O Google destaca que conteúdo em escala sem valor adicional não resolve a necessidade de quem pesquisa. Da mesma forma, não há requisito especial de marcação estruturada ou arquivo adicional para participar dessas experiências.</p><h2>Uma decisão editorial, não uma corrida por siglas</h2><p>Em vez de organizar a estratégia em torno de promessas de AEO ou GEO, vale melhorar a qualidade do que já representa a empresa: páginas de serviço completas, conteúdo que mostra repertório e uma estrutura técnica que não dificulte a descoberta. Assim, o site fica mais útil para pessoas e mais preparado para qualquer evolução da busca.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/fundamentals/ai-optimization-guide",
+      "https://developers.google.com/search/docs/appearance/ai-features",
+      "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 17,
+    "title": "Antes de investir em tráfego pago, defina o que conta como conversão",
+    "banner": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Tráfego Pago",
+    "readingTime": "7 min",
+    "tags": [
+      "Google Ads",
+      "Conversão",
+      "Medição"
+    ],
+    "summary": "Cliques e impressões ajudam a acompanhar uma campanha, mas não substituem uma definição objetiva de conversão. Antes de investir, a empresa precisa decidir quais ações sinalizam valor comercial de verdade.",
+    "content": "<h2>Mídia paga precisa de uma definição de sucesso</h2><p>Uma campanha pode gerar visitas e ainda assim não ajudar o negócio a avançar. Por isso, antes de escolher anúncios, palavras-chave ou orçamento, vale definir qual ação representa uma oportunidade real: envio de formulário, conversa qualificada no WhatsApp, ligação, pedido de orçamento ou venda concluída.</p><h2>Nem toda ação deve orientar a otimização</h2><p>O Google Ads diferencia conversões que entram na otimização de lances das que servem apenas para observação. Essa distinção importa porque um sinal mal escolhido pode levar a campanha a buscar volume de ações pouco úteis. Um clique em botão, por exemplo, pode ser um bom diagnóstico, mas não necessariamente deve ter o mesmo peso de um lead validado.</p><h2>Checklist antes de ativar a campanha</h2><ul><li>Defina a ação principal que tem valor para o negócio.</li><li>Verifique se a página ou o formulário realmente registra essa ação.</li><li>Separe microconversões de contatos ou vendas qualificadas.</li><li>Confirme o status das tags e faça um teste antes de escalar orçamento.</li><li>Alinhe quem atende os leads e como o resultado comercial será devolvido para a análise.</li></ul><h2>Quando faz sentido medir valor</h2><p>Se os contatos têm valores muito diferentes, a análise não deve parar na quantidade. A documentação do Google Ads prevê o uso de valores de conversão e também a conexão com dados de CRM para medir etapas posteriores, como qualificação e fechamento. Isso ajuda a aproximar a leitura de mídia do resultado comercial, sem prometer precisão onde o processo ainda não está organizado.</p><h2>O ponto prático</h2><p>Investir em tráfego pago sem uma medição mínima transforma a otimização em tentativa e erro. Uma definição clara de conversão não garante resultado, mas evita tomar decisões importantes com base apenas em números de atenção.</p>",
+    "sources": [
+      "https://support.google.com/google-ads/answer/1722022",
+      "https://support.google.com/google-ads/answer/12718882",
+      "https://support.google.com/google-ads/answer/13063108"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 18,
+    "title": "Acessibilidade em sites: três frentes para reduzir barreiras desde o projeto",
+    "banner": "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Desenvolvimento Web",
+    "readingTime": "8 min",
+    "tags": [
+      "Acessibilidade",
+      "UX",
+      "Desenvolvimento Web"
+    ],
+    "summary": "Acessibilidade não é uma etapa decorativa no fim do projeto. Contraste, navegação por teclado e textos claros reduzem barreiras para diferentes pessoas e também tornam a experiência mais previsível no dia a dia.",
+    "content": "<h2>Acessibilidade começa na forma como a página é usada</h2><p>Um site acessível não depende apenas de uma ferramenta automática ou de uma declaração no rodapé. Ele precisa permitir que diferentes pessoas encontrem informação, entendam o conteúdo e concluam tarefas sem obstáculos desnecessários. As diretrizes WCAG organizam esse objetivo em princípios como conteúdo perceptível, interface operável, informação compreensível e tecnologia robusta.</p><h2>Três frentes que merecem atenção desde o início</h2><h3>1. Contraste e hierarquia visual</h3><p>Texto, botões e estados importantes precisam continuar distinguíveis em diferentes telas e condições de uso. A boa hierarquia também ajuda quem lê rapidamente a encontrar títulos, instruções e próximas ações.</p><h3>2. Navegação por teclado e foco visível</h3><p>Links, menus, campos e botões precisam funcionar sem mouse. Quando o foco desaparece ou segue uma ordem confusa, parte do público fica impedida de usar recursos básicos da página.</p><h3>3. Conteúdo e formulários compreensíveis</h3><p>Rótulos objetivos, mensagens de erro claras e instruções próximas aos campos reduzem ambiguidade. Imagens que carregam informação também precisam de texto alternativo coerente com sua função.</p><h2>Como revisar sem transformar tudo de uma vez</h2><ul><li>Navegue pelas páginas principais apenas com a tecla Tab.</li><li>Confira se cada campo de formulário tem rótulo claro.</li><li>Revise contraste de textos, botões e avisos de erro.</li><li>Priorize páginas de contato, orçamento, compra e áreas mais acessadas.</li></ul><h2>Uma base melhor para todos</h2><p>Esses ajustes não substituem uma auditoria especializada quando ela é necessária, mas já tornam o projeto mais previsível e menos frágil. Acessibilidade bem tratada também costuma melhorar clareza, consistência e qualidade percebida para quem não usa tecnologia assistiva.</p>",
+    "sources": [
+      "https://www.w3.org/WAI/standards-guidelines/wcag/",
+      "https://www.w3.org/WAI/WCAG22/quickref/",
+      "https://web.dev/learn/accessibility/"
+    ]
   }
 ]
