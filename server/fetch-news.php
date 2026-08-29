@@ -28,6 +28,7 @@ $maxTotal = 60;
 $items = [];
 $seenLinks = [];
 $translationCache = [];
+$openGraphImageCache = [];
 
 function translateToPtBr($text) {
     global $translationCache;
@@ -90,9 +91,42 @@ function normalizeSummary($text, $limit = 220) {
     return rtrim(mb_substr($plain, 0, $limit - 1)) . '…';
 }
 
-function extractBanner($item, array $namespaces) {
+function extractImageFromHtml($html) {
+    if ($html === '') return '';
+
+    if (preg_match_all('/<meta\b[^>]*>/i', $html, $metaTags)) {
+        foreach ($metaTags[0] as $tag) {
+            if (!preg_match('/(?:property|name)=["\'](?:og:image(?::secure_url)?|twitter:image)["\']/i', $tag)) continue;
+            if (preg_match('/content=["\']([^"\']+)["\']/i', $tag, $match)) return html_entity_decode($match[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+    }
+
+    if (preg_match('/<img[^>]+(?:src|data-src)=["\']([^"\']+)["\']/i', $html, $matches)) {
+        return html_entity_decode($matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+
+    return '';
+}
+
+function fetchOpenGraphImage($url) {
+    global $openGraphImageCache;
+
+    if (isset($openGraphImageCache[$url])) return $openGraphImageCache[$url];
+
+    $context = stream_context_create([
+        'http' => ['timeout' => 6, 'user_agent' => 'SantsCompanyNewsBot/1.0'],
+        'https' => ['timeout' => 6, 'user_agent' => 'SantsCompanyNewsBot/1.0'],
+    ]);
+    $html = @file_get_contents($url, false, $context);
+    $openGraphImageCache[$url] = is_string($html) ? extractImageFromHtml($html) : '';
+
+    return $openGraphImageCache[$url];
+}
+
+function extractBanner($item, array $namespaces, $articleUrl) {
     if (isset($item->enclosure['url'])) {
-        return (string) $item->enclosure['url'];
+        $enclosureType = strtolower((string) $item->enclosure['type']);
+        if ($enclosureType === '' || str_starts_with($enclosureType, 'image/')) return (string) $item->enclosure['url'];
     }
 
     if (isset($namespaces['media'])) {
@@ -101,14 +135,18 @@ function extractBanner($item, array $namespaces) {
         if (isset($media->thumbnail['url'])) return (string) $media->thumbnail['url'];
     }
 
+    $html = '';
     if (isset($namespaces['content'])) {
-        $encoded = trim((string) $item->children($namespaces['content'])->encoded);
-        if (preg_match('/<img[^>]+src=["\']([^"\']+)["\']/i', $encoded, $matches)) {
-            return $matches[1];
-        }
+        $html = trim((string) $item->children($namespaces['content'])->encoded);
     }
+    if ($html === '') $html = trim((string) $item->content);
+    if ($html === '') $html = trim((string) $item->description);
 
-    return '../assets/images/branding/logo.png';
+    $feedImage = extractImageFromHtml($html);
+    if ($feedImage !== '') return $feedImage;
+
+    $openGraphImage = fetchOpenGraphImage($articleUrl);
+    return $openGraphImage !== '' ? $openGraphImage : '../assets/images/branding/logo.png';
 }
 
 foreach ($sources as $source) {
@@ -119,6 +157,7 @@ foreach ($sources as $source) {
     $xml = @simplexml_load_string($raw);
     if (!$xml) continue;
 
+    $feedNamespaces = $xml->getNamespaces(true);
     $feedItems = [];
     if (isset($xml->channel->item)) {
         $feedItems = $xml->channel->item;
@@ -131,7 +170,7 @@ foreach ($sources as $source) {
     foreach ($feedItems as $item) {
         if ($count >= $maxPerSource) break;
 
-        $namespaces = $item->getNamespaces(true);
+        $namespaces = $feedNamespaces;
         $link = trim((string) $item->link);
         if ($link === '' && isset($item->link['href'])) {
             $link = trim((string) $item->link['href']);
@@ -144,7 +183,7 @@ foreach ($sources as $source) {
         $originalSummary = normalizeSummary(extractItemText($item, $namespaces, ['description', 'summary', 'content:encoded', 'content']));
         $titlePtBr = translateToPtBr($originalTitle);
         $summaryPtBr = $originalSummary !== '' ? translateToPtBr($originalSummary) : 'Leia a cobertura completa na fonte original.';
-        $banner = extractBanner($item, $namespaces);
+        $banner = extractBanner($item, $namespaces, $link);
         $pubDateRaw = extractItemText($item, $namespaces, ['pubDate', 'published', 'updated', 'dc:date']);
         $pubDate = strtotime($pubDateRaw) ?: time();
 
