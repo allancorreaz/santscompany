@@ -4140,3 +4140,42 @@ body.dark-mode .service-detail-card::after { background: rgba(59, 130, 246, 0.13
   .service-detail-card { min-height: 0; padding: 28px 24px; }
   .service-detail-card::before { left: 24px; }
 }
+/* Composição sem sobreposição: ambos os cartões permanecem legíveis. */
+.hero-composition {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(190px, 0.82fr);
+  align-items: end;
+  gap: 18px;
+  min-height: 330px;
+}
+
+.hero-composition-card,
+.hero-composition-card--main,
+.hero-composition-card--small {
+  position: relative;
+  inset: auto;
+  right: auto;
+  bottom: auto;
+  width: auto;
+  margin: 0;
+}
+
+.hero-composition-card--main {
+  min-height: 300px;
+  padding: 38px;
+}
+
+.hero-composition-card--small {
+  min-height: 226px;
+  padding: 26px;
+}
+
+.hero-composition-tags { display: none; }
+
+@media (max-width: 992px) {
+  .hero-composition { max-width: 620px; }
+}
+
+@media (max-width: 768px) {
+  .hero-composition { display: none; }
+}
