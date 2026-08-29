@@ -78,6 +78,7 @@
       inject(".import-portfolio", `${basePath}components/portfolio.html`, basePath),
       inject(".import-contact-form", `${basePath}components/contact-form.html`, basePath),
       inject(".import-numeros-q-falam", `${basePath}components/numeros-q-falam.html`, basePath),
+      inject(".import-services", `${basePath}components/services.html`, basePath),
     ];
 
     Promise.all(injections)

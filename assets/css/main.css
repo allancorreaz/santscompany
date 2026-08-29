@@ -4179,3 +4179,98 @@ body.dark-mode .service-detail-card::after { background: rgba(59, 130, 246, 0.13
 @media (max-width: 768px) {
   .hero-composition { display: none; }
 }
+/* Home: serviços e diferenciais com a mesma estrutura da página de serviços. */
+.section-heading--services,
+.why-choose-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.75fr);
+  gap: 42px;
+  align-items: end;
+  margin-bottom: 48px;
+}
+
+.section-heading--services .section-title,
+.why-choose-heading .section-title {
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.section-heading--services .section-title::after,
+.why-choose-heading .section-title::after { margin-left: 0; }
+
+.section-heading--services .section-subtitle,
+.why-choose-heading .section-subtitle {
+  max-width: 38rem;
+  margin: 0;
+  text-align: left;
+}
+
+.section-services .service-detail-grid { margin-top: 0; }
+
+.why-choose-us {
+  overflow: hidden;
+  background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 52%, #eef2ff 100%);
+}
+
+.why-choose-us::before { opacity: 0.72; }
+
+.why-choose-heading {
+  position: relative;
+  z-index: 1;
+}
+
+.benefits-grid--refined {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.benefits-grid--refined .benefit-item {
+  min-height: 316px;
+  padding: 30px 28px;
+  border-radius: 18px;
+  text-align: left;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.07);
+}
+
+.benefits-grid--refined .benefit-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 42px rgba(15, 23, 42, 0.12);
+}
+
+.benefit-kicker {
+  display: block;
+  margin-bottom: 26px;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.benefits-grid--refined .benefit-icon {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  margin: 0 0 22px;
+  border-radius: 15px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 1.3rem;
+}
+
+.benefits-grid--refined .benefit-item:hover .benefit-icon { transform: none; color: #1d4ed8; }
+.benefits-grid--refined .benefit-item h3 { margin-bottom: 14px; font-size: 1.22rem; }
+.benefits-grid--refined .benefit-item p { font-size: 0.96rem; line-height: 1.7; }
+
+@media (max-width: 1100px) {
+  .benefits-grid--refined { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  .section-heading--services,
+  .why-choose-heading { grid-template-columns: 1fr; gap: 18px; margin-bottom: 34px; }
+  .benefits-grid--refined { grid-template-columns: 1fr; gap: 14px; }
+  .benefits-grid--refined .benefit-item { min-height: 0; padding: 26px 24px; }
+  .benefit-kicker { margin-bottom: 18px; }
+}
