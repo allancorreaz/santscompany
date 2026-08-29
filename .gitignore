@@ -1,0 +1,32 @@
+# Dependências de Backend (PHP / Composer)
+/vendor/
+/composer.phar
+
+# Arquivos Sensíveis de Credenciais e Deploy (Padrão Hostinger)
+server/credentials-local.php
+server/deploy-config.php
+credentials-local.php
+deploy-config.php
+config.local.php
+.env
+.env.*
+
+# Logs, Storage e Sessões Locais
+server/storage/*.log
+server/storage/cache/
+server/storage/sessions/
+*.log
+
+# IDEs e Editores de Código
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de Sistema Operacional
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Ignorar o arquivo .htaccess real se ele contiver regras específicas de IP local/ambiente de teste
+# .htaccess
