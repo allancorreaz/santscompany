@@ -301,5 +301,168 @@
       "https://www.w3.org/WAI/WCAG22/quickref/",
       "https://web.dev/learn/accessibility/"
     ]
+  },
+  {
+    "visible": true,
+    "id": 19,
+    "title": "Indexação técnica: o que revisar antes de publicar uma página",
+    "banner": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "SEO",
+    "readingTime": "6 min",
+    "summary": "Antes de esperar resultado orgânico, vale confirmar se a página responde corretamente, pode ser rastreada e entrega conteúdo acessível.",
+    "content": "<h2>Publicar não é o mesmo que estar disponível para busca</h2><p>Uma página pode estar no ar e ainda assim não ser encontrada ou interpretada como esperado. O ponto de partida é verificar se a URL responde com sucesso, não está bloqueada para rastreamento e exibe o conteúdo importante sem barreiras.</p><h2>Uma revisão curta antes de divulgar</h2><ul><li>Confirme a resposta HTTP da URL final.</li><li>Evite bloqueios involuntários por robots.txt ou meta robots.</li><li>Use título claro, conteúdo visível e links internos relevantes.</li></ul><h2>Indexação não é promessa automática</h2><p>Os requisitos técnicos ajudam uma página a ser elegível, mas não garantem indexação. Conteúdo útil e estrutura consistente continuam necessários.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/essentials/technical",
+      "https://developers.google.com/search/docs/fundamentals/get-started"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 20,
+    "title": "Eventos no GA4: como medir ações sem criar uma lista confusa",
+    "banner": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Marketing Digital",
+    "readingTime": "7 min",
+    "summary": "Uma boa medição começa com poucas ações relevantes, nomes consistentes e parâmetros que expliquem o contexto.",
+    "content": "<h2>Comece pelas perguntas de negócio</h2><p>Antes de configurar tags, defina o que precisa ser entendido: quais páginas iniciam conversas e quais canais levam a contatos qualificados. Cada evento deve responder a uma pergunta real.</p><h2>Nomes claros facilitam análise</h2><p>O GA4 recomenda convenções para eventos e parâmetros. Usar nomes consistentes evita que uma mesma ação apareça de várias formas nos relatórios.</p><h2>Contexto é parte da medição</h2><p>Um clique ganha significado com contexto, como página e localização do botão. Priorize eventos que serão usados para melhorar uma página, campanha ou atendimento.</p>",
+    "sources": [
+      "https://support.google.com/analytics/answer/13675006?hl=pt-BR",
+      "https://support.google.com/analytics/answer/13316687?hl=pt-BR",
+      "https://support.google.com/analytics/answer/9267735?hl=pt-BR"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 21,
+    "title": "Core Web Vitals: como transformar métricas em prioridades de melhoria",
+    "banner": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Desenvolvimento Web",
+    "readingTime": "7 min",
+    "summary": "Métricas de carregamento, interatividade e estabilidade ajudam a encontrar fricções reais sem perseguir uma nota isolada.",
+    "content": "<h2>Olhe para a experiência, não só para a pontuação</h2><p>Core Web Vitals reúnem sinais de carregamento percebido, resposta a interações e estabilidade visual. Eles são úteis quando orientam uma investigação concreta.</p><h2>Priorize o que aparece para o visitante</h2><p>Imagens dimensionadas, recursos críticos leves e espaço reservado para componentes reduzem problemas comuns. Primeiro, corrija o que afeta a navegação principal.</p><h2>Compare laboratório e uso real</h2><p>Ferramentas de teste reproduzem gargalos; dados de campo mostram o comportamento para pessoas reais. Os dois ajudam a priorizar melhor.</p>",
+    "sources": [
+      "https://web.dev/articles/vitals",
+      "https://web.dev/learn/performance/"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 22,
+    "title": "Migração de site: como organizar a mudança de URLs com menos risco",
+    "banner": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "SEO",
+    "readingTime": "8 min",
+    "summary": "Trocar estrutura, domínio ou tecnologia exige mapa de URLs, redirecionamentos coerentes e validação pós-publicação.",
+    "content": "<h2>Mapeie o que existe antes de alterar</h2><p>Uma migração segura começa pela lista de URLs importantes: serviços, conteúdos que recebem visitas, formulários e páginas indexadas.</p><h2>Redirecione para o equivalente</h2><p>Quando uma URL muda, o redirecionamento permanente deve levar à página mais correspondente possível. Mandar tudo para a home prejudica a experiência.</p><h2>Valide depois do lançamento</h2><p>Revise respostas HTTP, links internos, sitemap, canonicals e páginas prioritárias. Rastreamento e atualização dos resultados levam tempo.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes",
+      "https://developers.google.com/search/docs/crawling-indexing/301-redirects"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 23,
+    "title": "URLs e links internos: uma base simples para navegação e descoberta",
+    "banner": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "SEO",
+    "readingTime": "6 min",
+    "summary": "Endereços compreensíveis e links internos contextuais ajudam pessoas a se orientar e tornam a arquitetura do site mais clara.",
+    "content": "<h2>Uma URL deve explicar o necessário</h2><p>Endereços curtos, estáveis e relacionados ao conteúdo são mais fáceis de compartilhar, revisar e manter. A ideia não é acumular palavras-chave.</p><h2>Links internos conectam assuntos</h2><p>Uma página de serviço pode apontar para um artigo que aprofunda uma dúvida; um artigo pode indicar o serviço relacionado. Isso reduz páginas isoladas.</p><h2>Evite criar labirintos</h2><p>URLs duplicadas e links genéricos em excesso tornam o caminho menos claro. Revisar os caminhos principais ajuda a manter o site útil.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/crawling-indexing/url-structure",
+      "https://developers.google.com/search/docs/fundamentals/get-started"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 24,
+    "title": "Conteúdo com IA: como manter utilidade e voz própria no site",
+    "banner": "https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Inteligência Artificial",
+    "readingTime": "7 min",
+    "summary": "Ferramentas de IA podem apoiar pesquisa e rascunhos, mas não substituem repertório, revisão e responsabilidade editorial.",
+    "content": "<h2>Ferramenta não é estratégia editorial</h2><p>IA generativa acelera tarefas, mas não conhece sozinha a operação, os clientes e os limites de uma empresa. Texto genérico sem revisão pouco ajuda quem lê.</p><h2>O que torna um conteúdo próprio</h2><p>Exemplos vividos, critérios de decisão, limitações do serviço e aprendizados de projeto dão contexto e ajudam o leitor a avaliar uma solução.</p><h2>Revisão continua indispensável</h2><p>Antes de publicar, confira fatos, links, promessas, tom de voz e utilidade prática. O foco deve permanecer no valor para pessoas.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
+      "https://developers.google.com/search/docs/fundamentals/ai-optimization-guide"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 25,
+    "title": "Formulários que viram oportunidade: do campo de contato à conversão medida",
+    "banner": "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Tráfego Pago",
+    "readingTime": "7 min",
+    "summary": "Um formulário deve pedir apenas o necessário, confirmar o envio com clareza e registrar a conversão certa.",
+    "content": "<h2>Menos campos, mais clareza</h2><p>Todo campo adicional aumenta o esforço. O formulário deve reunir o necessário para iniciar o atendimento, com rótulos objetivos e erros compreensíveis.</p><h2>O envio precisa ter uma consequência visível</h2><p>Uma confirmação clara reduz incerteza e cria um ponto confiável para registrar uma conversão real.</p><h2>Conecte marketing e atendimento</h2><p>Para campanhas pagas, a conversão não termina no formulário. Retornar a qualidade dos contatos aproxima a otimização do resultado comercial.</p>",
+    "sources": [
+      "https://support.google.com/google-ads/answer/1722022",
+      "https://support.google.com/google-ads/answer/12718882",
+      "https://web.dev/learn/accessibility/forms/"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 26,
+    "title": "Componentes consistentes: por que design e acessibilidade andam juntos",
+    "banner": "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Desenvolvimento Web",
+    "readingTime": "6 min",
+    "summary": "Quando botões, campos, avisos e navegação se comportam de forma previsível, a interface fica mais fácil de usar e manter.",
+    "content": "<h2>Padrões poupam esforço de interpretação</h2><p>Um botão reconhecível, um campo com rótulo e uma mensagem de erro próxima ajudam qualquer pessoa a entender a interface mais rápido.</p><h2>Estados fazem parte do componente</h2><p>Foco de teclado, contraste, erro, carregamento e desabilitado precisam ser previstos para que a experiência continue clara.</p><h2>Uma biblioteca pequena pode ser suficiente</h2><p>Documentar elementos mais usados e revisar sua aplicação já reduz retrabalho e torna mudanças futuras mais seguras.</p>",
+    "sources": [
+      "https://www.w3.org/WAI/WCAG22/quickref/",
+      "https://web.dev/learn/accessibility/"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 27,
+    "title": "Imagens no site: como equilibrar contexto, acessibilidade e carregamento",
+    "banner": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Desenvolvimento Web",
+    "readingTime": "7 min",
+    "summary": "Uma imagem útil reforça o conteúdo e carrega no tamanho certo. Texto alternativo e dimensões reservadas ajudam a experiência.",
+    "content": "<h2>Imagem deve apoiar a mensagem</h2><p>Quando uma imagem transmite informação, o texto alternativo deve explicar sua função. Quando é decorativa, não deve adicionar ruído à leitura assistiva.</p><h2>Evite pagar por pixels que não aparecem</h2><p>Enviar uma imagem muito maior do que o espaço de exibição aumenta o peso sem melhorar a leitura. Formatos e tamanhos adequados ajudam.</p><h2>Reserve espaço antes do carregamento</h2><p>Definir proporção ou dimensões reduz mudanças repentinas no layout e melhora a estabilidade visual.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/appearance/google-images",
+      "https://web.dev/learn/images/"
+    ]
+  },
+  {
+    "visible": true,
+    "id": 28,
+    "title": "Checklist pós-lançamento: o que validar depois de publicar um site",
+    "banner": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80",
+    "author": "Sants Company",
+    "date": "29/08/2026",
+    "category": "Desenvolvimento Web",
+    "readingTime": "8 min",
+    "summary": "O lançamento é o início da validação em ambiente real. Links, respostas, formulários, sitemap e métricas precisam ser conferidos.",
+    "content": "<h2>Revise os caminhos que importam</h2><p>Comece por páginas de serviço e ações de negócio: contato, orçamento, telefone, WhatsApp e compra. Navegue como um visitante faria.</p><h2>Confira sinais técnicos essenciais</h2><ul><li>URLs prioritárias respondem corretamente.</li><li>Links internos e redirecionamentos levam ao destino esperado.</li><li>Sitemap e canonical apontam para versões corretas.</li><li>Formulários enviam e confirmam a ação.</li></ul><h2>Monitore para corrigir cedo</h2><p>Search Console e Analytics ajudam a identificar páginas não encontradas e comportamento de navegação para corrigir problemas com prioridade.</p>",
+    "sources": [
+      "https://developers.google.com/search/docs/essentials/technical",
+      "https://developers.google.com/search/docs/crawling-indexing/301-redirects",
+      "https://support.google.com/analytics/answer/9304153?hl=pt-BR"
+    ]
   }
 ]

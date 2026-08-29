@@ -16,7 +16,6 @@ function escapeHtml(text) {
 
 function sanitizeUrl(url, fallback = "#") {
   const value = String(url || "").trim();
-
   if (!value) return fallback;
   if (value.startsWith("./") || value.startsWith("../") || value.startsWith("/")) return value;
 
@@ -39,45 +38,51 @@ function normalizeText(text) {
 function parsePtBrDate(dateText) {
   const match = String(dateText || "").match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   if (!match) return 0;
-
   const [, day, month, year] = match;
   return new Date(Number(year), Number(month) - 1, Number(day)).getTime();
 }
 
 function renderState(container, message) {
-  if (!container) return;
-  container.innerHTML = `<div class="blog-empty-state"><p>${escapeHtml(message)}</p></div>`;
+  if (container) container.innerHTML = `<div class="blog-empty-state"><p>${escapeHtml(message)}</p></div>`;
 }
 
-function renderPosts(postList, blogList) {
-  if (!postList.length) {
-    renderState(blogList, "Nenhuma notícia encontrada para esta busca ou categoria.");
+function renderPosts(posts, container) {
+  if (!posts.length) {
+    renderState(container, "Nenhum conteúdo encontrado para esta busca ou categoria.");
     return;
   }
 
-  const [featuredPost, ...secondaryPosts] = postList;
+  const linkAttributes = (post) => post.isOwn
+    ? `href="${sanitizeUrl(post.url)}"`
+    : `href="${sanitizeUrl(post.url)}" target="_blank" rel="noopener noreferrer"`;
+  const sourceLabel = (post) => post.isOwn ? escapeHtml(post.sourceName) : `Fonte: ${escapeHtml(post.sourceName)}`;
+  const readLabel = (post, compact = false) => post.isOwn
+    ? (compact ? "Ler mais" : "Ler artigo completo")
+    : (compact ? "Ler mais" : "Ler notícia completa");
+  const externalIcon = (post) => post.isOwn ? "" : ' <i class="fas fa-external-link-alt"></i>';
+  const [featuredPost, ...secondaryPosts] = posts;
 
-  blogList.innerHTML = `
-    <a href="${sanitizeUrl(featuredPost.url)}" target="_blank" rel="noopener noreferrer" class="blog-featured-card">
+  container.innerHTML = `
+    <a ${linkAttributes(featuredPost)} class="blog-featured-card">
       <img src="${sanitizeUrl(featuredPost.banner, "../assets/images/branding/logo.png")}" alt="${escapeHtml(featuredPost.title)}" class="blog-featured-img" loading="lazy" decoding="async">
       <div class="blog-featured-content">
-        <span class="blog-category-chip">${escapeHtml(decodeHtmlEntities(featuredPost.category))}</span>
-        <div class="blog-meta">${escapeHtml(featuredPost.date)} • ${escapeHtml(featuredPost.readingTime)} • Fonte: ${escapeHtml(featuredPost.sourceName)}</div>
+        <span class="blog-category-chip">${escapeHtml(featuredPost.category)}</span>
+        <div class="blog-meta">${escapeHtml(featuredPost.date)} • ${escapeHtml(featuredPost.readingTime)} • ${sourceLabel(featuredPost)}</div>
         <h2>${escapeHtml(featuredPost.title)}</h2>
         <p>${escapeHtml(featuredPost.summary)}</p>
-        <span class="blog-card-readmore">Ler notícia completa <i class="fas fa-external-link-alt"></i></span>
+        <span class="blog-card-readmore">${readLabel(featuredPost)}${externalIcon(featuredPost)}</span>
       </div>
     </a>
     <div class="blog-cards">
       ${secondaryPosts.map((post) => `
-        <a href="${sanitizeUrl(post.url)}" target="_blank" rel="noopener noreferrer" class="blog-card">
+        <a ${linkAttributes(post)} class="blog-card">
           <img src="${sanitizeUrl(post.banner, "../assets/images/branding/logo.png")}" alt="${escapeHtml(post.title)}" class="blog-card-img" loading="lazy" decoding="async">
           <div class="blog-card-content">
-            <span class="blog-category-chip">${escapeHtml(decodeHtmlEntities(post.category))}</span>
-            <div class="blog-card-meta">${escapeHtml(post.date)} • ${escapeHtml(post.readingTime)} • Fonte: ${escapeHtml(post.sourceName)}</div>
+            <span class="blog-category-chip">${escapeHtml(post.category)}</span>
+            <div class="blog-card-meta">${escapeHtml(post.date)} • ${escapeHtml(post.readingTime)} • ${sourceLabel(post)}</div>
             <div class="blog-card-title">${escapeHtml(post.title)}</div>
             <div class="blog-card-excerpt">${escapeHtml(post.summary)}</div>
-            <span class="blog-card-readmore">Ler mais <i class="fas fa-external-link-alt"></i></span>
+            <span class="blog-card-readmore">${readLabel(post, true)}${externalIcon(post)}</span>
           </div>
         </a>
       `).join("")}
@@ -85,51 +90,29 @@ function renderPosts(postList, blogList) {
   `;
 }
 
-function renderOwnArticles(posts, container) {
-  if (!container) return;
-
-  if (!posts.length) {
-    renderState(container, "Nenhum artigo institucional disponível no momento.");
-    return;
-  }
-
-  container.innerHTML = posts.map((post) => `
-    <a href="./posts/${encodeURIComponent(post.id)}.html" class="blog-card">
-      <img src="${sanitizeUrl(post.banner, "../assets/images/branding/logo.png")}" alt="${escapeHtml(decodeHtmlEntities(post.title))}" class="blog-card-img" loading="lazy" decoding="async">
-      <div class="blog-card-content">
-        <span class="blog-category-chip">${escapeHtml(decodeHtmlEntities(post.category))}</span>
-        <div class="blog-card-meta">${escapeHtml(post.date)} • ${escapeHtml(post.readingTime)} • ${escapeHtml(post.author)}</div>
-        <div class="blog-card-title">${escapeHtml(decodeHtmlEntities(post.title))}</div>
-        <div class="blog-card-excerpt">${escapeHtml(decodeHtmlEntities(post.summary))}</div>
-        <span class="blog-card-readmore">Ler artigo completo</span>
-      </div>
-    </a>
-  `).join("");
-}
-
 const blogAssetVersion = window.SANTS_CONFIG && window.SANTS_CONFIG.assetVersion
   ? String(window.SANTS_CONFIG.assetVersion)
   : "";
+const withVersion = (url) => blogAssetVersion ? `${url}?v=${encodeURIComponent(blogAssetVersion)}` : url;
 
-const blogNewsUrl = blogAssetVersion
-  ? `../data/blog/news.json?v=${encodeURIComponent(blogAssetVersion)}`
-  : "../data/blog/news.json";
-
-const blogOwnPostsUrl = blogAssetVersion
-  ? `../data/blog/posts.json?v=${encodeURIComponent(blogAssetVersion)}`
-  : "../data/blog/posts.json";
-
-fetch(blogNewsUrl, { cache: "no-store" })
-  .then((response) => response.json())
-  .then((newsItems) => {
+Promise.all([
+  fetch(withVersion("../data/blog/news.json"), { cache: "no-store" }).then((response) => {
+    if (!response.ok) throw new Error("Falha ao carregar as notícias.");
+    return response.json();
+  }),
+  fetch(withVersion("../data/blog/posts.json"), { cache: "no-store" }).then((response) => {
+    if (!response.ok) throw new Error("Falha ao carregar os artigos.");
+    return response.json();
+  })
+])
+  .then(([newsItems, ownPosts]) => {
     const blogList = document.getElementById("blogList");
     const blogWelcome = document.getElementById("blogWelcome");
     const blogSearchInput = document.getElementById("blogSearchInput");
     const blogCategoryFilter = document.getElementById("blogCategoryFilter");
-
     if (!blogList || !blogWelcome) return;
 
-    const visiblePosts = Array.isArray(newsItems) ? newsItems.map((item) => ({
+    const externalPosts = (Array.isArray(newsItems) ? newsItems : []).map((item) => ({
       id: item.id,
       url: sanitizeUrl(item.url),
       title: decodeHtmlEntities(item.title),
@@ -138,85 +121,64 @@ fetch(blogNewsUrl, { cache: "no-store" })
       date: item.date,
       readingTime: item.readingTime,
       summary: decodeHtmlEntities(item.summary),
-      sourceName: decodeHtmlEntities(item.sourceName)
-    })) : [];
+      sourceName: decodeHtmlEntities(item.sourceName),
+      timestamp: Number(item.timestamp) || parsePtBrDate(item.date),
+      isOwn: false
+    }));
 
+    const institutionalPosts = (Array.isArray(ownPosts) ? ownPosts : [])
+      .filter((post) => post.visible !== false)
+      .map((post) => ({
+        id: post.id,
+        url: `./posts/${encodeURIComponent(post.id)}.html`,
+        title: decodeHtmlEntities(post.title),
+        category: decodeHtmlEntities(post.category),
+        banner: sanitizeUrl(post.banner, "../assets/images/branding/logo.png"),
+        date: post.date,
+        readingTime: post.readingTime,
+        summary: decodeHtmlEntities(post.summary),
+        sourceName: "Sants Company",
+        timestamp: parsePtBrDate(post.date),
+        isOwn: true
+      }));
+
+    const visiblePosts = [...externalPosts, ...institutionalPosts].sort((a, b) => b.timestamp - a.timestamp);
     if (!visiblePosts.length) {
-      renderState(blogList, "As notícias ainda estão sendo preparadas. Tente novamente em alguns minutos.");
+      renderState(blogList, "Os conteúdos ainda estão sendo preparados. Tente novamente em alguns minutos.");
       return;
     }
 
-    const categories = [...new Set(visiblePosts.map((post) => decodeHtmlEntities(post.category)))].sort((a, b) =>
-      a.localeCompare(b, "pt-BR")
-    );
-
+    const categories = [...new Set(visiblePosts.map((post) => post.category))].sort((a, b) => a.localeCompare(b, "pt-BR"));
     if (blogCategoryFilter && !blogCategoryFilter.dataset.enhanced) {
-      blogCategoryFilter.insertAdjacentHTML(
-        "beforeend",
-        categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("")
-      );
-
+      blogCategoryFilter.insertAdjacentHTML("beforeend", categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join(""));
       const filterFieldLabel = blogCategoryFilter.closest(".blog-filter-field");
       const customDropdown = document.createElement("div");
       customDropdown.className = "custom-dropdown";
-
       const dropdownButton = document.createElement("button");
       dropdownButton.className = "custom-dropdown-button";
       dropdownButton.textContent = "Todas as categorias";
       dropdownButton.type = "button";
-
       const dropdownMenu = document.createElement("div");
       dropdownMenu.className = "custom-dropdown-menu";
-
-      const optionsHtml = [
-        '<div class="custom-dropdown-option" data-value="">Todas as categorias</div>',
-        ...categories.map((category) => `<div class="custom-dropdown-option" data-value="${escapeHtml(category)}">${escapeHtml(category)}</div>`)
-      ].join("");
-
-      dropdownMenu.innerHTML = optionsHtml;
-      customDropdown.appendChild(dropdownButton);
-      customDropdown.appendChild(dropdownMenu);
-
-      if (filterFieldLabel) {
-        filterFieldLabel.appendChild(customDropdown);
-      }
+      dropdownMenu.innerHTML = ['<div class="custom-dropdown-option" data-value="">Todas as categorias</div>', ...categories.map((category) => `<div class="custom-dropdown-option" data-value="${escapeHtml(category)}">${escapeHtml(category)}</div>`)].join("");
+      customDropdown.append(dropdownButton, dropdownMenu);
+      if (filterFieldLabel) filterFieldLabel.appendChild(customDropdown);
       blogCategoryFilter.style.display = "none";
       blogCategoryFilter.dataset.enhanced = "true";
-
-      let isOpen = false;
-
-      const openDropdown = () => {
-        isOpen = true;
-        customDropdown.classList.add("open");
-      };
-
-      const closeDropdown = () => {
-        isOpen = false;
-        customDropdown.classList.remove("open");
-      };
-
-      dropdownButton.addEventListener("click", (e) => {
-        e.stopPropagation();
-        isOpen ? closeDropdown() : openDropdown();
+      const closeDropdown = () => customDropdown.classList.remove("open");
+      dropdownButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        customDropdown.classList.toggle("open");
       });
-
-      customDropdown.addEventListener("mouseenter", openDropdown);
+      customDropdown.addEventListener("mouseenter", () => customDropdown.classList.add("open"));
       customDropdown.addEventListener("mouseleave", closeDropdown);
-
-      document.addEventListener("click", (e) => {
-        if (!customDropdown.contains(e.target)) {
-          closeDropdown();
-        }
+      document.addEventListener("click", (event) => {
+        if (!customDropdown.contains(event.target)) closeDropdown();
       });
-
-      const options = dropdownMenu.querySelectorAll(".custom-dropdown-option");
-      options.forEach((option) => {
+      dropdownMenu.querySelectorAll(".custom-dropdown-option").forEach((option) => {
         option.addEventListener("click", () => {
-          const value = option.getAttribute("data-value") || "";
-          const text = option.textContent || "Todas as categorias";
-
-          blogCategoryFilter.value = value;
-          dropdownButton.textContent = text;
+          blogCategoryFilter.value = option.getAttribute("data-value") || "";
+          dropdownButton.textContent = option.textContent || "Todas as categorias";
           closeDropdown();
           blogCategoryFilter.dispatchEvent(new Event("change"));
         });
@@ -225,61 +187,27 @@ fetch(blogNewsUrl, { cache: "no-store" })
 
     blogWelcome.innerHTML = `
       <div class="blog-intro-desc">
-        <h1 class="blog-title">Notícias de Tecnologia e Marketing</h1>
-        <span class="blog-intro-highlight">Curadoria diária das principais fontes do setor.</span>
-        <span class="blog-intro-text">Acompanhe as últimas notícias sobre desenvolvimento web, marketing digital, SEO, IA e tecnologia, direto de fontes como Google, HubSpot, AWS e GitHub.</span>
+        <h1 class="blog-title">Notícias e Conteúdos da Sants Company</h1>
+        <span class="blog-intro-highlight">Curadoria atualizada e análises autorais para decisões digitais melhores.</span>
+        <span class="blog-intro-text">Acompanhe notícias de desenvolvimento web, marketing digital, SEO, IA e tecnologia, além dos conteúdos produzidos pela Sants Company.</span>
       </div>
     `;
 
     const applyFilter = () => {
       const query = normalizeText(blogSearchInput ? blogSearchInput.value : "");
       const selectedCategory = blogCategoryFilter ? blogCategoryFilter.value : "";
-
-      const filteredPosts = visiblePosts.filter((post) => {
+      renderPosts(visiblePosts.filter((post) => {
         const matchesTitle = !query || normalizeText(post.title).includes(query);
         const matchesCategory = !selectedCategory || normalizeText(post.category) === normalizeText(selectedCategory);
         return matchesTitle && matchesCategory;
-      });
-
-      renderPosts(filteredPosts, blogList);
+      }), blogList);
     };
 
-    if (blogSearchInput) {
-      blogSearchInput.addEventListener("input", applyFilter);
-    }
-
-    if (blogCategoryFilter) {
-      blogCategoryFilter.addEventListener("change", applyFilter);
-    }
-
+    if (blogSearchInput) blogSearchInput.addEventListener("input", applyFilter);
+    if (blogCategoryFilter) blogCategoryFilter.addEventListener("change", applyFilter);
     applyFilter();
   })
   .catch((error) => {
     console.error(error);
-    renderState(document.getElementById("blogList"), "Não foi possível carregar as notícias agora.");
-  });
-
-fetch(blogOwnPostsUrl, { cache: "no-store" })
-  .then((response) => response.json())
-  .then((posts) => {
-    const visibleOwnPosts = (Array.isArray(posts) ? posts : [])
-      .filter((post) => post.visible !== false)
-      .map((post) => ({
-        id: post.id,
-        title: decodeHtmlEntities(post.title),
-        banner: post.banner,
-        author: post.author,
-        date: post.date,
-        category: post.category,
-        readingTime: post.readingTime,
-        summary: decodeHtmlEntities(post.summary)
-      }))
-      .sort((a, b) => parsePtBrDate(b.date) - parsePtBrDate(a.date));
-
-    const ownArticlesList = document.getElementById("ownArticlesList");
-    renderOwnArticles(visibleOwnPosts, ownArticlesList);
-  })
-  .catch((error) => {
-    console.error(error);
-    renderState(document.getElementById("ownArticlesList"), "Não foi possível carregar os artigos da Sants Company agora.");
+    renderState(document.getElementById("blogList"), "Não foi possível carregar os conteúdos agora.");
   });
