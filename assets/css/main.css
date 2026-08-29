@@ -4059,3 +4059,84 @@ body.dark-mode .portfolio-cta p {
 body.dark-mode .service-detail-card .icon-card { color: #bfdbfe; background: #172554; }
 body.dark-mode .service-card-index { color: #94a3b8; }
 @media(max-width:768px){.hero-composition-tags{left:22px;bottom:54px;max-width:230px}.service-detail-card{padding:28px}.service-detail-card::before{left:28px}.service-detail-card p{min-height:0}}
+/* Ajustes de estabilidade visual e acabamento dos serviços. */
+@media (min-width: 1200px) {
+  .service-detail-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .service-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.service-detail-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 370px;
+  padding: 32px;
+  border-color: rgba(148, 163, 184, 0.2);
+  background: linear-gradient(145deg, #ffffff 0%, #f5f9ff 100%);
+}
+
+.service-detail-card::after {
+  content: "";
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  right: -88px;
+  bottom: -92px;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.08);
+  pointer-events: none;
+}
+
+.service-detail-card .icon-card {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.12);
+}
+
+.service-detail-card h3,
+.service-detail-card p,
+.service-detail-card ul,
+.service-card-header { position: relative; z-index: 1; }
+
+.service-detail-card p { min-height: 0; margin-bottom: 24px; }
+
+.service-detail-card ul {
+  margin-top: auto;
+  padding: 20px 0 0;
+  border-top-color: rgba(37, 99, 235, 0.16);
+}
+
+.service-detail-card ul::before {
+  content: "O que está incluso";
+  display: block;
+  margin-bottom: 13px;
+  color: #2563eb;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.service-detail-card li { padding-left: 22px; font-size: 0.94rem; }
+.service-detail-card li::before { box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.14); }
+
+body.dark-mode .service-detail-card {
+  background: linear-gradient(145deg, #070d17 0%, #0b1930 100%);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+body.dark-mode .service-detail-card::after { background: rgba(59, 130, 246, 0.13); }
+
+@media (max-width: 768px) {
+  .page-hero--split { min-height: auto; padding-bottom: 58px; }
+  .page-hero--split .page-hero-layout { gap: 0; }
+  .page-hero--split .hero-composition { display: none; }
+  .service-detail-grid { grid-template-columns: 1fr; gap: 18px; }
+  .service-detail-card { min-height: 0; padding: 28px 24px; }
+  .service-detail-card::before { left: 24px; }
+}
