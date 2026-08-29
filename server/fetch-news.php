@@ -42,8 +42,11 @@ function translateToPtBr($text) {
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_TIMEOUT => 15,
+        CURLOPT_HTTPHEADER => [
+            'Authorization: DeepL-Auth-Key ' . DEEPL_API_KEY,
+            'Content-Type: application/x-www-form-urlencoded',
+        ],
         CURLOPT_POSTFIELDS => http_build_query([
-            'auth_key' => DEEPL_API_KEY,
             'text' => $text,
             'target_lang' => 'PT-BR',
         ]),
