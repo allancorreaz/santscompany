@@ -98,6 +98,13 @@ function normalizeSummary($text, $limit = 220) {
     return rtrim(mb_substr($plain, 0, $limit - 1)) . '…';
 }
 
+function normalizeImageUrl($imageUrl, $articleUrl) {
+    $imageUrl = trim(html_entity_decode((string) $imageUrl, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    if ($imageUrl === '') return '';
+    if (str_starts_with($imageUrl, '//')) return 'https:' . $imageUrl;
+    if (filter_var($imageUrl, FILTER_VALIDATE_URL) && preg_match('#^https?://#i', $imageUrl)) return $imageUrl;
+    return '';
+}
 function extractImageFromHtml($html) {
     if ($html === '') return '';
 
@@ -143,13 +150,22 @@ function fetchOpenGraphImage($url) {
 function extractBanner($item, array $namespaces, $articleUrl) {
     if (isset($item->enclosure['url'])) {
         $enclosureType = strtolower((string) $item->enclosure['type']);
-        if ($enclosureType === '' || str_starts_with($enclosureType, 'image/')) return (string) $item->enclosure['url'];
+        if ($enclosureType === '' || str_starts_with($enclosureType, 'image/')) {
+            $imageUrl = normalizeImageUrl((string) $item->enclosure['url'], $articleUrl);
+            if ($imageUrl !== '') return $imageUrl;
+        }
     }
 
     if (isset($namespaces['media'])) {
         $media = $item->children($namespaces['media']);
-        if (isset($media->content['url'])) return (string) $media->content['url'];
-        if (isset($media->thumbnail['url'])) return (string) $media->thumbnail['url'];
+        if (isset($media->content['url'])) {
+            $imageUrl = normalizeImageUrl((string) $media->content['url'], $articleUrl);
+            if ($imageUrl !== '') return $imageUrl;
+        }
+        if (isset($media->thumbnail['url'])) {
+            $imageUrl = normalizeImageUrl((string) $media->thumbnail['url'], $articleUrl);
+            if ($imageUrl !== '') return $imageUrl;
+        }
     }
 
     $html = '';
@@ -160,10 +176,14 @@ function extractBanner($item, array $namespaces, $articleUrl) {
     if ($html === '') $html = trim((string) $item->description);
 
     $feedImage = extractImageFromHtml($html);
-    if ($feedImage !== '') return $feedImage;
+    if ($feedImage !== '') {
+        $imageUrl = normalizeImageUrl($feedImage, $articleUrl);
+        if ($imageUrl !== '') return $imageUrl;
+    }
 
     $openGraphImage = fetchOpenGraphImage($articleUrl);
-    return $openGraphImage !== '' ? $openGraphImage : '../assets/images/branding/logo.png';
+    $imageUrl = normalizeImageUrl($openGraphImage, $articleUrl);
+    return $imageUrl !== '' ? $imageUrl : '../assets/images/branding/logo.png';
 }
 
 echo 'Coletando fontes...' . PHP_EOL;
