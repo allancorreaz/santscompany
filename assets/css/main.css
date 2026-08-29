@@ -4040,3 +4040,22 @@ body.dark-mode .portfolio-cta p {
 @media(max-width:992px){.page-hero--split{min-height:auto;padding:126px 0 76px}.page-hero--split .page-hero-layout{grid-template-columns:1fr;gap:52px}.hero-composition{width:min(620px,100%);margin:0 auto}}
 @media(max-width:768px){.page-hero--split{padding:112px 0 66px}.page-hero--split .section-eyebrow,.page-hero--split .section-title,.page-hero--split .section-subtitle{text-align:center;margin-left:auto;margin-right:auto}.page-hero-actions{justify-content:center}.hero-composition{min-height:330px}.hero-composition-card--main{inset:28px 24px 36px 0;padding:30px}}
 @media(max-width:480px){.page-hero--split .section-title{font-size:2.35rem}.hero-composition{min-height:300px}.hero-composition-card--main{padding:24px;border-radius:24px}.hero-composition-card--main i{margin-bottom:20px}.hero-composition-card--small{width:65%;padding:20px}.hero-composition-tags{max-width:220px}}
+/* Detalhes das composições institucionais e cards de serviços. */
+.hero-composition-card--main { z-index: 1; }
+.hero-composition-card--small { z-index: 3; }
+.hero-composition-tags { top: auto; right: auto; bottom: 64px; left: 30px; z-index: 2; justify-content: flex-start; max-width: 270px; }
+.service-detail-grid { gap: 28px; }
+.service-detail-card { position: relative; overflow: hidden; padding: 34px; transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; }
+.service-detail-card::before { content: ""; position: absolute; top: 0; left: 34px; width: 74px; height: 3px; border-radius: 0 0 99px 99px; background: linear-gradient(90deg, #60a5fa, #2563eb); }
+.service-detail-card:hover { transform: translateY(-6px); border-color: rgba(37,99,235,.32); box-shadow: 0 26px 52px rgba(15,23,42,.14); }
+.service-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.service-card-index { color: #94a3b8; font-size: .8rem; font-weight: 800; letter-spacing: .12em; }
+.service-detail-card .icon-card { display: grid; width: 54px; height: 54px; place-items: center; margin: 0; border-radius: 17px; color: #2563eb; background: #eff6ff; font-size: 1.35rem; }
+.service-detail-card h3 { font-size: clamp(1.4rem,2vw,1.7rem); }
+.service-detail-card p { min-height: 78px; line-height: 1.72; }
+.service-detail-card ul { padding-top: 18px; border-top: 1px solid rgba(148,163,184,.2); }
+.service-detail-card li { position: relative; padding-left: 20px; line-height: 1.5; }
+.service-detail-card li::before { content: ""; position: absolute; left: 0; top: .54em; width: 7px; height: 7px; border-radius: 50%; background: #60a5fa; }
+body.dark-mode .service-detail-card .icon-card { color: #bfdbfe; background: #172554; }
+body.dark-mode .service-card-index { color: #94a3b8; }
+@media(max-width:768px){.hero-composition-tags{left:22px;bottom:54px;max-width:230px}.service-detail-card{padding:28px}.service-detail-card::before{left:28px}.service-detail-card p{min-height:0}}
