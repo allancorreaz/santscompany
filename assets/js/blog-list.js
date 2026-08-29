@@ -42,6 +42,22 @@ function parsePtBrDate(dateText) {
   return new Date(Number(year), Number(month) - 1, Number(day)).getTime();
 }
 
+function parsePublicationTimestamp(post) {
+  const rawTimestamp = Number(post.timestamp || post.publishedAt || 0);
+  if (Number.isFinite(rawTimestamp) && rawTimestamp > 0) {
+    return rawTimestamp < 100000000000 ? rawTimestamp * 1000 : rawTimestamp;
+  }
+
+  const isoTimestamp = Date.parse(String(post.publishedAt || ""));
+  return Number.isFinite(isoTimestamp) ? isoTimestamp : parsePtBrDate(post.date);
+}
+
+function compareByPublicationDate(left, right) {
+  const timeDifference = parsePublicationTimestamp(right) - parsePublicationTimestamp(left);
+  if (timeDifference !== 0) return timeDifference;
+
+  return Number(right.id || 0) - Number(left.id || 0);
+}
 function renderState(container, message) {
   if (container) container.innerHTML = `<div class="blog-empty-state"><p>${escapeHtml(message)}</p></div>`;
 }
@@ -122,7 +138,7 @@ Promise.all([
       readingTime: item.readingTime,
       summary: decodeHtmlEntities(item.summary),
       sourceName: decodeHtmlEntities(item.sourceName),
-      timestamp: Number(item.timestamp) || parsePtBrDate(item.date),
+      timestamp: item.timestamp,
       isOwn: false
     }));
 
@@ -138,11 +154,11 @@ Promise.all([
         readingTime: post.readingTime,
         summary: decodeHtmlEntities(post.summary),
         sourceName: "Sants Company",
-        timestamp: parsePtBrDate(post.date),
+        publishedAt: post.publishedAt || "",
         isOwn: true
       }));
 
-    const visiblePosts = [...externalPosts, ...institutionalPosts].sort((a, b) => b.timestamp - a.timestamp);
+    const visiblePosts = [...externalPosts, ...institutionalPosts].sort(compareByPublicationDate);
     if (!visiblePosts.length) {
       renderState(blogList, "Os conteúdos ainda estão sendo preparados. Tente novamente em alguns minutos.");
       return;
