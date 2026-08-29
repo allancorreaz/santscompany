@@ -1,6 +1,6 @@
 # Sants Company Website
 
-Site institucional responsivo da **Sants Company**, agência especializada em **marketing digital e desenvolvimento web**.
+Site institucional responsivo da **Sants Company**, agência especializada em **marketing digital e desenvolvimento web**, com 2 anos de experiência e mais de 10 projetos entregues.
 
 ---
 
@@ -9,16 +9,16 @@ Site institucional responsivo da **Sants Company**, agência especializada em **
 Este é o site institucional da Sants Company — uma solução completa que apresenta a empresa, seus serviços e permite contato direto com clientes através de um formulário otimizado.
 
 **O que oferece:**
-- 🏠 Homepage com apresentação visual e hero section
-- 📖 Blog dinâmico com posts em tempo real
-- 📝 Páginas institucionais (sobre, serviços, contato)
-- 💬 Formulário de contato com validação e proteção anti-spam
-- 📱 Responsivo e otimizado para mobile, tablet e desktop
-- ⚡ Máxima performance (PageSpeed 86/100 mobile, 97/100 desktop)
+- Homepage com apresentação visual e hero section
+- Blog com curadoria RSS em PT-BR e artigos autorais da Sants Company
+- Páginas institucionais (sobre, serviços, contato)
+- Formulário de contato com validação e proteção anti-spam
+- Responsivo e otimizado para mobile, tablet e desktop
+- Máxima performance (PageSpeed 86/100 mobile, 97/100 desktop)
 
 ---
 
-## 🏢 Sobre a Sants Company
+## Sobre a Sants Company
 
 A **Sants Company** é uma agência de marketing e programação que atua na criação de soluções digitais para empresas. O site é o cartão de visita digital da empresa, apresentando:
 
@@ -29,7 +29,7 @@ A **Sants Company** é uma agência de marketing e programação que atua na cri
 
 ---
 
-## 🛠️ Stack & Tecnologias
+## Stack & Tecnologias
 
 | Camada | Tecnologia |
 |--------|-----------|
@@ -39,11 +39,11 @@ A **Sants Company** é uma agência de marketing e programação que atua na cri
 | **Segurança** | Google reCAPTCHA v3 |
 | **Servidor** | Apache com mod_rewrite |
 | **Versionamento** | Git + GitHub |
-| **CMS/Blog** | JSON + JavaScript (sem banco de dados) |
+| **CMS/Blog** | JSON + JavaScript, RSS próprio e curadoria automatizada |
 
 ---
 
-## 🔌 APIs Integradas
+## APIs Integradas
 
 1. **Google reCAPTCHA v3** — Proteção contra bots no formulário
    - Validação backend obrigatória
@@ -55,15 +55,15 @@ A **Sants Company** é uma agência de marketing e programação que atua na cri
 
 ---
 
-## ⏱️ Cronograma de Desenvolvimento
+## Cronograma de Desenvolvimento
 
 - **Início:** Março 2026
 - **Performance Sprint:** Abril 2026 (otimizações principais)
-- **Status:** Produção com scores altos (86 mobile / 97 desktop)
+- **Status:** Em produção, com manutenção contínua de conteúdo e performance
 
 ---
 
-## 📁 Estrutura Geral
+## Estrutura Geral
 
 ```
 Sants Company/
@@ -83,7 +83,7 @@ Sants Company/
 
 ---
 
-## 💬 Formulário de Contato
+## Formulário de Contato
 
 O site permite que visitantes entrem em contato diretamente através de um formulário:
 
@@ -101,7 +101,7 @@ O site permite que visitantes entrem em contato diretamente através de um formu
 
 ---
 
-## 📝 Blog Dinâmico
+## Blog Dinâmico
 
 Posts são armazenados em JSON e renderizados via JavaScript:
 
@@ -124,7 +124,7 @@ Adicionar novo post:
 
 ---
 
-## 🚀 Performance
+## Performance
 
 | Métrica | Valor |
 |---------|-------|
@@ -143,7 +143,7 @@ Otimizações principais:
 
 ---
 
-## 📖 Documentação
+## Documentação
 
 **README.md** (este arquivo)
 - Apresentação do projeto
@@ -160,7 +160,7 @@ Otimizações principais:
 
 ---
 
-## 👥 Contato
+## Contato
 
 Para dúvidas sobre o projeto:
 - Contacte os administradores da Sants Company
