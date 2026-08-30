@@ -4320,3 +4320,57 @@ body.dark-mode .contact-choice-close { color: #f8fafc; }
   .service-detail-grid--shared { display: grid; grid-auto-columns: minmax(84%, 340px); grid-auto-flow: column; grid-template-columns: none; gap: 14px; margin: 0 -14px; padding: 4px 14px 20px; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 14px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
   .service-detail-grid--shared .service-detail-card { scroll-snap-align: start; }
 }
+/* Carrossel por toque apenas em celulares; telas maiores mantêm a grade. */
+.mobile-carousel-hint {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .mobile-carousel-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 22px 0 12px;
+    color: currentColor;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .section-portfolio .mobile-carousel-hint {
+    color: #475569;
+  }
+
+  .mobile-snap-carousel {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    grid-auto-columns: minmax(84vw, 1fr);
+    gap: 16px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    padding: 4px 12vw 20px 2px;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 2px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-snap-carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-snap-carousel > .portfolio-item,
+  .mobile-snap-carousel > .stat-card {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .stats-grid.mobile-snap-carousel {
+    margin-top: 0;
+  }
+
+  .portfolio-grid.mobile-snap-carousel {
+    margin-top: 0;
+  }
+}
