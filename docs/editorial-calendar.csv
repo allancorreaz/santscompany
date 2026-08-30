@@ -1,19 +1,19 @@
 id,status,title,publication_date,next_review,owner,review_focus
-1,published,Como estruturar um site institucional que realmente gera contato,2026-03-25,2026-09-25,Allan,Atualizar links internos e exemplos de estrutura
-2,published,Blog corporativo: quando vale a pena criar e como começar sem exagero,2026-03-24,2026-09-24,Jean,Revisar pauta e links para serviços
-3,published,O que revisar antes de subir uma nova versão do site,2026-03-23,2026-09-23,Allan,Revisar checklist técnico
-4,published,Landing page ou site institucional: quando sua empresa precisa de mais páginas,2026-03-22,2026-09-22,Allan,Atualizar exemplos e CTA
-5,draft,Como melhorar uma página de contato para receber mais oportunidades,2026-09-10,2027-03-10,Jean,Validar CTA e comportamento mobile
-6,published,Componentes globais em sites: por que eles reduzem retrabalho,2026-03-20,2026-09-20,Allan,Revisar padrões técnicos
-7,draft,SEO local para empresas: o que ajuda a aparecer no Google,2026-09-17,2027-03-17,Jean,Revisar orientações oficiais do Google
-8,published,Tráfego pago para negócios locais: erros antes da primeira campanha,2026-03-18,2026-09-18,Jean,Atualizar plataformas e exemplos
-9,published,Orgânico ou tráfego pago: como escolher para captar clientes,2026-03-17,2026-09-17,Jean,Revisar critérios de comparação
-10,draft,Desenvolvimento front-end moderno: o que priorizar em um novo site,2026-09-24,2027-03-24,Allan,Revisar ferramentas e práticas
-11,published,Google Ads para pequenas empresas: fundamentos para começar,2026-04-06,2026-10-06,Jean,Revisar políticas e interface da plataforma
-12,published,SEO on-page: como preparar páginas para serem compreendidas,2026-04-06,2026-10-06,Allan,Revisar documentação do Google
-14,published,Design responsivo: padrões que melhoram o uso no mobile,2026-04-06,2026-10-06,Allan,Testar exemplos em dispositivos atuais
-16,published,Busca com IA: o que muda na estratégia de conteúdo do seu site,2026-08-29,2027-02-28,Jean,Revisar mudanças de busca e fontes
-17,published,Antes de investir em tráfego pago defina o que conta como conversão,2026-08-29,2027-02-28,Jean,Revisar eventos e CTA
-18,published,Acessibilidade em sites: pontos práticos para reduzir barreiras,2026-08-29,2027-02-28,Allan,Revisar WCAG e checklist
-19,published,Indexação técnica: o que revisar antes de publicar uma página,2026-08-29,2027-02-28,Allan,Revisar Search Console e sitemap
-20,published,Eventos no GA4: como medir ações úteis sem poluir relatórios,2026-08-29,2027-02-28,Allan,Revisar interface e eventos do GA4
+1,published,Como estruturar um site institucional que realmente gera contato,2026-03-25,2026-09-25,Equipe,Atualizar links internos e exemplos de estrutura
+2,published,Blog corporativo: quando vale a pena criar e como começar sem exagero,2026-03-24,2026-09-24,Equipe,Revisar pauta e links para serviços
+3,published,O que revisar antes de subir uma nova versão do site,2026-03-23,2026-09-23,Equipe,Revisar checklist técnico
+4,published,Landing page ou site institucional: quando sua empresa precisa de mais páginas,2026-03-22,2026-09-22,Equipe,Atualizar exemplos e CTA
+5,draft,Como melhorar uma página de contato para receber mais oportunidades,2026-09-10,2027-03-10,Equipe,Validar CTA e comportamento mobile
+6,published,Componentes globais em sites: por que eles reduzem retrabalho,2026-03-20,2026-09-20,Equipe,Revisar padrões técnicos
+7,draft,SEO local para empresas: o que ajuda a aparecer no Google,2026-09-17,2027-03-17,Equipe,Revisar orientações oficiais do Google
+8,published,Tráfego pago para negócios locais: erros antes da primeira campanha,2026-03-18,2026-09-18,Equipe,Atualizar plataformas e exemplos
+9,published,Orgânico ou tráfego pago: como escolher para captar clientes,2026-03-17,2026-09-17,Equipe,Revisar critérios de comparação
+10,draft,Desenvolvimento front-end moderno: o que priorizar em um novo site,2026-09-24,2027-03-24,Equipe,Revisar ferramentas e práticas
+11,published,Google Ads para pequenas empresas: fundamentos para começar,2026-04-06,2026-10-06,Equipe,Revisar políticas e interface da plataforma
+12,published,SEO on-page: como preparar páginas para serem compreendidas,2026-04-06,2026-10-06,Equipe,Revisar documentação do Google
+14,published,Design responsivo: padrões que melhoram o uso no mobile,2026-04-06,2026-10-06,Equipe,Testar exemplos em dispositivos atuais
+16,published,Busca com IA: o que muda na estratégia de conteúdo do seu site,2026-08-29,2027-02-28,Equipe,Revisar mudanças de busca e fontes
+17,published,Antes de investir em tráfego pago defina o que conta como conversão,2026-08-29,2027-02-28,Equipe,Revisar eventos e CTA
+18,published,Acessibilidade em sites: pontos práticos para reduzir barreiras,2026-08-29,2027-02-28,Equipe,Revisar WCAG e checklist
+19,published,Indexação técnica: o que revisar antes de publicar uma página,2026-08-29,2027-02-28,Equipe,Revisar Search Console e sitemap
+20,published,Eventos no GA4: como medir ações úteis sem poluir relatórios,2026-08-29,2027-02-28,Equipe,Revisar interface e eventos do GA4

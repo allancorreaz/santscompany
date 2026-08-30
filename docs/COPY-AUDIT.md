@@ -12,7 +12,6 @@ Este registro acompanha a revisão de textos feita em agosto de 2026. A estrutur
 | Serviços, cartões | Descrições curtas e genéricas | Descrições com entregas: páginas, e-commerce, campanhas, conteúdo, vídeo, sistemas e integrações. | Ajuda a pessoa a reconhecer o serviço de que precisa. |
 | Sobre, título principal | Estratégia, design e tecnologia para transformar presença digital em confiança. | Desenvolvimento e marketing conduzidos pelos sócios, do planejamento à entrega. | Apresenta modelo de trabalho real e reforça proximidade. |
 | Sobre, conteúdo institucional | Texto sobre visão e transformação | Texto sobre proposta, operação, clareza de escopo e decisões explicadas. | Evita linguagem institucional vazia. |
-| Sobre, nova seção | Não existia apresentação individual | Allan Correia: desenvolvimento web e software. Jean: marketing, social media e vídeo. | Explica quem executa cada frente sem usar a idade da agência como argumento. |
 | Contato, título | Vamos conversar? | Conte o que sua empresa precisa agora. | Convite direto orientado à ação. |
 | Formulário, introdução | Presença digital mais organizada, profissional ou preparada para vender | Descreva o que sua empresa precisa. Respondemos pelo canal informado e alinhamos o melhor próximo passo para o projeto. | Deixa o próximo passo explícito e reduz tom promocional. |
 | Rodapé | Texto genérico sobre soluções | Desenvolvimento web e marketing digital para empresas que precisam organizar presença, comunicação e canais de contato. | Resume a atuação com vocabulário objetivo. |

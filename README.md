@@ -6,7 +6,7 @@ Site institucional da Sants Company, agência de desenvolvimento web e marketing
 
 - Desenvolvimento web: sites institucionais, landing pages, e-commerces, sistemas, integrações e manutenção técnica.
 - Marketing e conteúdo: social media, mídia paga, SEO, web design e produção de vídeo.
-- Operação próxima: Allan Correia conduz a frente técnica; Jean conduz marketing, conteúdo e audiovisual. Os sócios acompanham planejamento, execução e entrega.
+- Operação próxima: Os sócios acompanham planejamento, execução e entrega.
 
 ## Tecnologias
 
