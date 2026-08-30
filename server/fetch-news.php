@@ -98,6 +98,22 @@ function normalizeSummary($text, $limit = 220) {
     return rtrim(mb_substr($plain, 0, $limit - 1)) . '…';
 }
 
+function parsePublicationTimestamp($value) {
+    $value = trim((string) $value);
+    if ($value === '') return null;
+
+    try {
+        $timestamp = (new DateTimeImmutable($value))->getTimestamp();
+    } catch (Exception $exception) {
+        return null;
+    }
+
+    // Feeds com datas futuras ou sem data confiável não entram na curadoria.
+    if ($timestamp <= 0 || $timestamp > time() + 86400) return null;
+
+    return $timestamp;
+}
+
 function normalizeImageUrl($imageUrl, $articleUrl) {
     $imageUrl = trim(html_entity_decode((string) $imageUrl, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
     if ($imageUrl === '') return '';
@@ -226,7 +242,8 @@ foreach ($sources as $source) {
         if ($banner === '../assets/images/branding/logo.png') continue;
 
         $pubDateRaw = extractItemText($item, $namespaces, ['pubDate', 'published', 'updated', 'dc:date']);
-        $pubDate = strtotime($pubDateRaw) ?: time();
+        $pubDate = parsePublicationTimestamp($pubDateRaw);
+        if ($pubDate === null) continue;
 
         $items[] = [
             'id' => md5($link),
