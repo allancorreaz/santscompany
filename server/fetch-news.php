@@ -24,7 +24,9 @@ $sources = [
 ];
 
 $maxPerSource = 6;
-$maxTotal = 60;
+$maxRecent = 60;
+$maxArchive = 240;
+$retentionDays = 180;
 $items = [];
 $seenLinks = [];
 $translationCache = [];
@@ -278,9 +280,28 @@ foreach ($items as &$item) {
 unset($item);
 
 usort($items, fn($a, $b) => $b['timestamp'] <=> $a['timestamp']);
-$items = array_slice($items, 0, $maxTotal);
+$items = array_slice($items, 0, $maxRecent);
 
 $outputPath = __DIR__ . '/../data/blog/news.json';
+$existingItems = [];
+if (is_file($outputPath)) {
+    $existingItems = json_decode((string) file_get_contents($outputPath), true);
+    if (!is_array($existingItems)) $existingItems = [];
+}
+
+$archiveCutoff = time() - ($retentionDays * 86400);
+$mergedItems = [];
+foreach (array_merge($items, $existingItems) as $item) {
+    $timestamp = (int) ($item['timestamp'] ?? 0);
+    $key = (string) ($item['id'] ?? $item['url'] ?? '');
+    if ($key === '' || $timestamp < $archiveCutoff || isset($mergedItems[$key])) continue;
+    $mergedItems[$key] = $item;
+}
+
+$items = array_values($mergedItems);
+usort($items, fn($a, $b) => ($b['timestamp'] ?? 0) <=> ($a['timestamp'] ?? 0));
+$items = array_slice($items, 0, $maxArchive);
+
 file_put_contents($outputPath, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
 echo 'OK: ' . count($items) . ' notícias salvas em ' . date('Y-m-d H:i:s') . "\n";

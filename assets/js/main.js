@@ -220,6 +220,37 @@ function initHeroMediaBackgrounds() {
   });
 }
 
+function initContactChoice() {
+  if (window.__contactChoiceBound) return;
+  window.__contactChoiceBound = true;
+
+  document.addEventListener("click", (event) => {
+    const trigger = event.target.closest("[data-contact-choice]");
+    if (trigger) {
+      event.preventDefault();
+      const dialog = document.getElementById("contactChoiceDialog");
+      if (dialog && typeof dialog.showModal === "function") dialog.showModal();
+      return;
+    }
+
+    const closeButton = event.target.closest("[data-contact-choice-close]");
+    if (closeButton) {
+      const dialog = document.getElementById("contactChoiceDialog");
+      if (dialog && typeof dialog.close === "function") dialog.close();
+    }
+  });
+}
+
+function initContactChoiceDialog() {
+  const dialog = document.getElementById("contactChoiceDialog");
+  if (!dialog || dialog.dataset.bound === "true") return;
+  dialog.dataset.bound = "true";
+
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+}
+
 function initSite() {
   initHero();
   initHeroMediaBackgrounds();
@@ -230,6 +261,7 @@ function initSite() {
   initCounters();
   initFloatingButtons();
   initThemeToggle();
+  initContactChoice();
 }
 
 function loadFontAwesomeDeferred() {
@@ -265,6 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("components:loaded", () => {
   initMenu();
   initFloatingButtons();
+  initContactChoiceDialog();
   window.__revealBound = false;
   initReveal();
 });

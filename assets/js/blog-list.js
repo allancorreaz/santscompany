@@ -1,4 +1,5 @@
 const htmlEntityBuffer = document.createElement("textarea");
+const initialPostCount = 6;
 
 function decodeHtmlEntities(text) {
   htmlEntityBuffer.innerHTML = String(text || "");
@@ -62,12 +63,13 @@ function renderState(container, message) {
   if (container) container.innerHTML = `<div class="blog-empty-state"><p>${escapeHtml(message)}</p></div>`;
 }
 
-function renderPosts(posts, container) {
+function renderPosts(posts, container, displayedCount = initialPostCount) {
   if (!posts.length) {
     renderState(container, "Nenhum conteúdo encontrado para esta busca ou categoria.");
     return;
   }
 
+  const renderedPosts = posts.slice(0, displayedCount);
   const linkAttributes = (post) => post.isOwn
     ? `href="${sanitizeUrl(post.url)}"`
     : `href="${sanitizeUrl(post.url)}" target="_blank" rel="noopener noreferrer"`;
@@ -76,7 +78,7 @@ function renderPosts(posts, container) {
     ? (compact ? "Ler mais" : "Ler artigo completo")
     : (compact ? "Ler mais" : "Ler notícia completa");
   const externalIcon = (post) => post.isOwn ? "" : ' <i class="fas fa-external-link-alt"></i>';
-  const [featuredPost, ...secondaryPosts] = posts;
+  const [featuredPost, ...secondaryPosts] = renderedPosts;
 
   container.innerHTML = `
     <a ${linkAttributes(featuredPost)} class="blog-featured-card">
@@ -103,6 +105,7 @@ function renderPosts(posts, container) {
         </a>
       `).join("")}
     </div>
+    ${posts.length > renderedPosts.length ? `<div class="blog-load-more"><button type="button" data-load-more>Carregar mais conteúdos</button></div>` : ""}
   `;
 }
 
@@ -209,18 +212,28 @@ Promise.all([
       </div>
     `;
 
-    const applyFilter = () => {
+    let displayedCount = initialPostCount;
+    let filteredPosts = visiblePosts;
+
+    const applyFilter = (resetResults = true) => {
       const query = normalizeText(blogSearchInput ? blogSearchInput.value : "");
       const selectedCategory = blogCategoryFilter ? blogCategoryFilter.value : "";
-      renderPosts(visiblePosts.filter((post) => {
+      filteredPosts = visiblePosts.filter((post) => {
         const matchesTitle = !query || normalizeText(post.title).includes(query);
         const matchesCategory = !selectedCategory || normalizeText(post.category) === normalizeText(selectedCategory);
         return matchesTitle && matchesCategory;
-      }), blogList);
+      });
+      if (resetResults) displayedCount = initialPostCount;
+      renderPosts(filteredPosts, blogList, displayedCount);
     };
 
-    if (blogSearchInput) blogSearchInput.addEventListener("input", applyFilter);
-    if (blogCategoryFilter) blogCategoryFilter.addEventListener("change", applyFilter);
+    if (blogSearchInput) blogSearchInput.addEventListener("input", () => applyFilter());
+    if (blogCategoryFilter) blogCategoryFilter.addEventListener("change", () => applyFilter());
+    blogList.addEventListener("click", (event) => {
+      if (!event.target.closest("[data-load-more]")) return;
+      displayedCount += initialPostCount;
+      renderPosts(filteredPosts, blogList, displayedCount);
+    });
     applyFilter();
   })
   .catch((error) => {

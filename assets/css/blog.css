@@ -1070,3 +1070,10 @@ body.dark-mode .blog-card-readmore:hover {
 .blog-empty-state p {
   margin: 0;
 }
+
+.blog-load-more { display: flex; justify-content: center; margin: 14px 0 8px; }
+.blog-load-more button { min-height: 48px; padding: 0 24px; border: 1px solid rgba(37, 99, 235, 0.3); border-radius: 999px; color: #1d4ed8; background: #fff; font: inherit; font-weight: 700; cursor: pointer; transition: transform .2s ease, background .2s ease, color .2s ease; }
+.blog-load-more button:hover { color: #fff; background: #2563eb; transform: translateY(-2px); }
+.blog-load-more button:focus-visible { outline: 3px solid rgba(96, 165, 250, 0.5); outline-offset: 3px; }
+body.dark-mode .blog-load-more button { border-color: rgba(96, 165, 250, 0.5); color: #dbeafe; background: #0b1930; }
+body.dark-mode .blog-load-more button:hover { color: #fff; background: #2563eb; }

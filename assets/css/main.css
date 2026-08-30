@@ -4274,3 +4274,49 @@ body.dark-mode .service-detail-card::after { background: rgba(59, 130, 246, 0.13
   .benefits-grid--refined .benefit-item { min-height: 0; padding: 26px 24px; }
   .benefit-kicker { margin-bottom: 18px; }
 }
+
+/* Escolha de canal para CTAs de conversão. */
+.contact-choice-dialog {
+  width: min(100% - 32px, 460px);
+  padding: 0;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 24px;
+  color: var(--text);
+  background: var(--bg);
+  box-shadow: 0 26px 80px rgba(2, 6, 23, 0.34);
+}
+
+.contact-choice-dialog::backdrop { background: rgba(2, 6, 23, 0.72); }
+.contact-choice-dialog > p { margin: 0; padding: 0 28px 24px; color: var(--text-light); line-height: 1.6; }
+.contact-choice-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 28px 28px 14px; }
+.contact-choice-eyebrow { margin: 0 0 7px; color: var(--primary); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.contact-choice-header h2 { margin: 0; font-size: 1.5rem; line-height: 1.18; }
+.contact-choice-close { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; padding: 0; border: 1px solid rgba(148, 163, 184, 0.32); border-radius: 50%; color: var(--text); background: transparent; cursor: pointer; }
+.contact-choice-close:hover { border-color: var(--primary); color: var(--primary); }
+.contact-choice-options { display: grid; gap: 10px; padding: 0 28px 28px; }
+.contact-choice-option { display: grid; grid-template-columns: 42px 1fr auto; align-items: center; gap: 14px; min-height: 74px; padding: 14px 16px; border: 1px solid rgba(148, 163, 184, 0.28); border-radius: 16px; color: var(--text); text-decoration: none; transition: border-color .2s ease, transform .2s ease, background .2s ease; }
+.contact-choice-option > i:first-child { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 12px; color: var(--primary); background: rgba(37, 99, 235, 0.1); font-size: 1.2rem; }
+.contact-choice-option span { display: grid; gap: 3px; }
+.contact-choice-option strong { font-size: 1rem; }
+.contact-choice-option small { color: var(--text-light); font-size: 0.82rem; }
+.contact-choice-option:hover { border-color: var(--primary); background: rgba(37, 99, 235, 0.05); transform: translateY(-2px); }
+.contact-choice-option--whatsapp > i:first-child { color: #16a34a; background: rgba(22, 163, 74, 0.1); }
+body.dark-mode .contact-choice-dialog { color: #f8fafc; background: #07111f; border-color: rgba(148, 163, 184, 0.34); }
+body.dark-mode .contact-choice-dialog > p, body.dark-mode .contact-choice-option small { color: #cbd5e1; }
+body.dark-mode .contact-choice-option { color: #f8fafc; border-color: rgba(148, 163, 184, 0.3); background: rgba(15, 23, 42, 0.55); }
+body.dark-mode .contact-choice-close { color: #f8fafc; }
+
+.service-mobile-hint { display: none; }
+
+@media (max-width: 768px) {
+  .contact-choice-dialog { position: fixed; inset: auto 0 0; width: 100%; max-width: none; margin: 0; border-radius: 24px 24px 0 0; }
+  .contact-choice-header { padding: 24px 20px 12px; }
+  .contact-choice-dialog > p { padding: 0 20px 20px; }
+  .contact-choice-options { padding: 0 20px 24px; }
+  .contact-choice-option { min-height: 78px; }
+
+  .service-mobile-hint { display: flex; align-items: center; gap: 9px; margin: 0 0 12px; color: var(--text-light); font-size: 0.88rem; font-weight: 700; }
+  .service-mobile-hint i { color: var(--primary); }
+  .service-detail-grid--shared { display: grid; grid-auto-columns: minmax(84%, 340px); grid-auto-flow: column; grid-template-columns: none; gap: 14px; margin: 0 -14px; padding: 4px 14px 20px; overflow-x: auto; overscroll-behavior-x: contain; scroll-padding-inline: 14px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+  .service-detail-grid--shared .service-detail-card { scroll-snap-align: start; }
+}
