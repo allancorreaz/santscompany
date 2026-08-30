@@ -5,7 +5,7 @@ function initHero() {
   }
 }
 
-// ✅ CORRIGIDO AQUI
+// Mantem o menu mobile sincronizado com o estado de acessibilidade.
 function initMenu() {
   const menuToggle = document.getElementById("menuToggle");
   const nav = document.querySelector(".nav");
@@ -148,7 +148,9 @@ function createThemeToggleButton() {
 function updateThemeToggleLabel(button, theme) {
   if (!button) return;
   const isDark = theme === "dark";
-  button.innerHTML = isDark ? "☀️" : "🌙";
+  button.innerHTML = isDark
+    ? '<i class="fas fa-sun" aria-hidden="true"></i>'
+    : '<i class="fas fa-moon" aria-hidden="true"></i>';
   button.setAttribute("title", isDark ? "Ativar modo claro" : "Ativar modo noturno");
   button.setAttribute("aria-pressed", isDark ? "true" : "false");
 }

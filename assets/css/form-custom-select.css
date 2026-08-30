@@ -254,7 +254,7 @@
   animation: fadeIn 0.18s ease;
 }
 
-/* 🔥 CONTROLE ÚNICO (sem conflito com JS) */
+/* Controle único para evitar conflito com JavaScript. */
 .custom-select.open + .custom-options {
   display: block;
 }
