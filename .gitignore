@@ -11,6 +11,14 @@ config.local.php
 .env
 .env.*
 data/blog/news.json
+composer.json
+composer.lock
+config.php
+robots.txt
+send.php
+sitemap.xml
+.htaccess
+.gitignore
 
 # Logs, Storage e Sessões Locais
 server/storage/*.log
